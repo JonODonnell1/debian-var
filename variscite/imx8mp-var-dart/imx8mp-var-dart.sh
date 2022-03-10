@@ -34,6 +34,7 @@ G_LINUX_DTB="freescale/imx8mp-var-dart-dt8mcustomboard.dtb
        freescale/imx8mp-var-som-symphony-basler-isi0-m7.dtb
        freescale/imx8mp-var-dart-dt8mcustomboard-legacy-m7.dtb
        freescale/imx8mp-var-dart-dt8mcustomboard-m7.dtb
+       freescale/imx8mp-var-som-m5pro.dtb
        "
 # Broadcom BT/WIFI firmware
 readonly G_BCM_FW_SRC_DIR="${DEF_SRC_DIR}/bcmfw"
