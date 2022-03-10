@@ -48,7 +48,7 @@ readonly G_CROSS_COMPILER_ARCHIVE_32BIT="${G_CROSS_COMPILER_32BIT_NAME}.tar.xz"
 readonly G_EXT_CROSS_32BIT_COMPILER_LINK="http://releases.linaro.org/components/toolchain/binaries/6.3-2017.05/arm-linux-gnueabihf/${G_CROSS_COMPILER_ARCHIVE_32BIT}"
 readonly G_CROSS_COMPILER_32BIT_PREFIX="arm-linux-gnueabihf-"
 
-readonly G_CROSS_COMPILER_JOPTION="-j 4"
+readonly G_CROSS_COMPILER_JOPTION="-j 12"
 
 #### user rootfs packages ####
 readonly G_USER_PACKAGES=""
