@@ -2,7 +2,7 @@ readonly ARCH_CPU="64BIT"
 
 # U-Boot
 readonly G_UBOOT_SRC_DIR="${DEF_SRC_DIR}/uboot"
-readonly G_UBOOT_GIT="https://github.com/varigit/uboot-imx.git"
+readonly G_UBOOT_GIT="https://github.com/JonODonnell1/uboot-imx.git"
 readonly G_UBOOT_BRANCH="lf_v2021.04_var02"
 readonly G_UBOOT_REV="b932caa0bab1144407ae1d718c419dcef36d5797"
 G_UBOOT_DEF_CONFIG_MMC="imx8mp_var_dart_defconfig"
@@ -10,7 +10,7 @@ readonly G_UBOOT_NAME_FOR_EMMC='imx-boot-sd.bin'
 
 # Linux kernel
 readonly G_LINUX_KERNEL_SRC_DIR="${DEF_SRC_DIR}/kernel"
-readonly G_LINUX_KERNEL_GIT="https://github.com/varigit/linux-imx.git"
+readonly G_LINUX_KERNEL_GIT="https://github.com/JonODonnell1/linux-imx.git"
 readonly G_LINUX_KERNEL_BRANCH="lf-5.10.y_var03"
 readonly G_LINUX_KERNEL_REV="ba9ade6851ca01e1e46a545fe96d059db522a03f"
 readonly G_LINUX_KERNEL_DEF_CONFIG='imx8_var_defconfig'
