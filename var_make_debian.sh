@@ -858,8 +858,10 @@ function check_sdcard()
 	fi
 
 	pr_info "Device: ${LPARAM_BLOCK_DEVICE}, ${size_gib}GiB"
-	echo "============================================="
-	read -p "Press Enter to continue"
+	if [[ "${LPARAM_BLOCK_DEVICE}" != "/dev/loop"* ]]; then
+		echo "============================================="
+		read -p "Press Enter to continue"
+	fi
 
 	return 0
 }
