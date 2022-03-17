@@ -318,11 +318,7 @@ protected_install rng-tools
 protected_install mtd-utils
 
 # bluetooth
-protected_install bluetooth
-protected_install bluez-obexd
-protected_install bluez-tools
 protected_install pulseaudio
-protected_install pulseaudio-module-bluetooth
 
 # wifi support packages
 protected_install hostapd
@@ -593,42 +589,42 @@ EOF
 	fi
 
 	# install variscite-bt service
-	install -m 0755 ${G_VARISCITE_PATH}/brcm_patchram_plus \
-		${ROOTFS_BASE}/usr/bin
-	install -d ${ROOTFS_BASE}/etc/bluetooth
-	install -m 0644 ${G_VARISCITE_PATH}/${MACHINE}/variscite-bt.conf \
-		${ROOTFS_BASE}/etc/bluetooth
-	install -m 0755 ${G_VARISCITE_PATH}/variscite-bt \
-		${ROOTFS_BASE}/etc/bluetooth
-	install -m 0755 ${G_VARISCITE_PATH}/variscite-bt-common.sh \
-		${ROOTFS_BASE}/etc/bluetooth
-	install -m 0644 ${G_VARISCITE_PATH}/variscite-bt.service \
-		${ROOTFS_BASE}/lib/systemd/system
-	ln -s /lib/systemd/system/variscite-bt.service \
-		${ROOTFS_BASE}/etc/systemd/system/multi-user.target.wants/variscite-bt.service
-
-	# install BT audio and main config
-	install -m 0644 ${G_VARISCITE_PATH}/${MACHINE}/bluez5/files/audio.conf \
-		${ROOTFS_BASE}/etc/bluetooth/
-	install -m 0644 ${G_VARISCITE_PATH}/${MACHINE}/bluez5/files/main.conf \
-		${ROOTFS_BASE}/etc/bluetooth/
-
-	# install obexd configuration
-	install -m 0644 ${G_VARISCITE_PATH}/${MACHINE}/bluez5/files/obexd.conf \
-		${ROOTFS_BASE}/etc/dbus-1/system.d
-
-	install -m 0644 ${G_VARISCITE_PATH}/${MACHINE}/bluez5/files/obex.service \
-		${ROOTFS_BASE}/lib/systemd/system
-	ln -s /lib/systemd/system/obex.service \
-		${ROOTFS_BASE}/etc/systemd/system/multi-user.target.wants/obex.service
+#	install -m 0755 ${G_VARISCITE_PATH}/brcm_patchram_plus \
+#		${ROOTFS_BASE}/usr/bin
+#	install -d ${ROOTFS_BASE}/etc/bluetooth
+#	install -m 0644 ${G_VARISCITE_PATH}/${MACHINE}/variscite-bt.conf \
+#		${ROOTFS_BASE}/etc/bluetooth
+#	install -m 0755 ${G_VARISCITE_PATH}/variscite-bt \
+#		${ROOTFS_BASE}/etc/bluetooth
+#	install -m 0755 ${G_VARISCITE_PATH}/variscite-bt-common.sh \
+#		${ROOTFS_BASE}/etc/bluetooth
+#	install -m 0644 ${G_VARISCITE_PATH}/variscite-bt.service \
+#		${ROOTFS_BASE}/lib/systemd/system
+#	ln -s /lib/systemd/system/variscite-bt.service \
+#		${ROOTFS_BASE}/etc/systemd/system/multi-user.target.wants/variscite-bt.service
+#
+#	# install BT audio and main config
+#	install -m 0644 ${G_VARISCITE_PATH}/${MACHINE}/bluez5/files/audio.conf \
+#		${ROOTFS_BASE}/etc/bluetooth/
+#	install -m 0644 ${G_VARISCITE_PATH}/${MACHINE}/bluez5/files/main.conf \
+#		${ROOTFS_BASE}/etc/bluetooth/
+#
+#	# install obexd configuration
+#	install -m 0644 ${G_VARISCITE_PATH}/${MACHINE}/bluez5/files/obexd.conf \
+#		${ROOTFS_BASE}/etc/dbus-1/system.d
+#
+#	install -m 0644 ${G_VARISCITE_PATH}/${MACHINE}/bluez5/files/obex.service \
+#		${ROOTFS_BASE}/lib/systemd/system
+#	ln -s /lib/systemd/system/obex.service \
+#		${ROOTFS_BASE}/etc/systemd/system/multi-user.target.wants/obex.service
 
 	# install pulse audio configuration
 	install -m 0644 ${G_VARISCITE_PATH}/${MACHINE}/pulseaudio/pulseaudio.service \
 		${ROOTFS_BASE}/lib/systemd/system
 	ln -s /lib/systemd/system/pulseaudio.service \
 		${ROOTFS_BASE}/etc/systemd/system/multi-user.target.wants/pulseaudio.service
-	install -m 0644 ${G_VARISCITE_PATH}/${MACHINE}/pulseaudio/pulseaudio-bluetooth.conf \
-		${ROOTFS_BASE}/etc//dbus-1/system.d
+#	install -m 0644 ${G_VARISCITE_PATH}/${MACHINE}/pulseaudio/pulseaudio-bluetooth.conf \
+#		${ROOTFS_BASE}/etc//dbus-1/system.d
 	install -m 0644 ${G_VARISCITE_PATH}/${MACHINE}/pulseaudio/system.pa \
 		${ROOTFS_BASE}/etc/pulse/
 	install -m 0644 ${G_VARISCITE_PATH}/${MACHINE}/pulseaudio/client.conf \
@@ -645,17 +641,17 @@ EOF
 		${ROOTFS_BASE}/etc/modprobe.d/
 
 	# install variscite-wifi service
-	install -d ${ROOTFS_BASE}/etc/wifi
-	install -m 0644 ${G_VARISCITE_PATH}/${MACHINE}/variscite-wifi.conf \
-		${ROOTFS_BASE}/etc/wifi
-	install -m 0644 ${G_VARISCITE_PATH}/${MACHINE}/variscite-wifi-common.sh \
-		${ROOTFS_BASE}/etc/wifi
-	install -m 0755 ${G_VARISCITE_PATH}/variscite-wifi \
-		${ROOTFS_BASE}/etc/wifi
-	install -m 0644 ${G_VARISCITE_PATH}/variscite-wifi.service \
-		${ROOTFS_BASE}/lib/systemd/system
-	ln -s /lib/systemd/system/variscite-wifi.service \
-		${ROOTFS_BASE}/etc/systemd/system/multi-user.target.wants/variscite-wifi.service
+#	install -d ${ROOTFS_BASE}/etc/wifi
+#	install -m 0644 ${G_VARISCITE_PATH}/${MACHINE}/variscite-wifi.conf \
+#		${ROOTFS_BASE}/etc/wifi
+#	install -m 0644 ${G_VARISCITE_PATH}/${MACHINE}/variscite-wifi-common.sh \
+#		${ROOTFS_BASE}/etc/wifi
+#	install -m 0755 ${G_VARISCITE_PATH}/variscite-wifi \
+#		${ROOTFS_BASE}/etc/wifi
+#	install -m 0644 ${G_VARISCITE_PATH}/variscite-wifi.service \
+#		${ROOTFS_BASE}/lib/systemd/system
+#	ln -s /lib/systemd/system/variscite-wifi.service \
+#		${ROOTFS_BASE}/etc/systemd/system/multi-user.target.wants/variscite-wifi.service
 
 	#install securetty
 	install -m 0644 ${G_VARISCITE_PATH}/securetty \
@@ -682,10 +678,10 @@ EOF
 	rm -rf ${ROOTFS_BASE}/usr/lib/pm-utils/sleep.d/
 	rm -rf ${ROOTFS_BASE}/usr/lib/pm-utils/module.d/
 	rm -rf ${ROOTFS_BASE}/usr/lib/pm-utils/power.d/
-	install -m 0755 ${G_VARISCITE_PATH}/${MACHINE}/01-bt.sh \
-		${ROOTFS_BASE}/etc/pm/sleep.d/
-	install -m 0755 ${G_VARISCITE_PATH}/${MACHINE}/02-wifi.sh \
-		${ROOTFS_BASE}/etc/pm/sleep.d/
+#	install -m 0755 ${G_VARISCITE_PATH}/${MACHINE}/01-bt.sh \
+#		${ROOTFS_BASE}/etc/pm/sleep.d/
+#	install -m 0755 ${G_VARISCITE_PATH}/${MACHINE}/02-wifi.sh \
+#		${ROOTFS_BASE}/etc/pm/sleep.d/
 	if [ -f ${G_VARISCITE_PATH}/${MACHINE}/03-eth.sh ]; then
 		install -m 0755 ${G_VARISCITE_PATH}/${MACHINE}/03-eth.sh \
 			${ROOTFS_BASE}/etc/pm/sleep.d/
