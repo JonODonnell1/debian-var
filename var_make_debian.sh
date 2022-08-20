@@ -51,7 +51,7 @@ readonly G_CROSS_COMPILER_32BIT_PREFIX="arm-linux-gnueabihf-"
 readonly G_CROSS_COMPILER_JOPTION="-j 12"
 
 #### user rootfs packages ####
-readonly G_USER_PACKAGES="xterm"
+readonly G_USER_PACKAGES="xterm nvme-cli"
 
 export LC_ALL=C
 
