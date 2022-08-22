@@ -11,10 +11,14 @@
 #            sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c sdcard -d ${LOOP};          \
 #        )   |& tee build.log;                                                                \
 #    )
+sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c bootloader                        |& tee build.log
 sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c kernel                            |& tee build.log
+sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c modules                           |& tee build.log
+sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c kernelheaders                     |& tee build.log
 sudo cp output/Image.gz rootfs/boot/Image.gz
 sudo rm -r rootfs/boot/*.dtb
 sudo cp output/*.dtb rootfs/boot
+sudo custom/build.sh
 sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c rtar                              |& tee -a build.log
 dd if=/dev/zero of=/mnt/shared/imx8mp-var-dart-debian-sd.img bs=1M count=3720
 readonly LOOPDEV="`sudo losetup -Pf --show /mnt/shared/imx8mp-var-dart-debian-sd.img`"
