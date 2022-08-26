@@ -1080,7 +1080,7 @@ function cmd_make_rootfs()
 	fi
 
 	# pack full rootfs
-	make_tarball ${G_ROOTFS_DIR} ${G_ROOTFS_TARBALL_PATH}
+#	make_tarball ${G_ROOTFS_DIR} ${G_ROOTFS_TARBALL_PATH}
 }
 
 function cmd_make_freertos_variscite()
@@ -1229,6 +1229,7 @@ case $PARAM_CMD in
 		cmd_make_kernel_header_deb &&
 		cmd_make_freertos_variscite &&
 		cmd_make_rootfs
+		cmd_make_rfs_tar
 		;;
 	clean )
 		cmd_make_clean
