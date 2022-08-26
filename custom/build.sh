@@ -12,3 +12,7 @@ install -m 755 init.d/m5pro.sh ../rootfs/etc/init.d
 install -m 755 root/* ../rootfs/root
 rm -f ../rootfs/etc/rc5.d/S99m5pro
 ln -s ../init.d/m5pro.sh ../rootfs/etc/rc5.d/S99m5pro
+install -m 644 pulseaudio/daemon.conf ../rootfs/etc/pulse
+install -m 644 pulseaudio/default.pa  ../rootfs/etc/pulse
+install -m 644 pulseaudio/system.pa   ../rootfs/etc/pulse
+install -m 644 pulseaudio/m5pro*.conf ../rootfs/usr/share/pulseaudio/alsa-mixer/profile-sets

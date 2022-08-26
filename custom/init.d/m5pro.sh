@@ -20,96 +20,82 @@ verbose_log_end_msg() { [ "$VERBOSE" = no ] || log_end_msg "$@"; }
 verbose_log_action_msg() { [ "$VERBOSE" = no ] || log_action_msg "$@"; }
 verbose_log_success_msg() { [ "$VERBOSE" = no ] || log_success_msg "$@"; }
 
+pulseaudio_init(){
+    verbose_log_begin_msg "M5pro pulseaudio_init"
+
+    DUMMY1_CARD=`cat /sys/devices/platform/sound-dummy-1/sound/card?/number`
+    DUMMY2_CARD=`cat /sys/devices/platform/sound-dummy-2/sound/card?/number`
+    HDMI_CARD=`cat /sys/devices/platform/sound_hdmi/sound/card?/number`
+
+    pactl suspend-source 0
+    pactl suspend-sink 0
+    pactl load-module module-alsa-card device_id="$DUMMY1_CARD" name="platform-sound-dummy-1" card_name="alsa_card.platform-sound-dummy-1" namereg_fail=false fixed_latency_range=no ignore_dB=no deferred_volume=yes avoid_resampling=no card_properties="module-udev-detect.discovered=1" rate=192000 format=s32le profile_set=m5pro-1.conf
+
+    pactl suspend-source 0
+    pactl suspend-sink 0
+    pactl load-module module-alsa-card device_id="$DUMMY2_CARD" name="platform-sound-dummy-2" card_name="alsa_card.platform-sound-dummy-2" namereg_fail=false fixed_latency_range=no ignore_dB=no deferred_volume=yes avoid_resampling=no card_properties="module-udev-detect.discovered=1" rate=48000  format=s32le profile_set=m5pro-2.conf
+
+    pactl suspend-source 0
+    pactl suspend-sink 0
+    pactl load-module module-alsa-card device_id="$HDMI_CARD"   name="audiohdmi"              card_name="alsa_card.audiohdmi"              namereg_fail=false fixed_latency_range=no ignore_dB=no deferred_volume=yes avoid_resampling=no card_properties="module-udev-detect.discovered=1" rate=192000 format=s32le profile_set=m5pro-hdmi-out.conf
+
+    verbose_log_end_msg 0
+}
+
+nvme_init(){
+    verbose_log_begin_msg "M5pro nvme_init"
+    if [ `df | grep /dev/nvme0n1 | wc -l` -eq 0 ]; then
+        if [ ! -c /dev/nvme0 ]; then
+            log_action_msg "ERROR: M5Pro NVMe Drive found!"
+            exit 1
+        fi
+        if [ ! -b /dev/nvme0n1 ]; then
+            log_action_msg "ERROR: M5Pro NVMe Drive Partitions found!"
+            exit 1
+        fi
+        if [ `blkid | grep nvme | wc -l` -eq 0 ]; then
+            verbose_log_action_msg "M5Pro Creating NVMe FS"
+            mkfs.ext4 /dev/nvme0n1
+        fi
+        if [ ! -d /mnt/data ]; then
+            verbose_log_action_msg "M5Pro Creating NVMe mount point"
+            mkdir -p /mnt/data
+            chmod 777 /mnt/data
+        fi
+        UUID=`blkid -o value /dev/nvme0n1 | head -n1`
+        if [ `grep ${UUID} /etc/fstab | wc -l` -eq 0 ]; then
+            verbose_log_action_msg "M5Pro Adding NVMe to /etc/fstab"
+            echo -e "UUID=${UUID}\t/mnt/data\text4\tdefaults\t0\t2" >> /etc/fstab
+        fi
+        mount /dev/nvme0n1 /mnt/data 
+    fi
+    chmod 777 /mnt/data
+    verbose_log_end_msg 0
+}
+
 gpio_setup_out(){
     name=$1
     value=$2
-verbose_log_begin_msg gpio_setup_out $name $value
-#################################################################
-# these settings do not "stick", so no point in setting them up #
-#################################################################
-#    if [ $# -gt 2 ]; then
-#        drive=$3      # push-pull, open-drain, open-source
-#        if [ "$drive" != "push-pull" -a "$drive" != "open-drain" -a "$drive" != "open-source" ]; then
-#            log_action_msg "ERROR: M5Pro invalid drive '$drive'!"
-#            exit 1
-#        fi
-#    else
-#        drive="push-pull"
-#    fi
-#    if [ $# -gt 3 ]; then
-#        bias=$4       # disable, pull-down, pull-up
-#        if [ "$drive" != "disable" -a "$drive" != "pull-down" -a "$drive" != "pull-up" ]; then
-#            log_action_msg "ERROR: M5Pro invalid bias '$bias'!"
-#            exit 1
-#        fi
-#    else
-#        bias=diable
-#    fi
-#    if [ $# -gt 4 ]; then
-#        activehighlow=$5  # high low
-#        if [ "$activehighlow" != "high" -a "$activehighlow" != "low" ]; then
-#            log_action_msg "ERROR: M5Pro invalid activehighlow '$activelow'!"
-#            exit 1
-#        fi
-#    else
-#        activehighlow=high
-#    fi
-#
-#    if [ $activehighlow = "high" ]; then
-#        activelow_str=""
-#    else
-#        activelow_str="--active-low"
-#    fi
-
+    verbose_log_begin_msg "M5Pro gpio_setup_out $name $value"
     gpio=`gpiofind $name`
     if [ -z "$gpio" ]; then
         log_action_msg "ERROR: M5Pro Unable to find GPIO '$name'"
         exit 1
     fi
-#    gpioset $activelow_str --bias=$bias --drive=$drive $gpio=$value
     gpioset $gpio=$value
-verbose_log_end_msg 0
+    verbose_log_end_msg 0
 }
 
 gpio_setup_in(){
     name=$1
-verbose_log_begin_msg gpio_setup_in $name $value
-#################################################################
-# these settings do not "stick", so no point in setting them up #
-#################################################################
-#    if [ $# -gt 1 ]; then
-#        bias=$2       # disable, pull-down, pull-up
-#        if [ "$drive" != "disable" -a "$drive" != "pull-down" -a "$drive" != "pull-up" ]; then
-#            log_action_msg "ERROR: M5Pro invalid bias '$bias'!"
-#            exit 1
-#        fi
-#    else
-#        bias=diable
-#    fi
-#    if [ $# -gt 2 ]; then
-#        activehighlow=$3  # high low
-#        if [ "$activehighlow" != "high" -a "$activehighlow" != "low" ]; then
-#            log_action_msg "ERROR: M5Pro invalid activehighlow '$activelow'!"
-#            exit 1
-#        fi
-#    else
-#        activehighlow=high
-#    fi
-#
-#    if [ $activehighlow = "high" ]; then
-#        activelow_str=""
-#    else
-#        activelow_str="--active-low"
-#    fi
-
+    verbose_log_begin_msg "M5Pro gpio_setup_in $name $value"
     gpio=`gpiofind $name`
     if [ -z "$gpio" ]; then
         log_action_msg "ERROR: M5Pro Unable to find GPIO '$name'"
         exit 1
     fi
- #   value=`gpioget $activelow_str --bias=$bias $gpio`
-   value=`gpioget $gpio`
-verbose_log_end_msg 0
+    value=`gpioget $gpio`
+    verbose_log_end_msg 0
 }
 
 es9820(){
@@ -117,7 +103,7 @@ es9820(){
     i2c_sync_addr=$2
     i2c_addr=$3
 
-    verbose_log_begin_msg "Initializing es9820 on i2c-${i2c_bus} @ ${i2c_sync_addr}/${i2c_addr}..."
+    verbose_log_begin_msg "M5Pro Initializing es9820 on i2c-${i2c_bus} @ ${i2c_sync_addr}/${i2c_addr}..."
 
     i2cprog $i2c_bus $i2c_sync_addr <<________EOF_i2cprog
         193 0x01  # SEL_SYSCLK_IN = 00 (XTAL)
@@ -158,7 +144,7 @@ es9033(){
     i2c_sync_addr=$2
     i2c_addr=$3
 
-    verbose_log_begin_msg "Initializing es9033 on i2c-${i2c_bus} @ ${i2c_sync_addr}/${i2c_addr}..."
+    verbose_log_begin_msg "M5Pro Initializing es9033 on i2c-${i2c_bus} @ ${i2c_sync_addr}/${i2c_addr}..."
 
     i2cprog $i2c_bus $i2c_sync_addr <<________EOF_i2cprog
         192 0x03  # GPIO_SDB_SYNC=1 (SYS_CLK provided through GPIO1), and PLL_XLKHV_PHASE=1 (clocks have same phase)
@@ -179,7 +165,7 @@ src4392_out(){
     mux=$3
     clk_div=$4
 
-    verbose_log_begin_msg "Initializing src4392 for output on i2c-${i2c_bus} @ ${i2c_addr}..."
+    verbose_log_begin_msg "M5Pro Initializing src4392 for output on i2c-${i2c_bus} @ ${i2c_addr}..."
 
     # TODO: Simple DIT.  No SRC/clock divider for now
     i2cprog $i2c_bus $i2c_addr <<________EOF_i2cprog
@@ -207,7 +193,7 @@ src4392_in(){
     i2c_bus=$1
     i2c_addr=$2
 
-    verbose_log_begin_msg "Initializing src4392 for input on i2c-${i2c_bus} @ ${i2c_addr}..."
+    verbose_log_begin_msg "M5Pro Initializing src4392 for input on i2c-${i2c_bus} @ ${i2c_addr}..."
 
     i2cprog $i2c_bus $i2c_addr <<________EOF_i2cprog
         0x7F 0x00  # Register Page 0
@@ -230,7 +216,7 @@ hwrev=0
 
 case "$1" in
 start)
-	log_action_msg "Initializing M5Pro devices"
+	log_action_msg "M5Pro Initializing devices"
     if [ "$gen_clocks" -ne "0" ]; then
         # need to wait for sound device to initialize
         sleep 1
@@ -284,10 +270,13 @@ start)
     gpio_setup_out trigout3  0
     gpio_setup_out trigout4  0
     gpio_setup_out trigout5  0
-    gpio_setup_out pwroff    0
     gpio_setup_out pwrled    1  # default power led to on
     gpio_setup_out bootcompl 0
-    
+
+    nvme_init
+
+    pulseaudio_init
+
     # signal boot finished to PMIC
     gpioset `gpiofind bootcompl`=1  # signal boot complete, TODO: should be in app
 
@@ -307,7 +296,7 @@ status)
     ;;
 
 *)
-    log_success_msg "Usage: /etc/init.d/m5pro {start|stop|status|restart|reload|force-reload}"
+    log_success_msg "Usage: /etc/init.d/m5pro.sh {start|stop|status|restart|reload|force-reload}"
     exit 1
     ;;
 esac
