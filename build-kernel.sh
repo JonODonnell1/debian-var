@@ -20,7 +20,8 @@ sudo rm -r rootfs/boot/*.dtb
 sudo cp output/*.dtb rootfs/boot
 sudo custom/build.sh
 sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c rtar                              |& tee -a build.log
-dd if=/dev/zero of=/mnt/shared/imx8mp-var-dart-debian-sd.img bs=1M count=3720
-readonly LOOPDEV="`sudo losetup -Pf --show /mnt/shared/imx8mp-var-dart-debian-sd.img`"
+RTAR="m5pro-`date +%Y%m%d-%H%M`.img"
+dd if=/dev/zero of=/mnt/shared/$RTAR bs=1M count=7440
+readonly LOOPDEV="`sudo losetup -Pf --show /mnt/shared/$RTAR`"
 sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c sdcard -d "${LOOPDEV}"            |& tee -a build.log
 sudo losetup -d "${LOOPDEV}"
