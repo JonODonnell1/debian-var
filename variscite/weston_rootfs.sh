@@ -165,6 +165,13 @@ function make_debian_weston_rootfs()
 		fi
 	fi
 
+	if [ -d ${ROOTFS_BASE}/../deb-cache ]; then
+		pr_info "Restoring deb-cache"
+		rm -rf ${ROOTFS_BASE}/var/cache/apt
+		mkdir -p ${ROOTFS_BASE}/var/cache/apt
+		cp -r ${ROOTFS_BASE}/../deb-cache/* ${ROOTFS_BASE}/var/cache/apt
+	fi
+
 # add mirror to source list
 echo "deb ${DEF_DEBIAN_MIRROR} ${DEB_RELEASE} main contrib non-free
 deb-src ${DEF_DEBIAN_MIRROR} ${DEB_RELEASE} main contrib non-free
@@ -228,7 +235,7 @@ function protected_install()
 	echo Installing \${_name}
 	for (( c=0; c<\${repeated_cnt}; c++ ))
 	do
-		apt install -y \${_name} && {
+		apt-get install -y \${_name} && {
 			RET_CODE=0;
 			break;
 		};
@@ -241,7 +248,7 @@ function protected_install()
 
 		sleep 2;
 
-		apt --fix-broken install -y && {
+		apt-get --fix-broken install -y && {
 			RET_CODE=0;
 			break;
 		};
@@ -386,7 +393,7 @@ function protected_install()
 	echo Installing \${_name}
 	for (( c=0; c<\${repeated_cnt}; c++ ))
 	do
-		apt install -y \${_name} && {
+		apt-get install -y \${_name} && {
 			RET_CODE=0;
 			break;
 		};
@@ -399,7 +406,7 @@ function protected_install()
 
 		sleep 2;
 
-		apt --fix-broken install -y && {
+		apt-get --fix-broken install -y && {
 			RET_CODE=0;
 			break;
 		};
@@ -463,7 +470,7 @@ function protected_install()
 	echo Installing \${_name}
 	for (( c=0; c<\${repeated_cnt}; c++ ))
 	do
-		apt install -y \${_name} && {
+		apt-get install -y \${_name} && {
 			RET_CODE=0;
 			break;
 		};
@@ -476,7 +483,7 @@ function protected_install()
 
 		sleep 2;
 
-		apt --fix-broken install -y && {
+		apt-get --fix-broken install -y && {
 			RET_CODE=0;
 			break;
 		};
@@ -528,7 +535,7 @@ function protected_install()
 	echo Installing \${_name}
 	for (( c=0; c<\${repeated_cnt}; c++ ))
 	do
-		apt install -y \${_name} && {
+		apt-get install -y \${_name} && {
 			RET_CODE=0;
 			break;
 		};
@@ -541,7 +548,7 @@ function protected_install()
 
 		sleep 2;
 
-		apt --fix-broken install -y && {
+		apt-get --fix-broken install -y && {
 			RET_CODE=0;
 			break;
 		};
@@ -705,7 +712,7 @@ EOF
 	cp -ar /tmp/*.deb /srv/local-apt-repository/
 	dpkg-reconfigure local-apt-repository
 	cd -
-	rm -rf /var/cache/apt/*
+	# rm -rf /var/cache/apt/*
 	rm -f header-stage
 	" > header-stage
 
@@ -861,7 +868,7 @@ EOF
 
 	#clenup command
 	echo "#!/bin/bash
-	apt-get clean
+	# apt-get clean
 	rm -rf /tmp/*
 	rm -f cleanup
 	" > cleanup
@@ -871,6 +878,12 @@ EOF
 	chmod +x cleanup
 	chroot ${ROOTFS_BASE} /cleanup
 	umount ${ROOTFS_BASE}/{sys,proc,dev/pts,dev} 2>/dev/null || true
+
+	# save deb-cache
+	rm -rf ${ROOTFS_BASE}/../deb-cache
+	mkdir -p ${ROOTFS_BASE}/../deb-cache
+	cp -r ${ROOTFS_BASE}/var/cache/apt/* ${ROOTFS_BASE}/../deb-cache
+	rm -rf ${ROOTFS_BASE}/var/cache/apt
 
 	# kill latest dbus-daemon instance due to qemu-aarch64-static
 	QEMU_PROC_ID=$(ps axf | grep dbus-daemon | grep qemu-aarch64-static | awk '{print $1}')
