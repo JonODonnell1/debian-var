@@ -77,3 +77,5 @@ deb-cache
 \#*#
 
 build.log
+
+m5pro*.img

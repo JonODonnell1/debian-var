@@ -1,27 +1,20 @@
 #!/bin/bash -ex
-#time                                                                                         \
-#    (                                                                                        \
-#        (   sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c kernel                   && \
-#            sudo cp output/Image.gz rootfs/boot/Image.gz                                  && \
-#            sudo rm -r rootfs/boot/*.dtb                                                  && \
-#            sudo cp output/*.dtb rootfs/boot                                              && \
-#            sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c rtar                     && \ 
-#            dd if=/dev/zero of=/mnt/shared/imx8mp-var-dart-debian-sd.img bs=1M count=3720 && \
-#            LOOP=`sudo losetup -Pf --show /mnt/shared/imx8mp-var-dart-debian-sd.img`      && \
-#            sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c sdcard -d ${LOOP};          \
-#        )   |& tee build.log;                                                                \
-#    )
-sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c bootloader                        |& tee build.log
-sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c kernel                            |& tee build.log
-sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c modules                           |& tee build.log
-sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c kernelheaders                     |& tee build.log
-sudo cp output/Image.gz rootfs/boot/Image.gz
-sudo rm -r rootfs/boot/*.dtb
-sudo cp output/*.dtb rootfs/boot
-sudo custom/build.sh
-sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c rtar                              |& tee -a build.log
-RTAR="m5pro-`date +%Y%m%d-%H%M`.img"
-dd if=/dev/zero of=/mnt/shared/$RTAR bs=1M count=7440
-readonly LOOPDEV="`sudo losetup -Pf --show /mnt/shared/$RTAR`"
-sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c sdcard -d "${LOOPDEV}"            |& tee -a build.log
-sudo losetup -d "${LOOPDEV}"
+time \
+    (
+        (   sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c bootloader
+            sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c kernel
+            sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c modules
+            sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c kernelheaders
+            sudo cp output/Image.gz rootfs/boot/Image.gz
+            sudo rm -r rootfs/boot/*.dtb
+            sudo cp output/*.dtb rootfs/boot
+            sudo custom/build.sh
+            sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c rtar
+            RTAR="m5pro-`date +%Y%m%d-%H%M`.img"
+            if [ -z $M5PRO_IMAGE_DIR ]; then M5PRO_IMAGE_DIR="."; fi
+            dd if=/dev/zero of=$M5PRO_IMAGE_DIR/$RTAR bs=1M count=7440
+            LOOP=`sudo losetup -Pf --show $M5PRO_IMAGE_DIR/$RTAR`
+            sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c sdcard -d ${LOOP}
+            sudo losetup -d ${LOOP}
+        )   |& tee build.log
+    )
