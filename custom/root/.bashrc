@@ -23,5 +23,8 @@ update_size(){
     eval `resize`
 }
 
+export PROMPT_DIRTRIM=4
+export PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+
 trap update_size SIGWINCH
 update_size
