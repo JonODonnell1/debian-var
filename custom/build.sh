@@ -10,6 +10,7 @@ cd ..
 install -m 755 bin/* ../rootfs/usr/bin
 install -m 755 init.d/m5pro.sh ../rootfs/etc/init.d
 install -m 755 root/* ../rootfs/root
+install -m 755 root/.bashrc ../rootfs/root
 rm -f ../rootfs/etc/rc5.d/S99m5pro
 ln -s ../init.d/m5pro.sh ../rootfs/etc/rc5.d/S99m5pro
 install -m 644 pulseaudio/daemon.conf ../rootfs/etc/pulse
