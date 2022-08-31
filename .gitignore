@@ -65,12 +65,12 @@ GSYMS
 GTAGS
 
 # ignored dirs
-rootfs
-output
-src
-toolchain
-tmp
-deb-cache
+/rootfs
+/output
+/src
+/toolchain
+/tmp
+/deb-cache
 
 *.orig
 *~
