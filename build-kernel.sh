@@ -1,7 +1,8 @@
 #!/bin/bash -ex
 time \
     (
-        (   sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c bootloader
+        (   cd src/kernel; sudo make distclean; cd ../..     # force new kernel version string for uname
+            sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c bootloader
             sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c kernel
             sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c modules
             sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c kernelheaders
