@@ -1,13 +1,4 @@
 #!/bin/bash
-### BEGIN INIT INFO
-# Provides:          m5pro
-# Required-Start:    $local_fs
-# Required-Stop:     $local_fs
-# Default-Start:     S
-# Default-Stop:      0 6
-# Short-Description: Initialize m5pro devices
-# Description:       Initialize m5pro devices
-### END INIT INFO
 
 . /lib/lsb/init-functions
 VERBOSE=yes
@@ -67,7 +58,7 @@ nvme_init(){
             verbose_log_action_msg "M5Pro Adding NVMe to /etc/fstab"
             echo -e "UUID=${UUID}\t/mnt/data\text4\tdefaults\t0\t2" >> /etc/fstab
         fi
-        mount /dev/nvme0n1 /mnt/data 
+        mount /dev/nvme0n1 /mnt/data
     fi
     chmod 777 /mnt/data
     verbose_log_end_msg 0
@@ -211,20 +202,13 @@ ________EOF_i2cprog
     verbose_log_end_msg 0
 }
 
-gen_clocks=1
 hwrev=0
+
+echo `date` $1 >> /tmp/m5pro.log
 
 case "$1" in
 start)
-	log_action_msg "M5Pro Initializing devices"
-    if [ "$gen_clocks" -ne "0" ]; then
-        # need to wait for sound device to initialize
-        sleep 1
-        # need to generate clock signals to get ESS ICs to run correctly
-        aplay --device=plughw:CARD=dummyaudio1,DEV=0 --file-type=RAW --channels=10 --rate=192 --format=S32_LE /dev/zero &
-        aplay_pid=$!
-        sleep 0.1
-    fi
+    log_action_msg "M5Pro Initializing devices"
 
     es9820 11 0x24 0x20
     es9820 11 0x25 0x21
@@ -243,11 +227,6 @@ start)
 
     src4392_in 12 0x70
     src4392_in 13 0x70
-
-    if [ "$gen_clocks" -ne "0" ]; then
-        # stop generating clock signals
-        kill $aplay_pid
-    fi
 
     # setup gpio inputs
     # does not do anything because input is already the default
@@ -281,23 +260,18 @@ start)
     gpioset `gpiofind bootcompl`=1  # signal boot complete, TODO: should be in app
 
     verbose_log_success_msg "M5Pro Initialization done"
-	;;
+    ;;
 
 restart|reload|force-reload)
     /etc/init.d/m5pro start
     ;;
 
-stop)
-    :
+shutdown)
+    echo "################## m5pro shutdown #########################"
     ;;
 
-status)
-    do_status
-    ;;
-
-*)
-    log_success_msg "Usage: /etc/init.d/m5pro.sh {start|stop|status|restart|reload|force-reload}"
-    exit 1
+reboot)
+    echo "################## m5pro reboot ###########################"
     ;;
 esac
 
