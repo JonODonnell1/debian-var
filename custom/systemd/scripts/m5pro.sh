@@ -251,6 +251,7 @@ start)
     gpio_setup_out trigout5  0
     gpio_setup_out pwrled    1  # default power led to on
     gpio_setup_out bootcompl 0
+    gpio_setup_out pwroff    0
 
     nvme_init
 
@@ -268,6 +269,7 @@ restart|reload|force-reload)
 
 shutdown)
     echo "################## m5pro shutdown #########################"
+    gpioset `gpiofind pwroff`=1 # signal shutdown instead of reboot
     ;;
 
 reboot)
