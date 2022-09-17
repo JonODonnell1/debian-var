@@ -3,6 +3,7 @@ time \
     (
         (   sudo apt-get reinstall binfmt-support >> /dev/null     # fix debootstral format not recignized error
             cd src/kernel; sudo make distclean; cd ../..           # force new kernel version string for uname
+            sudo rm -rf rootfs output tmp                          # clean up before build
             sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c bootloader
             sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c kernel
             sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c modules
