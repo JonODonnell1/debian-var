@@ -17,7 +17,10 @@ install -m 644 pulseaudio/system.pa   ../rootfs/etc/pulse
 install -m 644 pulseaudio/m5pro*.conf ../rootfs/usr/share/pulseaudio/alsa-mixer/profile-sets
 install -m 755 systemd/scripts/*      ../rootfs/usr/lib/systemd/scripts
 install -m 644 systemd/*.service      ../rootfs/usr/lib/systemd/system
-ln -s /usr/lib/systemd/system/m5pro-start.service ../rootfs/etc/systemd/system/multi-user.target.wants/m5pro-start.service
+install -m 755 -d ../rootfs/etc/systemd/system/multi-user.target.wants
+install -m 755 -d ../rootfs/etc/systemd/system/shutdown.target.wants
+ln -s /usr/lib/systemd/system/m5pro-start.service    ../rootfs/etc/systemd/system/multi-user.target.wants/m5pro-start.service
+ln -s /usr/lib/systemd/system/m5pro-shutdown.service ../rootfs/etc/systemd/system/shutdown.target.wants/m5pro-shutdown.service
 
 #cleanup old
 rm -f ../rootfs/etc/rc5.d/S99m5pro
