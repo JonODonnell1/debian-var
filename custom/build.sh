@@ -19,8 +19,8 @@ install -m 755 systemd/scripts/*      ../rootfs/usr/lib/systemd/scripts
 install -m 644 systemd/*.service      ../rootfs/usr/lib/systemd/system
 install -m 755 -d ../rootfs/etc/systemd/system/multi-user.target.wants
 install -m 755 -d ../rootfs/etc/systemd/system/shutdown.target.wants
-ln -s /usr/lib/systemd/system/m5pro-start.service    ../rootfs/etc/systemd/system/multi-user.target.wants/m5pro-start.service
-ln -s /usr/lib/systemd/system/m5pro-shutdown.service ../rootfs/etc/systemd/system/shutdown.target.wants/m5pro-shutdown.service
+ln -s -f /usr/lib/systemd/system/m5pro-start.service    ../rootfs/etc/systemd/system/multi-user.target.wants/m5pro-start.service
+ln -s -f /usr/lib/systemd/system/m5pro-shutdown.service ../rootfs/etc/systemd/system/shutdown.target.wants/m5pro-shutdown.service
 
 #cleanup old
 rm -f ../rootfs/etc/rc5.d/S99m5pro
