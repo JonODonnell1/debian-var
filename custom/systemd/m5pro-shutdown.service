@@ -1,13 +1,14 @@
 [Unit]
-Description=M5Pro Startup Scripts
-After=pulseaudio.service
+Description=M5Pro Shutdown Script
+DefaultDependencies=no
+Conflicts=reboot.target
+Before=poweroff.target halt.target shutdown.target
+Requires=poweroff.target
 
 [Service]
 Type=oneshot
-RemainAfterExit=yes
-ExecStart=/usr/lib/systemd/scripts/m5pro.sh start
-ExecStop=/usr/lib/systemd/scripts/m5pro.sh stop
-StandardOutput=journal+console
+ExecStart=/usr/lib/systemd/scripts/m5pro.sh shutdown
+StandardOutput=console
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=shutdown.target
