@@ -56,7 +56,7 @@ nvme_init(){
         UUID=`blkid -o value /dev/nvme0n1 | head -n1`
         if [ `grep ${UUID} /etc/fstab | wc -l` -eq 0 ]; then
             verbose_log_action_msg "M5Pro Adding NVMe to /etc/fstab"
-            echo -e "UUID=${UUID}\t/mnt/data\text4\tdefaults\t0\t2" >> /etc/fstab
+            echo -e "UUID=${UUID}\t/mnt/data\text4\tdefaults,nofail\t0\t2" >> /etc/fstab
         fi
         mount /dev/nvme0n1 /mnt/data
     fi
