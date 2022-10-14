@@ -2,7 +2,7 @@ readonly ARCH_CPU="64BIT"
 
 # U-Boot
 readonly G_UBOOT_SRC_DIR="${DEF_SRC_DIR}/uboot"
-readonly G_UBOOT_GIT="https://github.com/JonODonnell1/uboot-imx.git"
+readonly G_UBOOT_GIT="git@github.com:JonODonnell1/uboot-imx.git"
 #readonly G_UBOOT_BRANCH="lf_v2021.04_var02"
 #readonly G_UBOOT_REV="b932caa0bab1144407ae1d718c419dcef36d5797"
 readonly G_UBOOT_BRANCH="jon-m5pro"
@@ -12,7 +12,7 @@ readonly G_UBOOT_NAME_FOR_EMMC='imx-boot-sd.bin'
 
 # Linux kernel
 readonly G_LINUX_KERNEL_SRC_DIR="${DEF_SRC_DIR}/kernel"
-readonly G_LINUX_KERNEL_GIT="https://github.com/JonODonnell1/linux-imx.git"
+readonly G_LINUX_KERNEL_GIT="git@github.com:JonODonnell1/linux-imx.git"
 #readonly G_LINUX_KERNEL_BRANCH="lf-5.10.y_var03"
 #readonly G_LINUX_KERNEL_REV="ba9ade6851ca01e1e46a545fe96d059db522a03f"
 readonly G_LINUX_KERNEL_BRANCH="jon-m5pro"
@@ -42,7 +42,7 @@ G_LINUX_DTB="freescale/imx8mp-var-dart-dt8mcustomboard.dtb
        "
 # Broadcom BT/WIFI firmware
 readonly G_BCM_FW_SRC_DIR="${DEF_SRC_DIR}/bcmfw"
-readonly G_BCM_FW_GIT="https://github.com/varigit/bcm_4343w_fw.git"
+readonly G_BCM_FW_GIT="git@github.com:varigit/bcm_4343w_fw.git"
 readonly G_BCM_FW_GIT_BRANCH="8.2.0.16"
 readonly G_BCM_FW_GIT_REV="8081cd2bddb1569abe91eb50bd687a2066a33342"
 
@@ -91,7 +91,7 @@ readonly DEF_DEBIAN_MIRROR="https://snapshot.debian.org/archive/debian/20211215T
 
 #freertos-variscite
 readonly G_FREERTOS_VAR_SRC_DIR="${DEF_SRC_DIR}/freertos-variscite"
-readonly G_FREERTOS_VAR_SRC_GIT="https://github.com/varigit/freertos-variscite.git"
+readonly G_FREERTOS_VAR_SRC_GIT="git@github.com:varigit/freertos-variscite.git"
 readonly G_FREERTOS_VAR_SRC_BRANCH="mcuxpresso_sdk_2.11.x-var01"
 readonly G_FREERTOS_VAR_SRC_REV="400b111535768f7aad0b25d29b09b8a9b352cd5f"
 readonly CM_BOARD="dart_mx8mp som_mx8mp"
