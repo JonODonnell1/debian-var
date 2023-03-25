@@ -4,7 +4,7 @@ readonly ARCH_CPU="64BIT"
 readonly G_UBOOT_SRC_DIR="${DEF_SRC_DIR}/uboot"
 readonly G_UBOOT_GIT="https://github.com/varigit/uboot-imx.git"
 readonly G_UBOOT_BRANCH="imx_v2020.04_5.4.24_2.1.0_var02"
-readonly G_UBOOT_REV="cad9e7175c3f5984999a5eb7abea02ccb2d0cda3"
+readonly G_UBOOT_REV="83c3b6b7c0d6098774d59bbb5f226fa7aba89751"
 G_UBOOT_DEF_CONFIG_MMC="imx8mq_var_dart_defconfig"
 readonly G_UBOOT_NAME_FOR_EMMC='imx-boot-sd.bin'
 readonly G_UBOOT_NAME_FOR_EMMC_DP='imx-boot-sd-dp.bin'
@@ -13,7 +13,7 @@ readonly G_UBOOT_NAME_FOR_EMMC_DP='imx-boot-sd-dp.bin'
 readonly G_LINUX_KERNEL_SRC_DIR="${DEF_SRC_DIR}/kernel"
 readonly G_LINUX_KERNEL_GIT="https://github.com/varigit/linux-imx.git"
 readonly G_LINUX_KERNEL_BRANCH="5.4-2.1.x-imx_var01"
-readonly G_LINUX_KERNEL_REV="2731a98458217ecc7f316817916dece4fac9bfe6"
+readonly G_LINUX_KERNEL_REV="3a0c66906337ae09b95c63666ac3bf9be60fdfaa"
 readonly G_LINUX_KERNEL_DEF_CONFIG='imx8mq_var_dart_defconfig'
 G_LINUX_DTB="freescale/imx8mq-var-dart-dt8mcustomboard-legacy-m4-sd-dp.dtb
 	freescale/imx8mq-var-dart-dt8mcustomboard-legacy-m4-sd-hdmi.dtb
@@ -92,8 +92,8 @@ readonly G_IMXBOOT_REV="6745ccdcf15384891639b7ced3aa6ce938682365"
 #freertos-variscite
 readonly G_FREERTOS_VAR_SRC_DIR="${DEF_SRC_DIR}/freertos-variscite"
 readonly G_FREERTOS_VAR_SRC_GIT="https://github.com/varigit/freertos-variscite.git"
-readonly G_FREERTOS_VAR_SRC_BRANCH="mcuxpresso_sdk_2.10.x-var01"
-readonly G_FREERTOS_VAR_SRC_REV="db2c47b339ab5ccaa923d4bc3de3a5222439fc15"
+readonly G_FREERTOS_VAR_SRC_BRANCH="mcuxpresso_sdk_2.11.x-var01"
+readonly G_FREERTOS_VAR_SRC_REV="400b111535768f7aad0b25d29b09b8a9b352cd5f"
 readonly CM_BOARD="dart_mx8mq"
 readonly CM_DEMOS=" \
     multicore_examples/rpmsg_lite_str_echo_rtos/ \
@@ -103,7 +103,7 @@ readonly CM_DEMOS=" \
     multicore_examples/rpmsg_lite_pingpong_rtos/linux_remote/ \
     demo_apps/hello_world \
 "
-readonly G_CM_GCC_NAME="gcc-arm-none-eabi-10-2020-q4-major"
+readonly G_CM_GCC_NAME="gcc-arm-none-eabi-10.3-2021.07"
 #
 # To avoid scfw compilation errors the Cortex-M gcc toolchain is unpacked in specific folder (G_CM_GCC_OUT_DIR)
 # The below line in the scfw Makefile cause the problem selecting a not proper gcc toolchain version
@@ -112,8 +112,8 @@ readonly G_CM_GCC_NAME="gcc-arm-none-eabi-10-2020-q4-major"
 readonly G_CM_GCC_OUT_DIR="cm-${G_CM_GCC_NAME}"
 
 readonly G_CM_GCC_ARCHIVE="${G_CM_GCC_NAME}-x86_64-linux.tar.bz2"
-readonly G_CM_GCC_LINK="https://developer.arm.com/-/media/Files/downloads/gnu-rm/10-2020q4/${G_CM_GCC_ARCHIVE}"
-readonly G_CM_GCC_SHA256SUM="21134caa478bbf5352e239fbc6e2da3038f8d2207e089efc96c3b55f1edcd618"
+readonly G_CM_GCC_LINK="https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.07/${G_CM_GCC_ARCHIVE}"
+readonly G_CM_GCC_SHA256SUM="8c5b8de344e23cd035ca2b53bbf2075c58131ad61223cae48510641d3e556cea"
 
 #imx-atf
 readonly G_IMX_ATF_SRC_DIR="${DEF_SRC_DIR}/imx-atf"

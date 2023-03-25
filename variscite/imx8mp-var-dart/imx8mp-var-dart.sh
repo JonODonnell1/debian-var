@@ -4,7 +4,7 @@ readonly ARCH_CPU="64BIT"
 readonly G_UBOOT_SRC_DIR="${DEF_SRC_DIR}/uboot"
 readonly G_UBOOT_GIT="https://github.com/varigit/uboot-imx.git"
 readonly G_UBOOT_BRANCH="lf_v2021.04_var02"
-readonly G_UBOOT_REV="13ab77c00f573b0d9ca10e4e01ba7eae51314fa3"
+readonly G_UBOOT_REV="b932caa0bab1144407ae1d718c419dcef36d5797"
 G_UBOOT_DEF_CONFIG_MMC="imx8mp_var_dart_defconfig"
 readonly G_UBOOT_NAME_FOR_EMMC='imx-boot-sd.bin'
 
@@ -12,7 +12,7 @@ readonly G_UBOOT_NAME_FOR_EMMC='imx-boot-sd.bin'
 readonly G_LINUX_KERNEL_SRC_DIR="${DEF_SRC_DIR}/kernel"
 readonly G_LINUX_KERNEL_GIT="https://github.com/varigit/linux-imx.git"
 readonly G_LINUX_KERNEL_BRANCH="lf-5.10.y_var03"
-readonly G_LINUX_KERNEL_REV="8358c8126ec561da2a55bf79f66939988454b646"
+readonly G_LINUX_KERNEL_REV="ba9ade6851ca01e1e46a545fe96d059db522a03f"
 readonly G_LINUX_KERNEL_DEF_CONFIG='imx8_var_defconfig'
 G_LINUX_DTB="freescale/imx8mp-var-dart-dt8mcustomboard.dtb
        freescale/imx8mp-var-dart-dt8mcustomboard-legacy.dtb
@@ -86,8 +86,8 @@ readonly DEF_DEBIAN_MIRROR="https://snapshot.debian.org/archive/debian/20211215T
 #freertos-variscite
 readonly G_FREERTOS_VAR_SRC_DIR="${DEF_SRC_DIR}/freertos-variscite"
 readonly G_FREERTOS_VAR_SRC_GIT="https://github.com/varigit/freertos-variscite.git"
-readonly G_FREERTOS_VAR_SRC_BRANCH="mcuxpresso_sdk_2.10.x-var01"
-readonly G_FREERTOS_VAR_SRC_REV="76473017c6615c8d7089868ce54914a0c0adfeea"
+readonly G_FREERTOS_VAR_SRC_BRANCH="mcuxpresso_sdk_2.11.x-var01"
+readonly G_FREERTOS_VAR_SRC_REV="400b111535768f7aad0b25d29b09b8a9b352cd5f"
 readonly CM_BOARD="dart_mx8mp som_mx8mp"
 readonly CM_DEMOS=" \
 	multicore_examples/rpmsg_lite_str_echo_rtos \
@@ -97,7 +97,7 @@ readonly CM_DEMOS=" \
 	multicore_examples/rpmsg_lite_pingpong_rtos/linux_remote \
 	demo_apps/hello_world \
 "
-readonly G_CM_GCC_NAME="gcc-arm-none-eabi-10-2020-q4-major"
+readonly G_CM_GCC_NAME="gcc-arm-none-eabi-10.3-2021.07"
 #
 # To avoid scfw compilation errors the Cortex-M gcc toolchain is unpacked in specific folder (G_CM_GCC_OUT_DIR)
 # The below line in the scfw Makefile cause the problem selecting a not proper gcc toolchain version
@@ -106,8 +106,8 @@ readonly G_CM_GCC_NAME="gcc-arm-none-eabi-10-2020-q4-major"
 readonly G_CM_GCC_OUT_DIR="cm-${G_CM_GCC_NAME}"
 
 readonly G_CM_GCC_ARCHIVE="${G_CM_GCC_NAME}-x86_64-linux.tar.bz2"
-readonly G_CM_GCC_LINK="https://developer.arm.com/-/media/Files/downloads/gnu-rm/10-2020q4/${G_CM_GCC_ARCHIVE}"
-readonly G_CM_GCC_SHA256SUM="21134caa478bbf5352e239fbc6e2da3038f8d2207e089efc96c3b55f1edcd618"
+readonly G_CM_GCC_LINK="https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.07/${G_CM_GCC_ARCHIVE}"
+readonly G_CM_GCC_SHA256SUM="8c5b8de344e23cd035ca2b53bbf2075c58131ad61223cae48510641d3e556cea"
 
 #rootfs package group control
 #Default compilation of rootfs (Console Base + Multimedia + Graphics)

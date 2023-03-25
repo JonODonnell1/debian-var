@@ -4,7 +4,7 @@ readonly ARCH_CPU="64BIT"
 readonly G_UBOOT_SRC_DIR="${DEF_SRC_DIR}/uboot"
 readonly G_UBOOT_GIT="https://github.com/varigit/uboot-imx.git"
 readonly G_UBOOT_BRANCH="imx_v2020.04_5.4.24_2.1.0_var02"
-readonly G_UBOOT_REV="f7d8fa4a77e31a591c80f82b52abb397eabdbd6a"
+readonly G_UBOOT_REV="575e54f56b70385da07ec35c6a72da56707269bb"
 G_UBOOT_DEF_CONFIG_MMC='imx8qm_var_som_defconfig'
 readonly G_UBOOT_NAME_FOR_EMMC='imx-boot-sd.bin'
 
@@ -12,7 +12,7 @@ readonly G_UBOOT_NAME_FOR_EMMC='imx-boot-sd.bin'
 readonly G_LINUX_KERNEL_SRC_DIR="${DEF_SRC_DIR}/kernel"
 readonly G_LINUX_KERNEL_GIT="https://github.com/varigit/linux-imx.git"
 readonly G_LINUX_KERNEL_BRANCH="5.4-2.1.x-imx_var01"
-readonly G_LINUX_KERNEL_REV="c19da14f4040d6c3f60ab8d97c763262f7b42787"
+readonly G_LINUX_KERNEL_REV="b84afa99240789b8425b9c63131823c98f0f27c1"
 readonly G_LINUX_KERNEL_DEF_CONFIG='imx8_var_defconfig'
 G_LINUX_DTB="freescale/imx8qm-var-som-dp.dtb
 	freescale/imx8qm-var-som-hdmi.dtb
