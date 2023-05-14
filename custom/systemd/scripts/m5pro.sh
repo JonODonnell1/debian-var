@@ -174,7 +174,7 @@ src4392_out(){
         0x10 0x00  #  D=0
         0x11 0x00  #
         0x2D 0x02  #  SRC Input = DIR, SRCCLK=MCLK, SRC Mute
-        0x01 0x37  #  All on
+        0x01 0x3F  #  All on
 ________EOF_i2cprog
 
     verbose_log_end_msg 0
@@ -189,14 +189,21 @@ src4392_in(){
     i2cprog $i2c_bus $i2c_addr <<________EOF_i2cprog
         0x7F 0x00  # Register Page 0
         0x01 0x80  #  Reset
-        0x01 0x00  #  All powered down
-#        0x03 0x71  #  I2S Port A: Clock Slave, 24 Bit Audio I2S, Output signal from SRC, Mute
-#        0x04 0x00  #  I2S Port A: MCLK Source MCLK, MCLK Freq = 128x LRCK
-#        0x05 0x71  #  I2S Port B: Clock Slave, 24 Bit Audio I2S, Output signal from SRC, Mute
-#        0x06 0x00  #  I2S Port B: MCLK Source MCLK, MCLK Freq = 128x LRCK
-#        0x0D 0x08  #  RXMUX=RX1, RXCLK=MCLK
-#        0x0E 0x08  #  RXAMLL
-#        0x07 0x80  #  TXCLK=RXCLKO
+        0x03 0x31  #  I2S Port A: Clock Slave (0x00), 24 Bit Audio I2S (0x01), Output signal from SRC (0x30), Un-Mute (0x00)
+        0x04 0x00  #  I2S Port A: MCLK Source MCLK (0x00), MCLK Freq = 128x LRCK (0x00)
+        0x05 0x41  #  I2S Port B: Clock Slave (0x00), 24 Bit Audio I2S (0x01), Output signal Port B (0x00), Mute (0x40) -- Inactive, Does Not Matter
+        0x06 0x00  #  I2S Port B: MCLK Source MCLK (0x00), MCLK Freq = 128x LRCK (0x00) -- Does Not Matter
+        0x07 0x00  #  Data slip (0x00), V=1 (0x00), BLSM Input (0x00), TXIS Port A (0x00), TXDIV 128 (0x00), TXCLK=MCLK (0x00)
+        0x08 0x07  #  TXOFF (0x01), TXMUTE (0x02), AESOFF (0x04), TXBTD (0x00), LDMUX AES3 (0x00), AEXMUX AES3 (0x00), BYPMUX=RX1 (0x00)
+        0x09 0x00  #  TXCUS (0x00), VALSEL (0x00)
+        0x0D 0x08  #  RXMUX=RX1 (0x00), RXCLK=MCLK (0x08), RA/UA transfer enabled (0x00)
+        0x0E 0x08  #  RXCKOE disabled (0x00), RXCKO Passthrough (0x00), RXAMLL Enabled (0x08), PLL2 Stop on Loss of lock (0x00)
+        0x2D 0x02  #  Input from DIR (0x02), SRCCLK MCLK (0x00), Unmuted (0x00), TRACK Disabled (0x00)
+        0x2E 0x00  #  IGRP 64 (0x00), Decimation Filter (0x00), De-emphasis Disabled (0x00), AUTODEM disabled (0x00)
+        0x2F 0x00  #  OWL 24 (0x00)
+        0x30 0x00  #  0dB Left attenuation 
+        0x31 0x00  #  0dB Right attenuation 
+        0x01 0x3F  #  All on
 ________EOF_i2cprog
 
     verbose_log_end_msg 0
