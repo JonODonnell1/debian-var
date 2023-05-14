@@ -8,7 +8,7 @@ Requires=poweroff.target
 [Service]
 Type=oneshot
 ExecStart=/usr/lib/systemd/scripts/m5pro.sh shutdown
-StandardOutput=console
+#StandardOutput=console
 
 [Install]
 WantedBy=shutdown.target
