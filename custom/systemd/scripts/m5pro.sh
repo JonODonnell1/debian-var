@@ -316,8 +316,8 @@ src4392_out(){
             0x09 0x00  #  Transmitter Channel State static
             0x0D 0x08  #  Receover Input = RX1, Ref Clk=MCLK
             0x0E 0x00  #  Mute if no CLK
-            0x0F 0x28  #  24.576MHz / 2 (P) * 8 (J) = 98.304MHz
-            0x10 0x00  #  D=0
+            0x0F 0x22  #  24.576MHz / 2 (P) * 8.0000 (J.D) = 98.304MHz (P=2, J=8, D=0)
+            0x10 0x00  # 
             0x11 0x00  #
             0x2D 0x02  #  SRC Input = DIR, SRCCLK=MCLK, SRC Mute
             0x01 0x3F  #  All on
@@ -361,6 +361,9 @@ src4392_in(){
             0x09 0x00  #  TXCUS (0x00), VALSEL (0x00)
             0x0D 0x08  #  RXMUX=RX1 (0x00), RXCLK=MCLK (0x08), RA/UA transfer enabled (0x00)
             0x0E 0x08  #  RXCKOE disabled (0x00), RXCKO Passthrough (0x00), RXAMLL Enabled (0x08), PLL2 Stop on Loss of lock (0x00)
+            0x0F 0x22  #  24.576MHz / 2 (P) * 8.0000 (J.D) = 98.304MHz (P=2, J=8, D=0)
+            0x10 0x00  #
+            0x11 0x00  #
             0x2D 0x02  #  Input from DIR (0x02), SRCCLK MCLK (0x00), Unmuted (0x00), TRACK Disabled (0x00)
             0x2E 0x00  #  IGRP 64 (0x00), Decimation Filter (0x00), De-emphasis Disabled (0x00), AUTODEM disabled (0x00)
             0x2F 0x00  #  OWL 24 (0x00)
