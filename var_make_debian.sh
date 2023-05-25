@@ -51,7 +51,7 @@ readonly G_CROSS_COMPILER_32BIT_PREFIX="arm-linux-gnueabihf-"
 readonly G_CROSS_COMPILER_JOPTION="-j 12"
 
 #### user rootfs packages ####
-readonly G_USER_PACKAGES="xterm nvme-cli vim emacs gedit pciutils alsa-tools alsa-utils alsaplayer-text wget htop bwm-ng xwayland"
+readonly G_USER_PACKAGES="xterm nvme-cli vim emacs gedit pciutils alsa-tools alsa-utils alsaplayer-text wget htop bwm-ng xwayland python3-pip python3-periphery"
 
 export LC_ALL=C
 
