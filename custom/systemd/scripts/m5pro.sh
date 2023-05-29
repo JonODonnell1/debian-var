@@ -14,7 +14,7 @@ verbose_log_action_msg() { [ "$VERBOSE" = no ] || log_action_msg "$@"; }
 verbose_log_success_msg() { [ "$VERBOSE" = no ] || log_success_msg "$@"; }
 
 pulseaudio_init(){
-    verbose_log_begin_msg "M5pro pulseaudio_init"
+    verbose_log_begin_msg "$MODEL pulseaudio_init"
 
     i=0
     while [ true ]; do
@@ -125,28 +125,28 @@ pulseaudio_init(){
 }
 
 nvme_init(){
-    verbose_log_begin_msg "M5pro nvme_init"
+    verbose_log_begin_msg "$MODEL nvme_init"
     if [ `df | grep /dev/nvme0n1 | wc -l` -eq 0 ]; then
         if [ ! -c /dev/nvme0 ]; then
-            log_action_msg "ERROR: M5Pro NVMe Drive found!"
+            log_action_msg "ERROR: $MODEL NVMe Drive found!"
             exit 1
         fi
         if [ ! -b /dev/nvme0n1 ]; then
-            log_action_msg "ERROR: M5Pro NVMe Drive Partitions found!"
+            log_action_msg "ERROR: $MODEL NVMe Drive Partitions found!"
             exit 1
         fi
         if [ `blkid | grep nvme | wc -l` -eq 0 ]; then
-            verbose_log_action_msg "M5Pro Creating NVMe FS"
+            verbose_log_action_msg "$MODEL Creating NVMe FS"
             mkfs.ext4 /dev/nvme0n1
         fi
         if [ ! -d /mnt/data ]; then
-            verbose_log_action_msg "M5Pro Creating NVMe mount point"
+            verbose_log_action_msg "$MODEL Creating NVMe mount point"
             mkdir -p /mnt/data
             chmod 777 /mnt/data
         fi
         UUID=`blkid -o value /dev/nvme0n1 | head -n1`
         if [ `grep ${UUID} /etc/fstab | wc -l` -eq 0 ]; then
-            verbose_log_action_msg "M5Pro Adding NVMe to /etc/fstab"
+            verbose_log_action_msg "$MODEL Adding NVMe to /etc/fstab"
             echo -e "UUID=${UUID}\t/mnt/data\text4\tdefaults,nofail\t0\t2" >> /etc/fstab
         fi
         mount /dev/nvme0n1 /mnt/data
@@ -158,10 +158,10 @@ nvme_init(){
 gpio_setup_out(){
     name=$1
     value=$2
-    verbose_log_begin_msg "M5Pro gpio_setup_out $name $value"
+    verbose_log_begin_msg "$MODEL gpio_setup_out $name $value"
     gpio=`gpiofind $name`
     if [ -z "$gpio" ]; then
-        log_action_msg "ERROR: M5Pro Unable to find GPIO '$name'"
+        log_action_msg "ERROR: $MODEL Unable to find GPIO '$name'"
         exit 1
     fi
     gpioset $gpio=$value
@@ -170,10 +170,10 @@ gpio_setup_out(){
 
 gpio_setup_in(){
     name=$1
-    verbose_log_begin_msg "M5Pro gpio_setup_in $name $value"
+    verbose_log_begin_msg "$MODEL gpio_setup_in $name $value"
     gpio=`gpiofind $name`
     if [ -z "$gpio" ]; then
-        log_action_msg "ERROR: M5Pro Unable to find GPIO '$name'"
+        log_action_msg "ERROR: $MODEL Unable to find GPIO '$name'"
         exit 1
     fi
     value=`gpioget $gpio`
@@ -185,7 +185,7 @@ es9820(){
     i2c_sync_addr=$2
     i2c_addr=$3
 
-    verbose_log_begin_msg "M5Pro Initializing es9820 on i2c-${i2c_bus} @ ${i2c_sync_addr}/${i2c_addr}..."
+    verbose_log_begin_msg "$MODEL Initializing es9820 on i2c-${i2c_bus} @ ${i2c_sync_addr}/${i2c_addr}..."
 
     i=0
     while [ true ]; do
@@ -251,7 +251,7 @@ es9033(){
     i2c_sync_addr=$2
     i2c_addr=$3
 
-    verbose_log_begin_msg "M5Pro Initializing es9033 on i2c-${i2c_bus} @ ${i2c_sync_addr}/${i2c_addr}..."
+    verbose_log_begin_msg "$MODEL Initializing es9033 on i2c-${i2c_bus} @ ${i2c_sync_addr}/${i2c_addr}..."
 
     i=0
     while [ true ]; do
@@ -298,7 +298,7 @@ src4392_out(){
     mux=$3
     clk_div=$4
 
-    verbose_log_begin_msg "M5Pro Initializing src4392 for output on i2c-${i2c_bus} @ ${i2c_addr}..."
+    verbose_log_begin_msg "$MODEL Initializing src4392 for output on i2c-${i2c_bus} @ ${i2c_addr}..."
 
     i=0
     while [ true ]; do
@@ -343,7 +343,7 @@ src4392_in(){
     i2c_bus=$1
     i2c_addr=$2
 
-    verbose_log_begin_msg "M5Pro Initializing src4392 for input on i2c-${i2c_bus} @ ${i2c_addr}..."
+    verbose_log_begin_msg "$MODEL Initializing src4392 for input on i2c-${i2c_bus} @ ${i2c_addr}..."
 
     i=0
     while [ true ]; do
@@ -388,32 +388,7 @@ ____________EOF_i2cprog
     verbose_log_end_msg 0
 }
 
-hwrev=0
-
-echo `date` $1 >> /tmp/m5pro.log
-
-case "$1" in
-start)
-    log_action_msg "M5Pro Initializing devices"
-
-    es9820 11 0x24 0x20
-    es9820 11 0x25 0x21
-
-    es9033  6 0x4C 0x48
-    es9033  7 0x4C 0x48
-    es9033  8 0x4C 0x48
-    es9033  9 0x4C 0x48
-    es9033 10 0x4C 0x48
-
-    src4392_out  6 0x70 0 1
-    src4392_out  7 0x70 0 1
-    src4392_out  8 0x70 0 1
-    src4392_out  9 0x70 0 1
-    src4392_out 10 0x70 0 1
-
-    src4392_in 12 0x70
-    src4392_in 13 0x70
-
+gpio_init(){
     # setup gpio inputs
     # does not do anything because input is already the default
     gpio_setup_in factory_n
@@ -443,15 +418,75 @@ start)
     gpio_setup_out clkselo3  0
     gpio_setup_out clkselo4  0
     gpio_setup_out clkselo5  0
+}
 
-    nvme_init
+gpio_read(){
+    gpio=$1
+    gpioget `gpiofind "$gpio"`
+}
+
+echo `date` $1 >> /tmp/$MODEL.log
+
+case "$1" in
+start)
+    export MODEL="M5Pro/M3"
+    log_action_msg "$MODEL Initializing devices"
+
+    gpio_init
+
+    hwid0=$(gpio_read hwid0)
+    hwid1=$(gpio_read hwid1)
+    hwid2=$(gpio_read hwid2)
+    hwid3=$(gpio_read hwid3)
+    hwid=$(( $hwid0 + 2*hwid1 + 4*hwid2 + 8*hwid3 ))
+    HWID_M5PRO=0
+    HWID_M3=1
+    if [ $hwid -eq $HWID_M5PRO ]; then
+        export MODEL=M5Pro
+    else
+        export MODEL=M3
+    fi
+
+    hwrev0=$(gpio_read hwrev0)
+    hwrev1=$(gpio_read hwrev1)
+    hwrev=$(( $hwrev0 + 2*hwrev1 ))
+
+    if [ $hwid -eq $HWID_M5PRO ]; then
+        es9820 11 0x24 0x20
+    fi
+    es9820 11 0x25 0x21
+
+    es9033  6 0x4C 0x48
+    es9033  7 0x4C 0x48
+    es9033  8 0x4C 0x48
+    if [ $hwid -eq $HWID_M5PRO ]; then
+        es9033  9 0x4C 0x48
+        es9033 10 0x4C 0x48
+    fi
+
+    src4392_out  6 0x70 0 1
+    src4392_out  7 0x70 0 1
+    src4392_out  8 0x70 0 1
+    if [ $hwid -eq $HWID_M5PRO ]; then
+        src4392_out  9 0x70 0 1
+        src4392_out 10 0x70 0 1
+    fi
+
+    src4392_in 12 0x70
+    if [ $hwid -eq $HWID_M5PRO ]; then
+        src4392_in 13 0x70
+    fi
+
+    if [ $hwid -eq $HWID_M5PRO ]; then
+        nvme_init
+    fi
 
     pulseaudio_init
 
     # signal boot finished to PMIC
     gpioset `gpiofind bootcompl`=1  # signal boot complete, TODO: should be in app
 
-    verbose_log_success_msg "M5Pro Initialization done"
+    verbose_log_success_msg "$MODEL Initialization done"
     ;;
 
 restart|reload|force-reload)
