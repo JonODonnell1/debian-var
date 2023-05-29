@@ -22,6 +22,8 @@ install -m 755 -d ../rootfs/etc/systemd/system/multi-user.target.wants
 install -m 755 -d ../rootfs/etc/systemd/system/shutdown.target.wants
 ln -s -f /usr/lib/systemd/system/m5pro-start.service    ../rootfs/etc/systemd/system/multi-user.target.wants/m5pro-start.service
 ln -s -f /usr/lib/systemd/system/m5pro-shutdown.service ../rootfs/etc/systemd/system/shutdown.target.wants/m5pro-shutdown.service
+install -m 755 -d ../rootfs/lib/firmware/imx/xcvr
+install -m 644 firmware/* ../rootfs/lib/firmware/imx/xcvr
 
 #cleanup old
 rm -f ../rootfs/etc/rc5.d/S99m5pro
