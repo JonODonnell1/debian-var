@@ -139,6 +139,19 @@ int main(int argc, char **argv)
             if (*p == 0 || *p == '#')
                 continue;
 
+            if (*p == 'w' || *p == 'W') {
+                long delay;
+                p++;
+                skipwhitespace(&p);
+                delay = strtol(p, &pEnd, 0);
+                if (p == pEnd) {
+                    fprintf(stderr, "i2cprog: error delay.\nLine:\n%s\n", line);
+                    goto _end;
+                }
+                usleep(delay);
+                continue;
+            }
+
             reg = strtol(p, &pEnd, 0);
             if (p == pEnd || (*pEnd > ' ' && *pEnd != '#')) {
                 fprintf(stderr, "i2cprog: error reading register.\nLine:\n%s\n", line);
