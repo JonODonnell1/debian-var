@@ -24,6 +24,7 @@ ln -s -f /usr/lib/systemd/system/m5pro-start.service    ../rootfs/etc/systemd/sy
 ln -s -f /usr/lib/systemd/system/m5pro-shutdown.service ../rootfs/etc/systemd/system/shutdown.target.wants/m5pro-shutdown.service
 install -m 755 -d ../rootfs/lib/firmware/imx/xcvr
 install -m 644 firmware/* ../rootfs/lib/firmware/imx/xcvr
+install -m 644 images/* ../rootfs/usr/share/images/desktop-base
 
 #cleanup old
 rm -f ../rootfs/etc/rc5.d/S99m5pro
