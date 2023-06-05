@@ -308,19 +308,49 @@ src4392_out(){
         i2cprog $i2c_bus $i2c_addr <<____________EOF_i2cprog
             0x7F 0x00  # Register Page 0
             0x01 0x80  #  Reset
-            0x03 0x21  #  I2S Port A: Clock Slave, 24 Bit Audio I2S, Output Signal from Receiver (NOT from SRC) (??? ref has 0x20 ???)
-            0x04 0x00  #  I2S Port A: MCLK source = MCLK, MCLK Freq = 128x LRCLK
-            0x05 0x01  #  I2S Port B: Clock Slave, 24 Bit Audio I2S, Loopback for now
-            0x06 0x04  #  I2S Port B: MCLK source = RXCKI, MCLK freq = 128x LRCLK (TODO: divider needs to be adjustable)
-            0x07 0x00  #  Clock Start Output; Transmitter Source=Port A, Transmitter MCLK DIvider = FPGA CLK/128, TXCLK=MCLK
-            0x09 0x00  #  Transmitter Channel State static
-            0x0D 0x08  #  Receover Input = RX1, Ref Clk=MCLK
-            0x0E 0x00  #  Mute if no CLK
-            0x0F 0x22  #  24.576MHz / 2 (P) * 8.0000 (J.D) = 98.304MHz (P=2, J=8, D=0)
+            0x03 0x41  #  I2S Port A: 24 Bit Audio I2S (0x01), Clock Slave (0x00), AOUTS=loopback (0x00), Mute (0x40)
+            0x04 0x00  #  I2S Port A: MCLK Source MCLK (0x00), MCLK Freq = 128x LRCK (0x00)
+            0x05 0x41  #  I2S Port B: 24 Bit Audio I2S (0x01), Clock Slave (0x00), BOUTS=loopback (0x00), Mute (0x40)
+            0x06 0x00  #  I2S Port B: MCLK Source MCLK (0x00), MCLK Freq = 128x LRCK (0x00)
+#            0x07 0x7C  #  DIT: Data slip (0x00), VALID (0x00), BLSM Output (0x04), TXIS=SRC (0x18), TXDIV 512 (0x60), TXCLK=MCLK (0x00)
+            0x07 0x3C  #  DIT: Data slip (0x00), VALID (0x00), BLSM Output (0x04), TXIS=SRC (0x18), TXDIV 256 (0x20), TXCLK=MCLK (0x00)
+#            0x07 0x1C  #  DIT: Data slip (0x00), VALID (0x00), BLSM Output (0x04), TXIS=SRC (0x18), TXDIV 128 (0x00), TXCLK=MCLK (0x00)
+                       #   TODO: adjust TXDIV to set output frequency
+                       #   TODO: for bit-perfect TXIS=PortA & TXDIV=128
+            0x08 0x08  #  DIT: TX+ Enable (0x00), TX+ Unmute (0x00), AESOUT Enable (0x00), TXBT Enable (0x08), LDMUX=AES3 (0x00), AESMUX=AES3 (0x00), BYPMUX=RX1 (0x00)
+            0x09 0x01  #  DIT: TXCUS=SPI/I2C (0x01), VALSEL=reg (0x00)
+            0x0D 0x08  #  DIR: RXMUX=RX1 (0x00), RXCLK=MCLK (0x08), RXBT=Diabled (0x00)
+            0x0E 0x00  #  DIR: RXCLOE=Disabled (0x00), RXCKOD=Passthrough (0x00), RXAMLL=disabled (0x00), LOL=PLl2 Stop (0x00)
+            0x0F 0x22  #  DIR PLL1: 24.576MHz / 2 (P) * 8.0000 (J.D) = 98.304MHz (P=2, J=8, D=0)
             0x10 0x00  # 
             0x11 0x00  #
-            0x2D 0x02  #  SRC Input = DIR, SRCCLK=MCLK, SRC Mute
+            0x1B 0x00  #  GPIO1: Low (0x00)
+            0x1C 0x00  #  GPIO2: Low (0x00)
+            0x1D 0x00  #  GPIO3: Low (0x00)
+            0x1E 0x00  #  GPIO4: Low (0x00)
+            0x2D 0x00  #  SRC: SRCIS=Port A (0x00), SRCCLK=MCLK (0x00), MUTE=Disabled (0x00), TRACK=independent (0x00)
+            0x2E 0x00  #  SRC: IGRP=64 (0x00), DDN=Decimation (0x00), DEM=No De-emphasis (0x00), AUTODEM=Disabled (0x00)
+            0x2F 0x00  #  SRC: OWL=24 (0x00)
+            0x30 0x00  #  SRC: Left Atten=0dB (0x00)
+            0x31 0x00  #  SRC: Right Atten=0dB (0x00)
+            0x08 0x00  #  DIT: TX+ Enable (0x00), TX+ Unmute (0x00), AESOUT Enable (0x00), TXBT Disable (0x00), LDMUX=AES3 (0x00), AESMUX=AES3 (0x00), BYPMUX=RX1 (0x00)
             0x01 0x3F  #  All on
+            0x7F 0x02  # Register Page 2
+            0x00 0x00  #  Ch1 S/PDIF, Digital Audio, Copy Restricted, No Pre-emphasis
+            0x01 0x00  #  Ch2 S/PDIF, Digital Audio, Copy Restricted, No Pre-emphasis
+            0x02 0x00  #  Ch1 General Category, 1st Gen
+            0x03 0x00  #  Ch2 General Category, 1st Gen
+            0x04 0x08  #  Ch1 Unspecified source, Left
+            0x05 0x04  #  Ch2 Unspecified source, Right
+#            0x06 0x40  #  Ch1 48kHz, Level 2 accuracy
+            0x06 0x50  #  Ch1 96kHz, Level 2 accuracy
+#            0x06 0x70  #  Ch1 192kHz, Level 2 accuracy
+                       #   TODO: adjust based on output rate
+#            0x07 0x40  #  Ch2 48kHz, Level 2 accuracy  
+            0x07 0x50  #  Ch2 96kHz, Level 2 accuracy  
+#            0x07 0x70  #  Ch2 192kHz, Level 2 accuracy  
+                       #   TODO: adjust based on output rate
+            0x7F 0x00  # Register Page 0
 ____________EOF_i2cprog
         if [ $? -ne 0 ]; then
             if [ $i -le $retries ]; then
@@ -352,23 +382,27 @@ src4392_in(){
         i2cprog $i2c_bus $i2c_addr <<____________EOF_i2cprog
             0x7F 0x00  # Register Page 0
             0x01 0x80  #  Reset
-            0x03 0x31  #  I2S Port A: Clock Slave (0x00), 24 Bit Audio I2S (0x01), Output signal from SRC (0x30), Un-Mute (0x00)
+            0x03 0x31  #  I2S Port A: 24 Bit Audio I2S (0x01), Clock Slave (0x00), AOUT=SRC (0x30), Un-Mute (0x00)
             0x04 0x00  #  I2S Port A: MCLK Source MCLK (0x00), MCLK Freq = 128x LRCK (0x00)
-            0x05 0x41  #  I2S Port B: Clock Slave (0x00), 24 Bit Audio I2S (0x01), Output signal Port B (0x00), Mute (0x40) -- Inactive, Does Not Matter
-            0x06 0x00  #  I2S Port B: MCLK Source MCLK (0x00), MCLK Freq = 128x LRCK (0x00) -- Does Not Matter
-            0x07 0x00  #  Data slip (0x00), V=1 (0x00), BLSM Input (0x00), TXIS Port A (0x00), TXDIV 128 (0x00), TXCLK=MCLK (0x00)
-            0x08 0x07  #  TXOFF (0x01), TXMUTE (0x02), AESOFF (0x04), TXBTD (0x00), LDMUX AES3 (0x00), AEXMUX AES3 (0x00), BYPMUX=RX1 (0x00)
-            0x09 0x00  #  TXCUS (0x00), VALSEL (0x00)
-            0x0D 0x08  #  RXMUX=RX1 (0x00), RXCLK=MCLK (0x08), RA/UA transfer enabled (0x00)
-            0x0E 0x08  #  RXCKOE disabled (0x00), RXCKO Passthrough (0x00), RXAMLL Enabled (0x08), PLL2 Stop on Loss of lock (0x00)
-            0x0F 0x22  #  24.576MHz / 2 (P) * 8.0000 (J.D) = 98.304MHz (P=2, J=8, D=0)
-            0x10 0x00  #
+            0x05 0x41  #  I2S Port B: 24 Bit Audio I2S (0x01), Clock Slave (0x00), BOUTS=loopback (0x00), Mute (0x40)
+            0x06 0x00  #  I2S Port B: MCLK Source MCLK (0x00), MCLK Freq = 128x LRCK (0x00)
+            0x07 0x04  #  DIT: Data slip (0x00), VALID (0x00), BLSM Output (0x04), TXIS=Port A (0x00), TXDIV 128 (0x00), TXCLK=MCLK (0x00)
+            0x08 0x07  #  DIT: TX+ Disabled (0x01), TX+ Mute (0x02), AESOUT Disable (0x04), TXBT Disable (0x00), LDMUX=AES3 (0x00), AESMUX=AES3 (0x00), BYPMUX=RX1 (0x00)
+            0x09 0x00  #  DIT: TXCUS=static (0x00), VALSEL=reg (0x00)
+            0x0D 0x08  #  DIR: RXMUX=RX1 (0x00), RXCLK=MCLK (0x08), RXBT=Enabled??? (0x00)
+            0x0E 0x08  #  DIR: RXCLOE=Disabled (0x00), RXCKOD=Passthrough (0x00), RXAMLL=enabled (0x08), LOL=PLl2 Stop (0x00)
+            0x0F 0x22  #  DIR PLL1: 24.576MHz / 2 (P) * 8.0000 (J.D) = 98.304MHz (P=2, J=8, D=0)
+            0x10 0x00  # 
             0x11 0x00  #
-            0x2D 0x02  #  Input from DIR (0x02), SRCCLK MCLK (0x00), Unmuted (0x00), TRACK Disabled (0x00)
-            0x2E 0x00  #  IGRP 64 (0x00), Decimation Filter (0x00), De-emphasis Disabled (0x00), AUTODEM disabled (0x00)
-            0x2F 0x00  #  OWL 24 (0x00)
-            0x30 0x00  #  0dB Left attenuation 
-            0x31 0x00  #  0dB Right attenuation 
+            0x1B 0x00  #  GPIO1: Low (0x00)
+            0x1C 0x00  #  GPIO2: Low (0x00)
+            0x1D 0x00  #  GPIO3: Low (0x00)
+            0x1E 0x00  #  GPIO4: Low (0x00)
+            0x2D 0x02  #  SRC: SRCIS=DIR (0x02), SRCCLK=MCLK (0x00), MUTE=Disabled (0x00), TRACK=independent (0x00)
+            0x2E 0x20  #  SRC: IGRP=64 (0x00), DDN=Decimation (0x00), DEM=No De-emphasis (0x00), AUTODEM=Enabled (0x20)
+            0x2F 0x00  #  SRC: OWL=24 (0x00)
+            0x30 0x00  #  SRC: Left Atten=0dB (0x00)
+            0x31 0x00  #  SRC: Right Atten=0dB (0x00)
             0x01 0x3F  #  All on
 ____________EOF_i2cprog
         if [ $? -ne 0 ]; then
