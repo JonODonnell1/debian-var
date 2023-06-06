@@ -1547,7 +1547,7 @@ src4392_page1 = (
         "fields": {
             "FREQ": {
                 "bits": [ 7, 6, 5, 4 ],
-                "choices": [ "44.1kHz", "Reserved", "48kHz", "32kHz", "22.05kHz", "Reserved", "24kHz", "Reserved", "88.2kHz", "Reserved", "98kHz", "Reserved", "176.4kHz", "Reserved", "192kHz", "Reserved" ],
+                "choices": [ "44.1kHz", "Reserved", "48kHz", "32kHz", "22.05kHz", "Reserved", "24kHz", "Reserved", "88.2kHz", "Reserved", "96kHz", "Reserved", "176.4kHz", "Reserved", "192kHz", "Reserved" ],
                 "desc": "Sample Frequency (Fs)"
             },
             "ACCURACY": {
@@ -1563,7 +1563,7 @@ src4392_page1 = (
         "fields": {
             "FREQ": {
                 "bits": [ 7, 6, 5, 4 ],
-                "choices": [ "44.1kHz", "Reserved", "48kHz", "32kHz", "22.05kHz", "Reserved", "24kHz", "Reserved", "88.2kHz", "Reserved", "98kHz", "Reserved", "176.4kHz", "Reserved", "192kHz", "Reserved" ],
+                "choices": [ "44.1kHz", "Reserved", "48kHz", "32kHz", "22.05kHz", "Reserved", "24kHz", "Reserved", "88.2kHz", "Reserved", "96kHz", "Reserved", "176.4kHz", "Reserved", "192kHz", "Reserved" ],
                 "desc": "Sample Frequency (Fs)"
             },
             "ACCURACY": {
@@ -2308,7 +2308,7 @@ src4392_page2 = (
         "fields": {
             "FREQ": {
                 "bits": [ 7, 6, 5, 4 ],
-                "choices": [ "44.1kHz", "Reserved", "48kHz", "32kHz", "22.05kHz", "Reserved", "24kHz", "Reserved", "88.2kHz", "Reserved", "98kHz", "Reserved", "176.4kHz", "Reserved", "192kHz", "Reserved" ],
+                "choices": [ "44.1kHz", "Reserved", "48kHz", "32kHz", "22.05kHz", "Reserved", "24kHz", "Reserved", "88.2kHz", "Reserved", "96kHz", "Reserved", "176.4kHz", "Reserved", "192kHz", "Reserved" ],
                 "desc": "Sample Frequency (Fs)"
             },
             "ACCURACY": {
@@ -2324,7 +2324,7 @@ src4392_page2 = (
         "fields": {
             "FREQ": {
                 "bits": [ 7, 6, 5, 4 ],
-                "choices": [ "44.1kHz", "Reserved", "48kHz", "32kHz", "22.05kHz", "Reserved", "24kHz", "Reserved", "88.2kHz", "Reserved", "98kHz", "Reserved", "176.4kHz", "Reserved", "192kHz", "Reserved" ],
+                "choices": [ "44.1kHz", "Reserved", "48kHz", "32kHz", "22.05kHz", "Reserved", "24kHz", "Reserved", "88.2kHz", "Reserved", "96kHz", "Reserved", "176.4kHz", "Reserved", "192kHz", "Reserved" ],
                 "desc": "Sample Frequency (Fs)"
             },
             "ACCURACY": {
