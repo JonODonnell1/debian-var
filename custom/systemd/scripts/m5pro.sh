@@ -367,6 +367,22 @@ src4392_out(){
             reg_p2_07=0x30  #  Ch2 176.4kHz, Level 2 accuracy
         fi
     fi
+    if [ $i2c_bus -eq 6 ]; then
+        reg_p2_04=0x88      # Source 1, Left
+        reg_p2_05=0x84      # Source 1, Right
+    elif [ $i2c_bus -eq 7 ]; then
+        reg_p2_04=0x48      # Source 2, Left
+        reg_p2_05=0x44      # Source 2, Right
+    elif [ $i2c_bus -eq 8 ]; then
+        reg_p2_04=0xC8      # Source 3, Left
+        reg_p2_05=0xC4      # Source 3, Right
+    elif [ $i2c_bus -eq 9 ]; then
+        reg_p2_04=0x28      # Source 4, Left
+        reg_p2_05=0x24      # Source 4, Right
+    elif [ $i2c_bus -eq 10 ]; then
+        reg_p2_04=0xA8      # Source 5, Left
+        reg_p2_05=0xA4      # Source 5, Right
+    fi
 
     i=0
     while [ true ]; do
@@ -386,7 +402,7 @@ src4392_out(){
             0x0D 0x08  #  DIR: RXMUX=RX1 (0x00), RXCLK=MCLK (0x08), RXBT=Diabled (0x00)
             0x0E 0x00  #  DIR: RXCLOE=Disabled (0x00), RXCKOD=Passthrough (0x00), RXAMLL=disabled (0x00), LOL=PLl2 Stop (0x00)
             0x0F 0x22  #  DIR PLL1: 24.576MHz / 2 (P) * 8.0000 (J.D) = 98.304MHz (P=2, J=8, D=0) -- DOES NOT MATTER FOR OUTPUTS
-            0x10 0x00  # 
+            0x10 0x00  #
             0x11 0x00  #
             0x1B 0x00  #  GPIO1: Low (0x00)
             0x1C 0x00  #  GPIO2: Low (0x00)
@@ -400,12 +416,12 @@ src4392_out(){
             0x08 0x00  #  DIT: TX+ Enable (0x00), TX+ Unmute (0x00), AESOUT Enable (0x00), TXBT Disable (0x00), LDMUX=AES3 (0x00), AESMUX=AES3 (0x00), BYPMUX=RX1 (0x00)
             0x01 0x3F  #  All on
             0x7F 0x02  # Register Page 2
-            0x00 0x00  #  Ch1 S/PDIF, Digital Audio, Copy Restricted, No Pre-emphasis
-            0x01 0x00  #  Ch2 S/PDIF, Digital Audio, Copy Restricted, No Pre-emphasis
-            0x02 0x00  #  Ch1 General Category, 1st Gen
-            0x03 0x00  #  Ch2 General Category, 1st Gen
-            0x04 0x08  #  Ch1 Unspecified source, Left
-            0x05 0x04  #  Ch2 Unspecified source, Right
+            0x00 0x20  #  Ch1 S/PDIF, Digital Audio, Copy Permitted, No Pre-emphasis
+            0x01 0x20  #  Ch2 S/PDIF, Digital Audio, Copy Premitted, No Pre-emphasis
+            0x02 0x00  #  Ch1 General Category, Original (Audio Precision does not understand 1st-gen flag)
+            0x03 0x00  #  Ch2 General Category, Original (Audio Precision does not understand 1st-get flag)
+            0x04 $reg_p2_04
+            0x05 $reg_p2_05
             0x06 $reg_p2_06
             0x07 $reg_p2_07
             0x7F 0x00  # Register Page 0
@@ -480,11 +496,8 @@ src4392_in(){
             0x09 0x00  #  DIT: TXCUS=static (0x00), VALSEL=reg (0x00)
             0x0D 0x08  #  DIR: RXMUX=RX1 (0x00), RXCLK=MCLK (0x08), RXBT=Enabled??? (0x00)
             0x0E 0x08  #  DIR: RXCLOE=Disabled (0x00), RXCKOD=Passthrough (0x00), RXAMLL=enabled (0x08), LOL=PLl2 Stop (0x00)
-#            0x0F 0x22  #  DIR PLL1: 24.576MHz / 2 (P) * 8.0000 (J.D) = 98.304MHz (P=2, J=8, D=0)
-#            0x10 0x00  #
-#            0x11 0x00  #
-            0x0F 0x22  #  DIR PLL1: 24.576MHz / 2 (P) * 9.0000 (J.D) = 110.592MHz (P=2, J=9, D=0)
-            0x10 0x40  #
+            0x0F 0x22  #  DIR PLL1: 24.576MHz / 2 (P) * 8.0000 (J.D) = 98.304MHz (P=2, J=8, D=0)
+            0x10 0x00  #
             0x11 0x00  #
             0x1B 0x00  #  GPIO1: Low (0x00)
             0x1C 0x00  #  GPIO2: Low (0x00)
