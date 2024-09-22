@@ -71,6 +71,7 @@ GTAGS
 /toolchain
 /tmp
 /deb-cache
+/custom/bin
 
 *.orig
 *~
@@ -78,4 +79,4 @@ GTAGS
 
 build.log
 
-m5pro*.img
+ma6*.img

@@ -5,7 +5,7 @@ readonly G_UBOOT_SRC_DIR="${DEF_SRC_DIR}/uboot"
 readonly G_UBOOT_GIT="git@github.com:JonODonnell1/uboot-imx.git"
 #readonly G_UBOOT_BRANCH="lf_v2021.04_var02"
 #readonly G_UBOOT_REV="b932caa0bab1144407ae1d718c419dcef36d5797"
-readonly G_UBOOT_BRANCH="jon-m5pro"
+readonly G_UBOOT_BRANCH="jon-ma6"
 readonly G_UBOOT_REV=""
 G_UBOOT_DEF_CONFIG_MMC="imx8mp_var_dart_defconfig"
 readonly G_UBOOT_NAME_FOR_EMMC='imx-boot-sd.bin'
@@ -15,7 +15,7 @@ readonly G_LINUX_KERNEL_SRC_DIR="${DEF_SRC_DIR}/kernel"
 readonly G_LINUX_KERNEL_GIT="git@github.com:JonODonnell1/linux-imx.git"
 #readonly G_LINUX_KERNEL_BRANCH="lf-5.10.y_var03"
 #readonly G_LINUX_KERNEL_REV="ba9ade6851ca01e1e46a545fe96d059db522a03f"
-readonly G_LINUX_KERNEL_BRANCH="jon-m5pro"
+readonly G_LINUX_KERNEL_BRANCH="jon-ma6"
 readonly G_LINUX_KERNEL_REV=""
 readonly G_LINUX_KERNEL_DEF_CONFIG='imx8_var_defconfig'
 G_LINUX_DTB="freescale/imx8mp-var-dart-dt8mcustomboard.dtb
@@ -38,7 +38,7 @@ G_LINUX_DTB="freescale/imx8mp-var-dart-dt8mcustomboard.dtb
        freescale/imx8mp-var-som-symphony-basler-isi0-m7.dtb
        freescale/imx8mp-var-dart-dt8mcustomboard-legacy-m7.dtb
        freescale/imx8mp-var-dart-dt8mcustomboard-m7.dtb
-       freescale/imx8mp-var-som-m5pro.dtb
+       freescale/imx8mp-var-som-ma6.dtb
        "
 # Broadcom BT/WIFI firmware
 readonly G_BCM_FW_SRC_DIR="${DEF_SRC_DIR}/bcmfw"
@@ -81,7 +81,7 @@ TEE_LOAD_ADDR=0x56000000
 ATF_LOAD_ADDR=0x00970000
 UBOOT_DTB="imx8mp-var-dart-dt8mcustomboard.dtb"
 UBOOT_DTB_EXTRA="imx8mp-var-dart-dt8mcustomboard-legacy.dtb"
-#UBOOT_DTB_EXTRA2="imx8mp-var-som-m5pro.dtb"
+#UBOOT_DTB_EXTRA2="imx8mp-var-som-ma6.dtb"
 UBOOT_DTB_EXTRA2="imx8mp-var-som-symphony.dtb"
 IMXBOOT_TARGETS="flash_evk"
 IMX_BOOT_TOOL_BL_BIN="bl31-imx8mp.bin"

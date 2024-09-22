@@ -1,5 +1,5 @@
 [Unit]
-Description=M5Pro Shutdown Script
+Description=MA6 Shutdown Script
 DefaultDependencies=no
 Conflicts=reboot.target
 Before=poweroff.target halt.target shutdown.target
@@ -7,7 +7,7 @@ Requires=poweroff.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/lib/systemd/scripts/m5pro.sh shutdown
+ExecStart=/usr/lib/systemd/scripts/ma6.sh shutdown
 #StandardOutput=console
 
 [Install]

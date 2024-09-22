@@ -1,12 +1,12 @@
 [Unit]
-Description=M5Pro Startup Scripts
+Description=MA6 Startup Scripts
 After=pulseaudio.service
 
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/usr/lib/systemd/scripts/m5pro.sh start
-ExecStop=/usr/lib/systemd/scripts/m5pro.sh stop
+ExecStart=/usr/lib/systemd/scripts/ma6.sh start
+ExecStop=/usr/lib/systemd/scripts/ma6.sh stop
 StandardOutput=journal+console
 
 [Install]

@@ -44,7 +44,7 @@ pulseaudio_init(){
                 break;
             fi
         fi
-        pactl load-module module-alsa-card device_id="$DUMMY1_CARD" name="platform-sound-dummy-1" card_name="alsa_card.platform-sound-dummy-1" namereg_fail=false fixed_latency_range=no ignore_dB=no deferred_volume=yes avoid_resampling=no card_properties="module-udev-detect.discovered=1" rate=192000 format=s32le profile_set=m5pro-1.conf
+        pactl load-module module-alsa-card device_id="$DUMMY1_CARD" name="platform-sound-dummy-1" card_name="alsa_card.platform-sound-dummy-1" namereg_fail=false fixed_latency_range=no ignore_dB=no deferred_volume=yes avoid_resampling=no card_properties="module-udev-detect.discovered=1" rate=192000 format=s32le profile_set=ma6-1.conf
         if [ $? -ne 0 ]; then
             if [ $i -le $retries ]; then
                 echo "Retrying..."
@@ -75,7 +75,7 @@ pulseaudio_init(){
                 break;
             fi
         fi
-        pactl load-module module-alsa-card device_id="$DUMMY2_CARD" name="platform-sound-dummy-2" card_name="alsa_card.platform-sound-dummy-2" namereg_fail=false fixed_latency_range=no ignore_dB=no deferred_volume=yes avoid_resampling=no card_properties="module-udev-detect.discovered=1" rate=48000  format=s32le profile_set=m5pro-2.conf
+        pactl load-module module-alsa-card device_id="$DUMMY2_CARD" name="platform-sound-dummy-2" card_name="alsa_card.platform-sound-dummy-2" namereg_fail=false fixed_latency_range=no ignore_dB=no deferred_volume=yes avoid_resampling=no card_properties="module-udev-detect.discovered=1" rate=48000  format=s32le profile_set=ma6-2.conf
         if [ $? -ne 0 ]; then
             if [ $i -le $retries ]; then
                 echo "Retrying..."
@@ -106,7 +106,7 @@ pulseaudio_init(){
                 break;
             fi
         fi
-        pactl load-module module-alsa-card device_id="$HDMI_CARD"   name="audiohdmi"              card_name="alsa_card.audiohdmi"              namereg_fail=false fixed_latency_range=no ignore_dB=no deferred_volume=yes avoid_resampling=no card_properties="module-udev-detect.discovered=1" rate=192000 format=s32le profile_set=m5pro-hdmi-out.conf
+        pactl load-module module-alsa-card device_id="$HDMI_CARD"   name="audiohdmi"              card_name="alsa_card.audiohdmi"              namereg_fail=false fixed_latency_range=no ignore_dB=no deferred_volume=yes avoid_resampling=no card_properties="module-udev-detect.discovered=1" rate=192000 format=s32le profile_set=ma6-hdmi-out.conf
         if [ $? -ne 0 ]; then
             if [ $i -le $retries ]; then
                 echo "Retrying..."
@@ -423,7 +423,7 @@ src4392_out(){
             0x04 $reg_p2_04
             0x05 $reg_p2_05
             0x06 $reg_p2_06
-            0x07 $reg_p2_07
+                0x07 $reg_p2_07
             0x7F 0x00  # Register Page 0
 ____________EOF_i2cprog
         if [ $? -ne 0 ]; then
@@ -568,7 +568,7 @@ echo `date` $1 >> /tmp/$MODEL.log
 
 case "$1" in
 start)
-    export MODEL="M5Pro/M3"
+    export MODEL="MA6"
     log_action_msg "$MODEL Initializing devices"
 
     gpio_init
@@ -578,47 +578,37 @@ start)
     hwid2=$(gpio_read hwid2)
     hwid3=$(gpio_read hwid3)
     hwid=$(( $hwid0 + 2*hwid1 + 4*hwid2 + 8*hwid3 ))
-    HWID_M5PRO=0
-    HWID_M3=1
-    if [ $hwid -eq $HWID_M5PRO ]; then
-        export MODEL=M5Pro
+    HWID_MA6=2
+    HWID_UNKNOWN=
+    if [ $hwid -eq $HWID_MA6 ]; then
+        export MODEL=MA6
     else
-        export MODEL=M3
+        export MODEL=UNKNOWN
     fi
 
     hwrev0=$(gpio_read hwrev0)
     hwrev1=$(gpio_read hwrev1)
     hwrev=$(( $hwrev0 + 2*hwrev1 ))
 
-    if [ $hwid -eq $HWID_M5PRO ]; then
-        es9820 11 0x24 0x20
-    fi
+    es9820 11 0x24 0x20
     es9820 11 0x25 0x21
 
     es9033  6 0x4C 0x48
     es9033  7 0x4C 0x48
     es9033  8 0x4C 0x48
-    if [ $hwid -eq $HWID_M5PRO ]; then
-        es9033  9 0x4C 0x48
-        es9033 10 0x4C 0x48
-    fi
+    es9033  9 0x4C 0x48
+    es9033 10 0x4C 0x48
 
     src4392_out  6 0x70 192000 0
     src4392_out  7 0x70 192000 0
     src4392_out  8 0x70 192000 0
-    if [ $hwid -eq $HWID_M5PRO ]; then
-        src4392_out  9 0x70 192000 0
-        src4392_out 10 0x70 192000 0
-    fi
+    src4392_out  9 0x70 192000 0
+    src4392_out 10 0x70 192000 0
 
     src4392_in 12 0x70
-    if [ $hwid -eq $HWID_M5PRO ]; then
-        src4392_in 13 0x70
-    fi
+    src4392_in 13 0x70
 
-    if [ $hwid -eq $HWID_M5PRO ]; then
-        nvme_init
-    fi
+    nvme_init
 
     pulseaudio_init
 
@@ -629,16 +619,16 @@ start)
     ;;
 
 restart|reload|force-reload)
-    /etc/init.d/m5pro start
+    /etc/init.d/ma6 start
     ;;
 
 shutdown)
-    echo "################## m5pro shutdown #########################"
+    echo "################## ma6 shutdown #########################"
     gpioset `gpiofind pwroff`=1 # signal shutdown instead of reboot
     ;;
 
 reboot)
-    echo "################## m5pro reboot ###########################"
+    echo "################## ma6 reboot ###########################"
     ;;
 esac
 
