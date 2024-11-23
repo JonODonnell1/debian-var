@@ -18,5 +18,5 @@ time \
             LOOP=`sudo losetup -Pf --show $MA6_IMAGE_DIR/$RTAR`
             sudo MACHINE=imx8mp-var-dart ./var_make_debian.sh -c sdcard -d ${LOOP}
             sudo losetup -d ${LOOP}
-        )   |& tee build.log
-    )
+        )   
+    ) |& tee build.log

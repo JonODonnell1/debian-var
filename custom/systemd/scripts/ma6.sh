@@ -21,8 +21,6 @@ pulseaudio_init(){
         i=$(($i+1))
 
         DUMMY1_CARD=`cat /sys/devices/platform/sound-dummy-1/sound/card?/number`
-        DUMMY2_CARD=`cat /sys/devices/platform/sound-dummy-2/sound/card?/number`
-        HDMI_CARD=`cat /sys/devices/platform/sound_hdmi/sound/card?/number`
 
         pactl suspend-source 0
         if [ $? -ne 0 ]; then
@@ -54,71 +52,6 @@ pulseaudio_init(){
                 break;
             fi
         fi
-
-        pactl suspend-source 0
-        if [ $? -ne 0 ]; then
-            if [ $i -le $retries ]; then
-                echo "Retrying..."
-                continue
-            else
-                echo "Abort!"
-                break;
-            fi
-        fi
-        pactl suspend-sink 0
-        if [ $? -ne 0 ]; then
-            if [ $i -le $retries ]; then
-                echo "Retrying..."
-                continue
-            else
-                echo "Abort!"
-                break;
-            fi
-        fi
-        pactl load-module module-alsa-card device_id="$DUMMY2_CARD" name="platform-sound-dummy-2" card_name="alsa_card.platform-sound-dummy-2" namereg_fail=false fixed_latency_range=no ignore_dB=no deferred_volume=yes avoid_resampling=no card_properties="module-udev-detect.discovered=1" rate=48000  format=s32le profile_set=ma6-2.conf
-        if [ $? -ne 0 ]; then
-            if [ $i -le $retries ]; then
-                echo "Retrying..."
-                continue
-            else
-                echo "Abort!"
-                break;
-            fi
-        fi
-
-        pactl suspend-source 0
-        if [ $? -ne 0 ]; then
-            if [ $i -le $retries ]; then
-                echo "Retrying..."
-                continue
-            else
-                echo "Abort!"
-                break;
-            fi
-        fi
-        pactl suspend-sink 0
-        if [ $? -ne 0 ]; then
-            if [ $i -le $retries ]; then
-                echo "Retrying..."
-                continue
-            else
-                echo "Abort!"
-                break;
-            fi
-        fi
-        pactl load-module module-alsa-card device_id="$HDMI_CARD"   name="audiohdmi"              card_name="alsa_card.audiohdmi"              namereg_fail=false fixed_latency_range=no ignore_dB=no deferred_volume=yes avoid_resampling=no card_properties="module-udev-detect.discovered=1" rate=192000 format=s32le profile_set=ma6-hdmi-out.conf
-        if [ $? -ne 0 ]; then
-            if [ $i -le $retries ]; then
-                echo "Retrying..."
-                continue
-            else
-                echo "Abort!"
-                break;
-            fi
-        else
-            # success
-            break
-        fi
     done
 
     verbose_log_end_msg 0
@@ -128,28 +61,29 @@ nvme_init(){
     verbose_log_begin_msg "$MODEL nvme_init"
     if [ `df | grep /dev/nvme0n1 | wc -l` -eq 0 ]; then
         if [ ! -c /dev/nvme0 ]; then
-            log_action_msg "ERROR: $MODEL NVMe Drive found!"
-            exit 1
+            log_action_msg "WARNING: $MODEL NVMe Drive found!"
+        else
+            if [ ! -b /dev/nvme0n1 ]; then
+                log_action_msg "ERROR: $MODEL NVMe Drive Partitions found!"
+                exit 1
+            else
+                if [ `blkid | grep nvme | wc -l` -eq 0 ]; then
+                    verbose_log_action_msg "$MODEL Creating NVMe FS"
+                    mkfs.ext4 /dev/nvme0n1
+                fi
+                if [ ! -d /mnt/data ]; then
+                    verbose_log_action_msg "$MODEL Creating NVMe mount point"
+                    mkdir -p /mnt/data
+                    chmod 777 /mnt/data
+                fi
+                UUID=`blkid -o value /dev/nvme0n1 | head -n1`
+                if [ `grep ${UUID} /etc/fstab | wc -l` -eq 0 ]; then
+                    verbose_log_action_msg "$MODEL Adding NVMe to /etc/fstab"
+                    echo -e "UUID=${UUID}\t/mnt/data\text4\tdefaults,nofail\t0\t2" >> /etc/fstab
+                fi
+                mount /dev/nvme0n1 /mnt/data
+            fi
         fi
-        if [ ! -b /dev/nvme0n1 ]; then
-            log_action_msg "ERROR: $MODEL NVMe Drive Partitions found!"
-            exit 1
-        fi
-        if [ `blkid | grep nvme | wc -l` -eq 0 ]; then
-            verbose_log_action_msg "$MODEL Creating NVMe FS"
-            mkfs.ext4 /dev/nvme0n1
-        fi
-        if [ ! -d /mnt/data ]; then
-            verbose_log_action_msg "$MODEL Creating NVMe mount point"
-            mkdir -p /mnt/data
-            chmod 777 /mnt/data
-        fi
-        UUID=`blkid -o value /dev/nvme0n1 | head -n1`
-        if [ `grep ${UUID} /etc/fstab | wc -l` -eq 0 ]; then
-            verbose_log_action_msg "$MODEL Adding NVMe to /etc/fstab"
-            echo -e "UUID=${UUID}\t/mnt/data\text4\tdefaults,nofail\t0\t2" >> /etc/fstab
-        fi
-        mount /dev/nvme0n1 /mnt/data
     fi
     chmod 777 /mnt/data
     verbose_log_end_msg 0
@@ -293,7 +227,7 @@ ____________EOF_i2cprog
 }
 
 src4392_out(){
-    i2c_bus=$1 # 6|7|8|9|10
+    i2c_bus=$1 # 12|13
     i2c_addr=$2
     freq=$3 # 48000, 96000, 192000, 44100, 88200, 176400
     bitperfect=$4 # 0,1 (bitperfect uses port B and can only be used for i2c_addr==6)
@@ -367,21 +301,12 @@ src4392_out(){
             reg_p2_07=0x30  #  Ch2 176.4kHz, Level 2 accuracy
         fi
     fi
-    if [ $i2c_bus -eq 6 ]; then
+    if [ $i2c_bus -eq 12 ]; then
         reg_p2_04=0x88      # Source 1, Left
         reg_p2_05=0x84      # Source 1, Right
-    elif [ $i2c_bus -eq 7 ]; then
+    elif [ $i2c_bus -eq 13 ]; then
         reg_p2_04=0x48      # Source 2, Left
         reg_p2_05=0x44      # Source 2, Right
-    elif [ $i2c_bus -eq 8 ]; then
-        reg_p2_04=0xC8      # Source 3, Left
-        reg_p2_05=0xC4      # Source 3, Right
-    elif [ $i2c_bus -eq 9 ]; then
-        reg_p2_04=0x28      # Source 4, Left
-        reg_p2_05=0x24      # Source 4, Right
-    elif [ $i2c_bus -eq 10 ]; then
-        reg_p2_04=0xA8      # Source 5, Left
-        reg_p2_05=0xA4      # Source 5, Right
     fi
 
     i=0
@@ -440,37 +365,6 @@ ____________EOF_i2cprog
         fi
     done
 
-    if [ $i2c_bus -eq 6 ]; then
-        if [ $freq -eq 192000 -o $freq -eq 96000 -o $freq -eq 48000 ]; then
-            gpioset `gpiofind clkselo1`=0
-        else
-            gpioset `gpiofind clkselo1`=1
-        fi
-    elif [ $i2c_bus -eq 7 ]; then
-        if [ $freq -eq 192000 -o $freq -eq 96000 -o $freq -eq 48000 ]; then
-            gpioset `gpiofind clkselo2`=0
-        else
-            gpioset `gpiofind clkselo2`=1
-        fi
-    elif [ $i2c_bus -eq 8 ]; then
-        if [ $freq -eq 192000 -o $freq -eq 96000 -o $freq -eq 48000 ]; then
-            gpioset `gpiofind clkselo3`=0
-        else
-            gpioset `gpiofind clkselo3`=1
-        fi
-    elif [ $i2c_bus -eq 9 ]; then
-        if [ $freq -eq 192000 -o $freq -eq 96000 -o $freq -eq 48000 ]; then
-            gpioset `gpiofind clkselo4`=0
-        else
-            gpioset `gpiofind clkselo4`=1
-        fi
-    elif [ $i2c_bus -eq 10 ]; then
-        if [ $freq -eq 192000 -o $freq -eq 96000 -o $freq -eq 48000 ]; then
-            gpioset `gpiofind clkselo5`=0
-        else
-            gpioset `gpiofind clkselo5`=1
-        fi
-    fi
     verbose_log_end_msg 0
 }
 
@@ -542,6 +436,13 @@ gpio_init(){
     gpio_setup_in trigin2_n
     gpio_setup_in trigin3_n
     gpio_setup_in trigin4_n
+    gpio_setup_in ampdcfault_n
+    gpio_setup_in out_ready_o1
+    gpio_setup_in out_ready_o2
+    gpio_setup_in out_ready_o3
+    gpio_setup_in out_ready_o4
+    gpio_setup_in out_ready_o5
+    gpio_setup_in out_ready_o6
 
     # setup gpio outputs
     gpio_setup_out trigout1  0
@@ -549,14 +450,13 @@ gpio_init(){
     gpio_setup_out trigout3  0
     gpio_setup_out trigout4  0
     gpio_setup_out trigout5  0
+    gpio_setup_out trigout6  0
+    gpio_setup_out trigout7  0
+    gpio_setup_out trigout8  0
     gpio_setup_out pwrled    1  # default power led to on
     gpio_setup_out bootcompl 0
     gpio_setup_out pwroff    0
-    gpio_setup_out clkselo1  0
-    gpio_setup_out clkselo2  0
-    gpio_setup_out clkselo3  0
-    gpio_setup_out clkselo4  0
-    gpio_setup_out clkselo5  0
+    gpio_setup_out out_ampen 0
 }
 
 gpio_read(){
@@ -578,8 +478,7 @@ start)
     hwid2=$(gpio_read hwid2)
     hwid3=$(gpio_read hwid3)
     hwid=$(( $hwid0 + 2*hwid1 + 4*hwid2 + 8*hwid3 ))
-    HWID_MA6=2
-    HWID_UNKNOWN=
+    HWID_MA6=8
     if [ $hwid -eq $HWID_MA6 ]; then
         export MODEL=MA6
     else
@@ -590,23 +489,25 @@ start)
     hwrev1=$(gpio_read hwrev1)
     hwrev=$(( $hwrev0 + 2*hwrev1 ))
 
-    es9820 11 0x24 0x20
-    es9820 11 0x25 0x21
+    es9820  6 0x24 0x20  # I1
+    es9820  7 0x24 0x20  # I2
+    es9820  8 0x24 0x20  # I3
+    es9820  9 0x24 0x20  # I4
+    src4392_in 10 0x70   # I5
+    src4392_in 11 0x70   # I6
+    src4392_in 12 0x70   # I7
+    src4392_in 13 0x70   # I8
 
-    es9033  6 0x4C 0x48
-    es9033  7 0x4C 0x48
-    es9033  8 0x4C 0x48
-    es9033  9 0x4C 0x48
-    es9033 10 0x4C 0x48
-
-    src4392_out  6 0x70 192000 0
-    src4392_out  7 0x70 192000 0
-    src4392_out  8 0x70 192000 0
-    src4392_out  9 0x70 192000 0
-    src4392_out 10 0x70 192000 0
-
-    src4392_in 12 0x70
-    src4392_in 13 0x70
+    es9033  6 0x4C 0x48           # O1
+    es9033  7 0x4C 0x48           # O2
+    es9033  8 0x4C 0x48           # O3
+    es9033  9 0x4C 0x48           # O4
+    es9033 10 0x4C 0x48           # O5
+    es9033 11 0x4C 0x48           # O6
+    es9033 12 0x4C 0x48           # O7
+    src4392_out 12 0x70 192000 0  # O7
+    es9033 13 0x4C 0x48           # O8
+    src4392_out 13 0x70 192000 0  # O8
 
     nvme_init
 

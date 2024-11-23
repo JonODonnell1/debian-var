@@ -25,14 +25,7 @@ install -m 755 -d                                     ../rootfs/etc/systemd/syst
 install -m 755 -d                                     ../rootfs/etc/systemd/system/shutdown.target.wants
 ln -s -f /usr/lib/systemd/system/ma6-start.service    ../rootfs/etc/systemd/system/multi-user.target.wants/ma6-start.service
 ln -s -f /usr/lib/systemd/system/ma6-shutdown.service ../rootfs/etc/systemd/system/shutdown.target.wants/ma6-shutdown.service
-install -m 755 -d                                     ../rootfs/lib/firmware/imx/xcvr
-install -m 644 firmware/*                             ../rootfs/lib/firmware/imx/xcvr
 install -m 644 images/*                               ../rootfs/usr/share/images/desktop-base
-install -m 644 alsa-cards/*.conf                      ../rootfs/usr/share/alsa/cards
-
-if [ `grep -c "cards.IMX-XCVR" ../rootfs/usr/share/alsa/cards/aliases.conf` -eq 0 ]; then
-  sudo patch ../rootfs/usr/share/alsa/cards/aliases.conf < alsa-cards/aliases.conf.patch
-fi
 
 #cleanup old
 rm -f ../rootfs/etc/rc5.d/S99ma6
