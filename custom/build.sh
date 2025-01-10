@@ -5,6 +5,7 @@ CPP=`realpath ../toolchain/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu/bin
 cd src
 $CC i2cprog.c -o ../bin/i2cprog
 $CC interleave.c -o ../bin/interleave
+$CC deinterleave.c -o ../bin/deinterleave
 $CC SigGen.c pink.c -lm -o ../bin/SigGen
 $CC RMS.c -lm -o ../bin/RMS
 $CPP THDn.cpp FFTWindow.cpp -lm -mcpu=cortex-a53 -mtune=cortex-a53 -o ../bin/THDn

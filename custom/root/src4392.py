@@ -2748,1240 +2748,11 @@ def reg_decode(i2c:I2C, address:int, reg_info:Dict) -> Dict:
 if len(sys.argv) >= 2:
   chan = str(sys.argv[1]).upper()
 else:
-  chan = "O1"
+  chan = "O7"
 
-if chan == "OA":
-    dev = "/dev/i2c-6"
-    p0_reglist = [
-        0,  # 0x01      Power-Down and Reset
-    #    1,  # 0x02      Global Interrupt Status
-        2,  # 0x03      Port A Control
-        3,  # 0x04      Port A Control
-    #    4,  # 0x05      Port B Control
-    #    5,  # 0x06      Port B Control
-        6,  # 0x07      Transmitter Control
-        7,  # 0x08      Transmitter Control
-        8,  # 0x09      Transmitter Control
-        9,  # 0x0A      SRC and DIT Status
-    #    10, # 0x0B      SRC and DIT Interrupt Mask
-    #    11, # 0x0C      SRC and DIT Interrupt Mask
-    #    12, # 0x0D      Receiver Control
-    #    13, # 0x0E      Receiver Control
-    #    14, # 0x0F-0x11 Receiver PLL Configuration
-    #    15, # 0x12      Non-PCM Audio Detection
-    #    16, # 0x13      Receiver Status
-    #    17, # 0x14      Receiver Status
-    #    18, # 0x15      Receiver Status
-    #    19, # 0x16      Receiver Interrupt Mask
-    #    20, # 0x17      Receiver Interrupt Mask
-    #    21, # 0x18      Receiver Interrupt Mode
-    #    22, # 0x19      Receiver Interrupt Mode
-    #    23, # 0x1A      Receiver Interrupt Mode
-    #    24, # 0x1B      General-Purpose Out (GPO1)
-    #    25, # 0x1C      General-Purpose Out (GPO2)
-    #    26, # 0x1D      General-Purpose Out (GPO3)
-    #    27, # 0x1E      General-Purpose Out (GPO4)
-    #    28, # 0x1F      Audio CD Q-Channel Sub-Code
-    #    29, # 0x20      Audio CD Q-Channel Sub-Code
-    #    30, # 0x21      Audio CD Q-Channel Sub-Code
-    #    31, # 0x22      Audio CD Q-Channel Sub-Code
-    #    32, # 0x23      Audio CD Q-Channel Sub-Code
-    #    33, # 0x24      Audio CD Q-Channel Sub-Code
-    #    34, # 0x25      Audio CD Q-Channel Sub-Code
-    #    35, # 0x26      Audio CD Q-Channel Sub-Code
-    #    36, # 0x27      Audio CD Q-Channel Sub-Code
-    #    37, # 0x28      Audio CD Q-Channel Sub-Code
-    #    38, # 0x29-0x2A PC Burst Preamble
-    #    39, # 0x2B-0x2C PD Burst Preamble
-        40, # 0x2D      SRC Control
-        41, # 0x2E      SRC Control
-        42, # 0x2F      SRC Control
-        43, # 0x30      SRC Control Right Attenuation
-        44, # 0x31      SRC Control Left Attenuation
-        45, # 0x32-0x33 SRC Input: Output Ratio
-    ]
-    p1_reglist = [
-    #    0,  # 0x00      DIR Channel Status Ch1 Byte 0
-    #    1,  # 0x01      DIR Channel Status Ch2 Byte 0
-    #    2,  # 0x02      DIR Channel Status Ch1 Byte 1
-    #    3,  # 0x03      DIR Channel Status Ch2 Byte 1
-    #    4,  # 0x04      DIR Channel Status Ch1 Byte 2
-    #    5,  # 0x05      DIR Channel Status Ch2 Byte 2
-    #    6,  # 0x06      DIR Channel Status Ch1 Byte 3
-    #    7,  # 0x07      DIR Channel Status Ch2 Byte 3
-    #    8,  # 0x08      DIR Channel Status Ch1 Byte 4
-    #    9,  # 0x09      DIR Channel Status Ch2 Byte 4
-    #    10, # 0x0A      DIR Channel Status Ch1 Byte 5
-    #    11, # 0x0B      DIR Channel Status Ch2 Byte 5
-    #    12, # 0x0C      DIR Channel Status Ch1 Byte 6
-    #    13, # 0x0D      DIR Channel Status Ch2 Byte 6
-    #    14, # 0x0E      DIR Channel Status Ch1 Byte 7
-    #    15, # 0x0F      DIR Channel Status Ch2 Byte 7
-    #    16, # 0x10      DIR Channel Status Ch1 Byte 8
-    #    17, # 0x11      DIR Channel Status Ch2 Byte 8
-    #    18, # 0x12      DIR Channel Status Ch1 Byte 9
-    #    19, # 0x13      DIR Channel Status Ch2 Byte 9
-    #    20, # 0x14      DIR Channel Status Ch1 Byte 10
-    #    21, # 0x15      DIR Channel Status Ch2 Byte 10
-    #    22, # 0x16      DIR Channel Status Ch1 Byte 11
-    #    23, # 0x17      DIR Channel Status Ch2 Byte 11
-    #    24, # 0x18      DIR Channel Status Ch1 Byte 12
-    #    25, # 0x19      DIR Channel Status Ch2 Byte 12
-    #    26, # 0x1A      DIR Channel Status Ch1 Byte 13
-    #    27, # 0x1B      DIR Channel Status Ch2 Byte 13
-    #    28, # 0x1C      DIR Channel Status Ch1 Byte 14
-    #    29, # 0x1D      DIR Channel Status Ch2 Byte 14
-    #    30, # 0x1E      DIR Channel Status Ch1 Byte 15
-    #    31, # 0x1F      DIR Channel Status Ch2 Byte 15
-    #    32, # 0x20      DIR Channel Status Ch1 Byte 16
-    #    33, # 0x21      DIR Channel Status Ch2 Byte 16
-    #    34, # 0x22      DIR Channel Status Ch1 Byte 17
-    #    35, # 0x23      DIR Channel Status Ch2 Byte 17
-    #    36, # 0x24      DIR Channel Status Ch1 Byte 18
-    #    37, # 0x25      DIR Channel Status Ch2 Byte 18
-    #    38, # 0x26      DIR Channel Status Ch1 Byte 19
-    #    39, # 0x27      DIR Channel Status Ch2 Byte 19
-    #    40, # 0x28      DIR Channel Status Ch1 Byte 20
-    #    41, # 0x29      DIR Channel Status Ch2 Byte 20
-    #    42, # 0x2A      DIR Channel Status Ch1 Byte 21
-    #    43, # 0x2B      DIR Channel Status Ch2 Byte 21
-    #    44, # 0x2C      DIR Channel Status Ch1 Byte 22
-    #    45, # 0x2D      DIR Channel Status Ch2 Byte 22
-    #    46, # 0x2E      DIR Channel Status Ch1 Byte 23
-    #    47, # 0x2F      DIR Channel Status Ch2 Byte 23
-    #    48, # 0x40      DIR User Data Ch2 Byte 0
-    #    49, # 0x41      DIR User Data Ch1 Byte 0
-    #    50, # 0x42      DIR User Data Ch2 Byte 1
-    #    51, # 0x43      DIR User Data Ch1 Byte 1
-    #    52, # 0x44      DIR User Data Ch2 Byte 2
-    #    53, # 0x45      DIR User Data Ch1 Byte 2
-    #    54, # 0x46      DIR User Data Ch2 Byte 3
-    #    55, # 0x47      DIR User Data Ch1 Byte 3
-    #    56, # 0x48      DIR User Data Ch2 Byte 4
-    #    57, # 0x49      DIR User Data Ch1 Byte 4
-    #    58, # 0x4A      DIR User Data Ch2 Byte 5
-    #    59, # 0x4B      DIR User Data Ch1 Byte 5
-    #    60, # 0x4C      DIR User Data Ch2 Byte 6
-    #    61, # 0x4D      DIR User Data Ch1 Byte 6
-    #    62, # 0x4E      DIR User Data Ch2 Byte 7
-    #    63, # 0x4F      DIR User Data Ch1 Byte 7
-    #    64, # 0x50      DIR User Data Ch2 Byte 8
-    #    65, # 0x51      DIR User Data Ch1 Byte 8
-    #    66, # 0x52      DIR User Data Ch2 Byte 9
-    #    67, # 0x53      DIR User Data Ch1 Byte 9
-    #    68, # 0x54      DIR User Data Ch2 Byte 10
-    #    69, # 0x55      DIR User Data Ch1 Byte 10
-    #    70, # 0x56      DIR User Data Ch2 Byte 11
-    #    71, # 0x57      DIR User Data Ch1 Byte 11
-    #    72, # 0x58      DIR User Data Ch2 Byte 12
-    #    73, # 0x59      DIR User Data Ch1 Byte 12
-    #    74, # 0x5A      DIR User Data Ch2 Byte 13
-    #    75, # 0x5B      DIR User Data Ch1 Byte 13
-    #    76, # 0x5C      DIR User Data Ch2 Byte 14
-    #    77, # 0x5D      DIR User Data Ch1 Byte 14
-    #    78, # 0x5E      DIR User Data Ch2 Byte 15
-    #    79, # 0x5F      DIR User Data Ch1 Byte 15
-    #    80, # 0x60      DIR User Data Ch2 Byte 16
-    #    81, # 0x61      DIR User Data Ch1 Byte 16
-    #    82, # 0x62      DIR User Data Ch2 Byte 17
-    #    83, # 0x63      DIR User Data Ch1 Byte 17
-    #    84, # 0x64      DIR User Data Ch2 Byte 18
-    #    85, # 0x65      DIR User Data Ch1 Byte 18
-    #    86, # 0x66      DIR User Data Ch2 Byte 19
-    #    87, # 0x67      DIR User Data Ch1 Byte 19
-    #    88, # 0x68      DIR User Data Ch2 Byte 20
-    #    89, # 0x69      DIR User Data Ch1 Byte 20
-    #    90, # 0x6A      DIR User Data Ch2 Byte 21
-    #    91, # 0x6B      DIR User Data Ch1 Byte 21
-    #    92, # 0x6C      DIR User Data Ch2 Byte 22
-    #    93, # 0x6D      DIR User Data Ch2 Byte 22
-    #    94, # 0x6E      DIR User Data Ch1 Byte 23
-    #    95, # 0x6F      DIR User Data Ch2 Byte 23
-    ]
-    p2_reglist = [
-        0,  # 0x00      DIT Channel Status Ch1 Byte 0
-        1,  # 0x01      DIT Channel Status Ch2 Byte 0
-        2,  # 0x02      DIT Channel Status Ch1 Byte 1
-        3,  # 0x03      DIT Channel Status Ch2 Byte 1
-        4,  # 0x04      DIT Channel Status Ch1 Byte 2
-        5,  # 0x05      DIT Channel Status Ch2 Byte 2
-        6,  # 0x06      DIT Channel Status Ch1 Byte 3
-        7,  # 0x07      DIT Channel Status Ch2 Byte 3
-    #    8,  # 0x08      DIT Channel Status Ch1 Byte 4
-    #    9,  # 0x09      DIT Channel Status Ch2 Byte 4
-    #    10, # 0x0A      DIT Channel Status Ch1 Byte 5
-    #    11, # 0x0B      DIT Channel Status Ch2 Byte 5
-    #    12, # 0x0C      DIT Channel Status Ch1 Byte 6
-    #    13, # 0x0D      DIT Channel Status Ch2 Byte 6
-    #    14, # 0x0E      DIT Channel Status Ch1 Byte 7
-    #    15, # 0x0F      DIT Channel Status Ch2 Byte 7
-    #    16, # 0x10      DIT Channel Status Ch1 Byte 8
-    #    17, # 0x11      DIT Channel Status Ch2 Byte 8
-    #    18, # 0x12      DIT Channel Status Ch1 Byte 9
-    #    19, # 0x13      DIT Channel Status Ch2 Byte 9
-    #    20, # 0x14      DIT Channel Status Ch1 Byte 10
-    #    21, # 0x15      DIT Channel Status Ch2 Byte 10
-    #    22, # 0x16      DIT Channel Status Ch1 Byte 11
-    #    23, # 0x17      DIT Channel Status Ch2 Byte 11
-    #    24, # 0x18      DIT Channel Status Ch1 Byte 12
-    #    25, # 0x19      DIT Channel Status Ch2 Byte 12
-    #    26, # 0x1A      DIT Channel Status Ch1 Byte 13
-    #    27, # 0x1B      DIT Channel Status Ch2 Byte 13
-    #    28, # 0x1C      DIT Channel Status Ch1 Byte 14
-    #    29, # 0x1D      DIT Channel Status Ch2 Byte 14
-    #    30, # 0x1E      DIT Channel Status Ch1 Byte 15
-    #    31, # 0x1F      DIT Channel Status Ch2 Byte 15
-    #    32, # 0x20      DIT Channel Status Ch1 Byte 16
-    #    33, # 0x21      DIT Channel Status Ch2 Byte 16
-    #    34, # 0x22      DIT Channel Status Ch1 Byte 17
-    #    35, # 0x23      DIT Channel Status Ch2 Byte 17
-    #    36, # 0x24      DIT Channel Status Ch1 Byte 18
-    #    37, # 0x25      DIT Channel Status Ch2 Byte 18
-    #    38, # 0x26      DIT Channel Status Ch1 Byte 19
-    #    39, # 0x27      DIT Channel Status Ch2 Byte 19
-    #    40, # 0x28      DIT Channel Status Ch1 Byte 20
-    #    41, # 0x29      DIT Channel Status Ch2 Byte 20
-    #    42, # 0x2A      DIT Channel Status Ch1 Byte 21
-    #    43, # 0x2B      DIT Channel Status Ch2 Byte 21
-    #    44, # 0x2C      DIT Channel Status Ch1 Byte 22
-    #    45, # 0x2D      DIT Channel Status Ch2 Byte 22
-    #    46, # 0x2E      DIT Channel Status Ch1 Byte 23
-    #    47, # 0x2F      DIT Channel Status Ch2 Byte 23
-    #    48, # 0x40      DIT User Data Ch2 Byte 0
-    #    49, # 0x41      DIT User Data Ch1 Byte 0
-    #    50, # 0x42      DIT User Data Ch2 Byte 1
-    #    51, # 0x43      DIT User Data Ch1 Byte 1
-    #    52, # 0x44      DIT User Data Ch2 Byte 2
-    #    53, # 0x45      DIT User Data Ch1 Byte 2
-    #    54, # 0x46      DIT User Data Ch2 Byte 3
-    #    55, # 0x47      DIT User Data Ch1 Byte 3
-    #    56, # 0x48      DIT User Data Ch2 Byte 4
-    #    57, # 0x49      DIT User Data Ch1 Byte 4
-    #    58, # 0x4A      DIT User Data Ch2 Byte 5
-    #    59, # 0x4B      DIT User Data Ch1 Byte 5
-    #    60, # 0x4C      DIT User Data Ch2 Byte 6
-    #    61, # 0x4D      DIT User Data Ch1 Byte 6
-    #    62, # 0x4E      DIT User Data Ch2 Byte 7
-    #    63, # 0x4F      DIT User Data Ch1 Byte 7
-    #    64, # 0x50      DIT User Data Ch2 Byte 8
-    #    65, # 0x51      DIT User Data Ch1 Byte 8
-    #    66, # 0x52      DIT User Data Ch2 Byte 9
-    #    67, # 0x53      DIT User Data Ch1 Byte 9
-    #    68, # 0x54      DIT User Data Ch2 Byte 10
-    #    69, # 0x55      DIT User Data Ch1 Byte 10
-    #    70, # 0x56      DIT User Data Ch2 Byte 11
-    #    71, # 0x57      DIT User Data Ch1 Byte 11
-    #    72, # 0x58      DIT User Data Ch2 Byte 12
-    #    73, # 0x59      DIT User Data Ch1 Byte 12
-    #    74, # 0x5A      DIT User Data Ch2 Byte 13
-    #    75, # 0x5B      DIT User Data Ch1 Byte 13
-    #    76, # 0x5C      DIT User Data Ch2 Byte 14
-    #    77, # 0x5D      DIT User Data Ch1 Byte 14
-    #    78, # 0x5E      DIR User Data Ch2 Byte 15
-    #    79, # 0x5F      DIT User Data Ch1 Byte 15
-    #    80, # 0x60      DIT User Data Ch2 Byte 16
-    #    81, # 0x61      DIT User Data Ch1 Byte 16
-    #    82, # 0x62      DIT User Data Ch2 Byte 17
-    #    83, # 0x63      DIT User Data Ch1 Byte 17
-    #    84, # 0x64      DIT User Data Ch2 Byte 18
-    #    85, # 0x65      DIT User Data Ch1 Byte 18
-    #    86, # 0x66      DIT User Data Ch2 Byte 19
-    #    87, # 0x67      DIT User Data Ch1 Byte 19
-    #    88, # 0x68      DIT User Data Ch2 Byte 20
-    #    89, # 0x69      DIT User Data Ch1 Byte 20
-    #    90, # 0x6A      DIT User Data Ch2 Byte 21
-    #    91, # 0x6B      DIT User Data Ch1 Byte 21
-    #    92, # 0x6C      DIT User Data Ch2 Byte 22
-    #    93, # 0x6D      DIT User Data Ch2 Byte 22
-    #    94, # 0x6E      DIT User Data Ch1 Byte 23
-    #    95, # 0x6F      DIT User Data Ch2 Byte 23
-    ]
-elif chan == "OB":
-    dev = "/dev/i2c-7"
-    p0_reglist = [
-        0,  # 0x01      Power-Down and Reset
-    #    1,  # 0x02      Global Interrupt Status
-        2,  # 0x03      Port A Control
-        3,  # 0x04      Port A Control
-    #    4,  # 0x05      Port B Control
-    #    5,  # 0x06      Port B Control
-        6,  # 0x07      Transmitter Control
-        7,  # 0x08      Transmitter Control
-        8,  # 0x09      Transmitter Control
-        9,  # 0x0A      SRC and DIT Status
-    #    10, # 0x0B      SRC and DIT Interrupt Mask
-    #    11, # 0x0C      SRC and DIT Interrupt Mask
-    #    12, # 0x0D      Receiver Control
-    #    13, # 0x0E      Receiver Control
-    #    14, # 0x0F-0x11 Receiver PLL Configuration
-    #    15, # 0x12      Non-PCM Audio Detection
-    #    16, # 0x13      Receiver Status
-    #    17, # 0x14      Receiver Status
-    #    18, # 0x15      Receiver Status
-    #    19, # 0x16      Receiver Interrupt Mask
-    #    20, # 0x17      Receiver Interrupt Mask
-    #    21, # 0x18      Receiver Interrupt Mode
-    #    22, # 0x19      Receiver Interrupt Mode
-    #    23, # 0x1A      Receiver Interrupt Mode
-    #    24, # 0x1B      General-Purpose Out (GPO1)
-    #    25, # 0x1C      General-Purpose Out (GPO2)
-    #    26, # 0x1D      General-Purpose Out (GPO3)
-    #    27, # 0x1E      General-Purpose Out (GPO4)
-    #    28, # 0x1F      Audio CD Q-Channel Sub-Code
-    #    29, # 0x20      Audio CD Q-Channel Sub-Code
-    #    30, # 0x21      Audio CD Q-Channel Sub-Code
-    #    31, # 0x22      Audio CD Q-Channel Sub-Code
-    #    32, # 0x23      Audio CD Q-Channel Sub-Code
-    #    33, # 0x24      Audio CD Q-Channel Sub-Code
-    #    34, # 0x25      Audio CD Q-Channel Sub-Code
-    #    35, # 0x26      Audio CD Q-Channel Sub-Code
-    #    36, # 0x27      Audio CD Q-Channel Sub-Code
-    #    37, # 0x28      Audio CD Q-Channel Sub-Code
-    #    38, # 0x29-0x2A PC Burst Preamble
-    #    39, # 0x2B-0x2C PD Burst Preamble
-        40, # 0x2D      SRC Control
-        41, # 0x2E      SRC Control
-        42, # 0x2F      SRC Control
-        43, # 0x30      SRC Control Right Attenuation
-        44, # 0x31      SRC Control Left Attenuation
-        45, # 0x32-0x33 SRC Input: Output Ratio
-    ]
-    p1_reglist = [
-    #    0,  # 0x00      DIR Channel Status Ch1 Byte 0
-    #    1,  # 0x01      DIR Channel Status Ch2 Byte 0
-    #    2,  # 0x02      DIR Channel Status Ch1 Byte 1
-    #    3,  # 0x03      DIR Channel Status Ch2 Byte 1
-    #    4,  # 0x04      DIR Channel Status Ch1 Byte 2
-    #    5,  # 0x05      DIR Channel Status Ch2 Byte 2
-    #    6,  # 0x06      DIR Channel Status Ch1 Byte 3
-    #    7,  # 0x07      DIR Channel Status Ch2 Byte 3
-    #    8,  # 0x08      DIR Channel Status Ch1 Byte 4
-    #    9,  # 0x09      DIR Channel Status Ch2 Byte 4
-    #    10, # 0x0A      DIR Channel Status Ch1 Byte 5
-    #    11, # 0x0B      DIR Channel Status Ch2 Byte 5
-    #    12, # 0x0C      DIR Channel Status Ch1 Byte 6
-    #    13, # 0x0D      DIR Channel Status Ch2 Byte 6
-    #    14, # 0x0E      DIR Channel Status Ch1 Byte 7
-    #    15, # 0x0F      DIR Channel Status Ch2 Byte 7
-    #    16, # 0x10      DIR Channel Status Ch1 Byte 8
-    #    17, # 0x11      DIR Channel Status Ch2 Byte 8
-    #    18, # 0x12      DIR Channel Status Ch1 Byte 9
-    #    19, # 0x13      DIR Channel Status Ch2 Byte 9
-    #    20, # 0x14      DIR Channel Status Ch1 Byte 10
-    #    21, # 0x15      DIR Channel Status Ch2 Byte 10
-    #    22, # 0x16      DIR Channel Status Ch1 Byte 11
-    #    23, # 0x17      DIR Channel Status Ch2 Byte 11
-    #    24, # 0x18      DIR Channel Status Ch1 Byte 12
-    #    25, # 0x19      DIR Channel Status Ch2 Byte 12
-    #    26, # 0x1A      DIR Channel Status Ch1 Byte 13
-    #    27, # 0x1B      DIR Channel Status Ch2 Byte 13
-    #    28, # 0x1C      DIR Channel Status Ch1 Byte 14
-    #    29, # 0x1D      DIR Channel Status Ch2 Byte 14
-    #    30, # 0x1E      DIR Channel Status Ch1 Byte 15
-    #    31, # 0x1F      DIR Channel Status Ch2 Byte 15
-    #    32, # 0x20      DIR Channel Status Ch1 Byte 16
-    #    33, # 0x21      DIR Channel Status Ch2 Byte 16
-    #    34, # 0x22      DIR Channel Status Ch1 Byte 17
-    #    35, # 0x23      DIR Channel Status Ch2 Byte 17
-    #    36, # 0x24      DIR Channel Status Ch1 Byte 18
-    #    37, # 0x25      DIR Channel Status Ch2 Byte 18
-    #    38, # 0x26      DIR Channel Status Ch1 Byte 19
-    #    39, # 0x27      DIR Channel Status Ch2 Byte 19
-    #    40, # 0x28      DIR Channel Status Ch1 Byte 20
-    #    41, # 0x29      DIR Channel Status Ch2 Byte 20
-    #    42, # 0x2A      DIR Channel Status Ch1 Byte 21
-    #    43, # 0x2B      DIR Channel Status Ch2 Byte 21
-    #    44, # 0x2C      DIR Channel Status Ch1 Byte 22
-    #    45, # 0x2D      DIR Channel Status Ch2 Byte 22
-    #    46, # 0x2E      DIR Channel Status Ch1 Byte 23
-    #    47, # 0x2F      DIR Channel Status Ch2 Byte 23
-    #    48, # 0x40      DIR User Data Ch2 Byte 0
-    #    49, # 0x41      DIR User Data Ch1 Byte 0
-    #    50, # 0x42      DIR User Data Ch2 Byte 1
-    #    51, # 0x43      DIR User Data Ch1 Byte 1
-    #    52, # 0x44      DIR User Data Ch2 Byte 2
-    #    53, # 0x45      DIR User Data Ch1 Byte 2
-    #    54, # 0x46      DIR User Data Ch2 Byte 3
-    #    55, # 0x47      DIR User Data Ch1 Byte 3
-    #    56, # 0x48      DIR User Data Ch2 Byte 4
-    #    57, # 0x49      DIR User Data Ch1 Byte 4
-    #    58, # 0x4A      DIR User Data Ch2 Byte 5
-    #    59, # 0x4B      DIR User Data Ch1 Byte 5
-    #    60, # 0x4C      DIR User Data Ch2 Byte 6
-    #    61, # 0x4D      DIR User Data Ch1 Byte 6
-    #    62, # 0x4E      DIR User Data Ch2 Byte 7
-    #    63, # 0x4F      DIR User Data Ch1 Byte 7
-    #    64, # 0x50      DIR User Data Ch2 Byte 8
-    #    65, # 0x51      DIR User Data Ch1 Byte 8
-    #    66, # 0x52      DIR User Data Ch2 Byte 9
-    #    67, # 0x53      DIR User Data Ch1 Byte 9
-    #    68, # 0x54      DIR User Data Ch2 Byte 10
-    #    69, # 0x55      DIR User Data Ch1 Byte 10
-    #    70, # 0x56      DIR User Data Ch2 Byte 11
-    #    71, # 0x57      DIR User Data Ch1 Byte 11
-    #    72, # 0x58      DIR User Data Ch2 Byte 12
-    #    73, # 0x59      DIR User Data Ch1 Byte 12
-    #    74, # 0x5A      DIR User Data Ch2 Byte 13
-    #    75, # 0x5B      DIR User Data Ch1 Byte 13
-    #    76, # 0x5C      DIR User Data Ch2 Byte 14
-    #    77, # 0x5D      DIR User Data Ch1 Byte 14
-    #    78, # 0x5E      DIR User Data Ch2 Byte 15
-    #    79, # 0x5F      DIR User Data Ch1 Byte 15
-    #    80, # 0x60      DIR User Data Ch2 Byte 16
-    #    81, # 0x61      DIR User Data Ch1 Byte 16
-    #    82, # 0x62      DIR User Data Ch2 Byte 17
-    #    83, # 0x63      DIR User Data Ch1 Byte 17
-    #    84, # 0x64      DIR User Data Ch2 Byte 18
-    #    85, # 0x65      DIR User Data Ch1 Byte 18
-    #    86, # 0x66      DIR User Data Ch2 Byte 19
-    #    87, # 0x67      DIR User Data Ch1 Byte 19
-    #    88, # 0x68      DIR User Data Ch2 Byte 20
-    #    89, # 0x69      DIR User Data Ch1 Byte 20
-    #    90, # 0x6A      DIR User Data Ch2 Byte 21
-    #    91, # 0x6B      DIR User Data Ch1 Byte 21
-    #    92, # 0x6C      DIR User Data Ch2 Byte 22
-    #    93, # 0x6D      DIR User Data Ch2 Byte 22
-    #    94, # 0x6E      DIR User Data Ch1 Byte 23
-    #    95, # 0x6F      DIR User Data Ch2 Byte 23
-    ]
-    p2_reglist = [
-        0,  # 0x00      DIT Channel Status Ch1 Byte 0
-        1,  # 0x01      DIT Channel Status Ch2 Byte 0
-        2,  # 0x02      DIT Channel Status Ch1 Byte 1
-        3,  # 0x03      DIT Channel Status Ch2 Byte 1
-        4,  # 0x04      DIT Channel Status Ch1 Byte 2
-        5,  # 0x05      DIT Channel Status Ch2 Byte 2
-        6,  # 0x06      DIT Channel Status Ch1 Byte 3
-        7,  # 0x07      DIT Channel Status Ch2 Byte 3
-    #    8,  # 0x08      DIT Channel Status Ch1 Byte 4
-    #    9,  # 0x09      DIT Channel Status Ch2 Byte 4
-    #    10, # 0x0A      DIT Channel Status Ch1 Byte 5
-    #    11, # 0x0B      DIT Channel Status Ch2 Byte 5
-    #    12, # 0x0C      DIT Channel Status Ch1 Byte 6
-    #    13, # 0x0D      DIT Channel Status Ch2 Byte 6
-    #    14, # 0x0E      DIT Channel Status Ch1 Byte 7
-    #    15, # 0x0F      DIT Channel Status Ch2 Byte 7
-    #    16, # 0x10      DIT Channel Status Ch1 Byte 8
-    #    17, # 0x11      DIT Channel Status Ch2 Byte 8
-    #    18, # 0x12      DIT Channel Status Ch1 Byte 9
-    #    19, # 0x13      DIT Channel Status Ch2 Byte 9
-    #    20, # 0x14      DIT Channel Status Ch1 Byte 10
-    #    21, # 0x15      DIT Channel Status Ch2 Byte 10
-    #    22, # 0x16      DIT Channel Status Ch1 Byte 11
-    #    23, # 0x17      DIT Channel Status Ch2 Byte 11
-    #    24, # 0x18      DIT Channel Status Ch1 Byte 12
-    #    25, # 0x19      DIT Channel Status Ch2 Byte 12
-    #    26, # 0x1A      DIT Channel Status Ch1 Byte 13
-    #    27, # 0x1B      DIT Channel Status Ch2 Byte 13
-    #    28, # 0x1C      DIT Channel Status Ch1 Byte 14
-    #    29, # 0x1D      DIT Channel Status Ch2 Byte 14
-    #    30, # 0x1E      DIT Channel Status Ch1 Byte 15
-    #    31, # 0x1F      DIT Channel Status Ch2 Byte 15
-    #    32, # 0x20      DIT Channel Status Ch1 Byte 16
-    #    33, # 0x21      DIT Channel Status Ch2 Byte 16
-    #    34, # 0x22      DIT Channel Status Ch1 Byte 17
-    #    35, # 0x23      DIT Channel Status Ch2 Byte 17
-    #    36, # 0x24      DIT Channel Status Ch1 Byte 18
-    #    37, # 0x25      DIT Channel Status Ch2 Byte 18
-    #    38, # 0x26      DIT Channel Status Ch1 Byte 19
-    #    39, # 0x27      DIT Channel Status Ch2 Byte 19
-    #    40, # 0x28      DIT Channel Status Ch1 Byte 20
-    #    41, # 0x29      DIT Channel Status Ch2 Byte 20
-    #    42, # 0x2A      DIT Channel Status Ch1 Byte 21
-    #    43, # 0x2B      DIT Channel Status Ch2 Byte 21
-    #    44, # 0x2C      DIT Channel Status Ch1 Byte 22
-    #    45, # 0x2D      DIT Channel Status Ch2 Byte 22
-    #    46, # 0x2E      DIT Channel Status Ch1 Byte 23
-    #    47, # 0x2F      DIT Channel Status Ch2 Byte 23
-    #    48, # 0x40      DIT User Data Ch2 Byte 0
-    #    49, # 0x41      DIT User Data Ch1 Byte 0
-    #    50, # 0x42      DIT User Data Ch2 Byte 1
-    #    51, # 0x43      DIT User Data Ch1 Byte 1
-    #    52, # 0x44      DIT User Data Ch2 Byte 2
-    #    53, # 0x45      DIT User Data Ch1 Byte 2
-    #    54, # 0x46      DIT User Data Ch2 Byte 3
-    #    55, # 0x47      DIT User Data Ch1 Byte 3
-    #    56, # 0x48      DIT User Data Ch2 Byte 4
-    #    57, # 0x49      DIT User Data Ch1 Byte 4
-    #    58, # 0x4A      DIT User Data Ch2 Byte 5
-    #    59, # 0x4B      DIT User Data Ch1 Byte 5
-    #    60, # 0x4C      DIT User Data Ch2 Byte 6
-    #    61, # 0x4D      DIT User Data Ch1 Byte 6
-    #    62, # 0x4E      DIT User Data Ch2 Byte 7
-    #    63, # 0x4F      DIT User Data Ch1 Byte 7
-    #    64, # 0x50      DIT User Data Ch2 Byte 8
-    #    65, # 0x51      DIT User Data Ch1 Byte 8
-    #    66, # 0x52      DIT User Data Ch2 Byte 9
-    #    67, # 0x53      DIT User Data Ch1 Byte 9
-    #    68, # 0x54      DIT User Data Ch2 Byte 10
-    #    69, # 0x55      DIT User Data Ch1 Byte 10
-    #    70, # 0x56      DIT User Data Ch2 Byte 11
-    #    71, # 0x57      DIT User Data Ch1 Byte 11
-    #    72, # 0x58      DIT User Data Ch2 Byte 12
-    #    73, # 0x59      DIT User Data Ch1 Byte 12
-    #    74, # 0x5A      DIT User Data Ch2 Byte 13
-    #    75, # 0x5B      DIT User Data Ch1 Byte 13
-    #    76, # 0x5C      DIT User Data Ch2 Byte 14
-    #    77, # 0x5D      DIT User Data Ch1 Byte 14
-    #    78, # 0x5E      DIR User Data Ch2 Byte 15
-    #    79, # 0x5F      DIT User Data Ch1 Byte 15
-    #    80, # 0x60      DIT User Data Ch2 Byte 16
-    #    81, # 0x61      DIT User Data Ch1 Byte 16
-    #    82, # 0x62      DIT User Data Ch2 Byte 17
-    #    83, # 0x63      DIT User Data Ch1 Byte 17
-    #    84, # 0x64      DIT User Data Ch2 Byte 18
-    #    85, # 0x65      DIT User Data Ch1 Byte 18
-    #    86, # 0x66      DIT User Data Ch2 Byte 19
-    #    87, # 0x67      DIT User Data Ch1 Byte 19
-    #    88, # 0x68      DIT User Data Ch2 Byte 20
-    #    89, # 0x69      DIT User Data Ch1 Byte 20
-    #    90, # 0x6A      DIT User Data Ch2 Byte 21
-    #    91, # 0x6B      DIT User Data Ch1 Byte 21
-    #    92, # 0x6C      DIT User Data Ch2 Byte 22
-    #    93, # 0x6D      DIT User Data Ch2 Byte 22
-    #    94, # 0x6E      DIT User Data Ch1 Byte 23
-    #    95, # 0x6F      DIT User Data Ch2 Byte 23
-    ]
-elif chan == "OC":
-    dev = "/dev/i2c-8"
-    p0_reglist = [
-        0,  # 0x01      Power-Down and Reset
-    #    1,  # 0x02      Global Interrupt Status
-        2,  # 0x03      Port A Control
-        3,  # 0x04      Port A Control
-    #    4,  # 0x05      Port B Control
-    #    5,  # 0x06      Port B Control
-        6,  # 0x07      Transmitter Control
-        7,  # 0x08      Transmitter Control
-        8,  # 0x09      Transmitter Control
-        9,  # 0x0A      SRC and DIT Status
-    #    10, # 0x0B      SRC and DIT Interrupt Mask
-    #    11, # 0x0C      SRC and DIT Interrupt Mask
-    #    12, # 0x0D      Receiver Control
-    #    13, # 0x0E      Receiver Control
-    #    14, # 0x0F-0x11 Receiver PLL Configuration
-    #    15, # 0x12      Non-PCM Audio Detection
-    #    16, # 0x13      Receiver Status
-    #    17, # 0x14      Receiver Status
-    #    18, # 0x15      Receiver Status
-    #    19, # 0x16      Receiver Interrupt Mask
-    #    20, # 0x17      Receiver Interrupt Mask
-    #    21, # 0x18      Receiver Interrupt Mode
-    #    22, # 0x19      Receiver Interrupt Mode
-    #    23, # 0x1A      Receiver Interrupt Mode
-    #    24, # 0x1B      General-Purpose Out (GPO1)
-    #    25, # 0x1C      General-Purpose Out (GPO2)
-    #    26, # 0x1D      General-Purpose Out (GPO3)
-    #    27, # 0x1E      General-Purpose Out (GPO4)
-    #    28, # 0x1F      Audio CD Q-Channel Sub-Code
-    #    29, # 0x20      Audio CD Q-Channel Sub-Code
-    #    30, # 0x21      Audio CD Q-Channel Sub-Code
-    #    31, # 0x22      Audio CD Q-Channel Sub-Code
-    #    32, # 0x23      Audio CD Q-Channel Sub-Code
-    #    33, # 0x24      Audio CD Q-Channel Sub-Code
-    #    34, # 0x25      Audio CD Q-Channel Sub-Code
-    #    35, # 0x26      Audio CD Q-Channel Sub-Code
-    #    36, # 0x27      Audio CD Q-Channel Sub-Code
-    #    37, # 0x28      Audio CD Q-Channel Sub-Code
-    #    38, # 0x29-0x2A PC Burst Preamble
-    #    39, # 0x2B-0x2C PD Burst Preamble
-        40, # 0x2D      SRC Control
-        41, # 0x2E      SRC Control
-        42, # 0x2F      SRC Control
-        43, # 0x30      SRC Control Right Attenuation
-        44, # 0x31      SRC Control Left Attenuation
-        45, # 0x32-0x33 SRC Input: Output Ratio
-    ]
-    p1_reglist = [
-    #    0,  # 0x00      DIR Channel Status Ch1 Byte 0
-    #    1,  # 0x01      DIR Channel Status Ch2 Byte 0
-    #    2,  # 0x02      DIR Channel Status Ch1 Byte 1
-    #    3,  # 0x03      DIR Channel Status Ch2 Byte 1
-    #    4,  # 0x04      DIR Channel Status Ch1 Byte 2
-    #    5,  # 0x05      DIR Channel Status Ch2 Byte 2
-    #    6,  # 0x06      DIR Channel Status Ch1 Byte 3
-    #    7,  # 0x07      DIR Channel Status Ch2 Byte 3
-    #    8,  # 0x08      DIR Channel Status Ch1 Byte 4
-    #    9,  # 0x09      DIR Channel Status Ch2 Byte 4
-    #    10, # 0x0A      DIR Channel Status Ch1 Byte 5
-    #    11, # 0x0B      DIR Channel Status Ch2 Byte 5
-    #    12, # 0x0C      DIR Channel Status Ch1 Byte 6
-    #    13, # 0x0D      DIR Channel Status Ch2 Byte 6
-    #    14, # 0x0E      DIR Channel Status Ch1 Byte 7
-    #    15, # 0x0F      DIR Channel Status Ch2 Byte 7
-    #    16, # 0x10      DIR Channel Status Ch1 Byte 8
-    #    17, # 0x11      DIR Channel Status Ch2 Byte 8
-    #    18, # 0x12      DIR Channel Status Ch1 Byte 9
-    #    19, # 0x13      DIR Channel Status Ch2 Byte 9
-    #    20, # 0x14      DIR Channel Status Ch1 Byte 10
-    #    21, # 0x15      DIR Channel Status Ch2 Byte 10
-    #    22, # 0x16      DIR Channel Status Ch1 Byte 11
-    #    23, # 0x17      DIR Channel Status Ch2 Byte 11
-    #    24, # 0x18      DIR Channel Status Ch1 Byte 12
-    #    25, # 0x19      DIR Channel Status Ch2 Byte 12
-    #    26, # 0x1A      DIR Channel Status Ch1 Byte 13
-    #    27, # 0x1B      DIR Channel Status Ch2 Byte 13
-    #    28, # 0x1C      DIR Channel Status Ch1 Byte 14
-    #    29, # 0x1D      DIR Channel Status Ch2 Byte 14
-    #    30, # 0x1E      DIR Channel Status Ch1 Byte 15
-    #    31, # 0x1F      DIR Channel Status Ch2 Byte 15
-    #    32, # 0x20      DIR Channel Status Ch1 Byte 16
-    #    33, # 0x21      DIR Channel Status Ch2 Byte 16
-    #    34, # 0x22      DIR Channel Status Ch1 Byte 17
-    #    35, # 0x23      DIR Channel Status Ch2 Byte 17
-    #    36, # 0x24      DIR Channel Status Ch1 Byte 18
-    #    37, # 0x25      DIR Channel Status Ch2 Byte 18
-    #    38, # 0x26      DIR Channel Status Ch1 Byte 19
-    #    39, # 0x27      DIR Channel Status Ch2 Byte 19
-    #    40, # 0x28      DIR Channel Status Ch1 Byte 20
-    #    41, # 0x29      DIR Channel Status Ch2 Byte 20
-    #    42, # 0x2A      DIR Channel Status Ch1 Byte 21
-    #    43, # 0x2B      DIR Channel Status Ch2 Byte 21
-    #    44, # 0x2C      DIR Channel Status Ch1 Byte 22
-    #    45, # 0x2D      DIR Channel Status Ch2 Byte 22
-    #    46, # 0x2E      DIR Channel Status Ch1 Byte 23
-    #    47, # 0x2F      DIR Channel Status Ch2 Byte 23
-    #    48, # 0x40      DIR User Data Ch2 Byte 0
-    #    49, # 0x41      DIR User Data Ch1 Byte 0
-    #    50, # 0x42      DIR User Data Ch2 Byte 1
-    #    51, # 0x43      DIR User Data Ch1 Byte 1
-    #    52, # 0x44      DIR User Data Ch2 Byte 2
-    #    53, # 0x45      DIR User Data Ch1 Byte 2
-    #    54, # 0x46      DIR User Data Ch2 Byte 3
-    #    55, # 0x47      DIR User Data Ch1 Byte 3
-    #    56, # 0x48      DIR User Data Ch2 Byte 4
-    #    57, # 0x49      DIR User Data Ch1 Byte 4
-    #    58, # 0x4A      DIR User Data Ch2 Byte 5
-    #    59, # 0x4B      DIR User Data Ch1 Byte 5
-    #    60, # 0x4C      DIR User Data Ch2 Byte 6
-    #    61, # 0x4D      DIR User Data Ch1 Byte 6
-    #    62, # 0x4E      DIR User Data Ch2 Byte 7
-    #    63, # 0x4F      DIR User Data Ch1 Byte 7
-    #    64, # 0x50      DIR User Data Ch2 Byte 8
-    #    65, # 0x51      DIR User Data Ch1 Byte 8
-    #    66, # 0x52      DIR User Data Ch2 Byte 9
-    #    67, # 0x53      DIR User Data Ch1 Byte 9
-    #    68, # 0x54      DIR User Data Ch2 Byte 10
-    #    69, # 0x55      DIR User Data Ch1 Byte 10
-    #    70, # 0x56      DIR User Data Ch2 Byte 11
-    #    71, # 0x57      DIR User Data Ch1 Byte 11
-    #    72, # 0x58      DIR User Data Ch2 Byte 12
-    #    73, # 0x59      DIR User Data Ch1 Byte 12
-    #    74, # 0x5A      DIR User Data Ch2 Byte 13
-    #    75, # 0x5B      DIR User Data Ch1 Byte 13
-    #    76, # 0x5C      DIR User Data Ch2 Byte 14
-    #    77, # 0x5D      DIR User Data Ch1 Byte 14
-    #    78, # 0x5E      DIR User Data Ch2 Byte 15
-    #    79, # 0x5F      DIR User Data Ch1 Byte 15
-    #    80, # 0x60      DIR User Data Ch2 Byte 16
-    #    81, # 0x61      DIR User Data Ch1 Byte 16
-    #    82, # 0x62      DIR User Data Ch2 Byte 17
-    #    83, # 0x63      DIR User Data Ch1 Byte 17
-    #    84, # 0x64      DIR User Data Ch2 Byte 18
-    #    85, # 0x65      DIR User Data Ch1 Byte 18
-    #    86, # 0x66      DIR User Data Ch2 Byte 19
-    #    87, # 0x67      DIR User Data Ch1 Byte 19
-    #    88, # 0x68      DIR User Data Ch2 Byte 20
-    #    89, # 0x69      DIR User Data Ch1 Byte 20
-    #    90, # 0x6A      DIR User Data Ch2 Byte 21
-    #    91, # 0x6B      DIR User Data Ch1 Byte 21
-    #    92, # 0x6C      DIR User Data Ch2 Byte 22
-    #    93, # 0x6D      DIR User Data Ch2 Byte 22
-    #    94, # 0x6E      DIR User Data Ch1 Byte 23
-    #    95, # 0x6F      DIR User Data Ch2 Byte 23
-    ]
-    p2_reglist = [
-        0,  # 0x00      DIT Channel Status Ch1 Byte 0
-        1,  # 0x01      DIT Channel Status Ch2 Byte 0
-        2,  # 0x02      DIT Channel Status Ch1 Byte 1
-        3,  # 0x03      DIT Channel Status Ch2 Byte 1
-        4,  # 0x04      DIT Channel Status Ch1 Byte 2
-        5,  # 0x05      DIT Channel Status Ch2 Byte 2
-        6,  # 0x06      DIT Channel Status Ch1 Byte 3
-        7,  # 0x07      DIT Channel Status Ch2 Byte 3
-    #    8,  # 0x08      DIT Channel Status Ch1 Byte 4
-    #    9,  # 0x09      DIT Channel Status Ch2 Byte 4
-    #    10, # 0x0A      DIT Channel Status Ch1 Byte 5
-    #    11, # 0x0B      DIT Channel Status Ch2 Byte 5
-    #    12, # 0x0C      DIT Channel Status Ch1 Byte 6
-    #    13, # 0x0D      DIT Channel Status Ch2 Byte 6
-    #    14, # 0x0E      DIT Channel Status Ch1 Byte 7
-    #    15, # 0x0F      DIT Channel Status Ch2 Byte 7
-    #    16, # 0x10      DIT Channel Status Ch1 Byte 8
-    #    17, # 0x11      DIT Channel Status Ch2 Byte 8
-    #    18, # 0x12      DIT Channel Status Ch1 Byte 9
-    #    19, # 0x13      DIT Channel Status Ch2 Byte 9
-    #    20, # 0x14      DIT Channel Status Ch1 Byte 10
-    #    21, # 0x15      DIT Channel Status Ch2 Byte 10
-    #    22, # 0x16      DIT Channel Status Ch1 Byte 11
-    #    23, # 0x17      DIT Channel Status Ch2 Byte 11
-    #    24, # 0x18      DIT Channel Status Ch1 Byte 12
-    #    25, # 0x19      DIT Channel Status Ch2 Byte 12
-    #    26, # 0x1A      DIT Channel Status Ch1 Byte 13
-    #    27, # 0x1B      DIT Channel Status Ch2 Byte 13
-    #    28, # 0x1C      DIT Channel Status Ch1 Byte 14
-    #    29, # 0x1D      DIT Channel Status Ch2 Byte 14
-    #    30, # 0x1E      DIT Channel Status Ch1 Byte 15
-    #    31, # 0x1F      DIT Channel Status Ch2 Byte 15
-    #    32, # 0x20      DIT Channel Status Ch1 Byte 16
-    #    33, # 0x21      DIT Channel Status Ch2 Byte 16
-    #    34, # 0x22      DIT Channel Status Ch1 Byte 17
-    #    35, # 0x23      DIT Channel Status Ch2 Byte 17
-    #    36, # 0x24      DIT Channel Status Ch1 Byte 18
-    #    37, # 0x25      DIT Channel Status Ch2 Byte 18
-    #    38, # 0x26      DIT Channel Status Ch1 Byte 19
-    #    39, # 0x27      DIT Channel Status Ch2 Byte 19
-    #    40, # 0x28      DIT Channel Status Ch1 Byte 20
-    #    41, # 0x29      DIT Channel Status Ch2 Byte 20
-    #    42, # 0x2A      DIT Channel Status Ch1 Byte 21
-    #    43, # 0x2B      DIT Channel Status Ch2 Byte 21
-    #    44, # 0x2C      DIT Channel Status Ch1 Byte 22
-    #    45, # 0x2D      DIT Channel Status Ch2 Byte 22
-    #    46, # 0x2E      DIT Channel Status Ch1 Byte 23
-    #    47, # 0x2F      DIT Channel Status Ch2 Byte 23
-    #    48, # 0x40      DIT User Data Ch2 Byte 0
-    #    49, # 0x41      DIT User Data Ch1 Byte 0
-    #    50, # 0x42      DIT User Data Ch2 Byte 1
-    #    51, # 0x43      DIT User Data Ch1 Byte 1
-    #    52, # 0x44      DIT User Data Ch2 Byte 2
-    #    53, # 0x45      DIT User Data Ch1 Byte 2
-    #    54, # 0x46      DIT User Data Ch2 Byte 3
-    #    55, # 0x47      DIT User Data Ch1 Byte 3
-    #    56, # 0x48      DIT User Data Ch2 Byte 4
-    #    57, # 0x49      DIT User Data Ch1 Byte 4
-    #    58, # 0x4A      DIT User Data Ch2 Byte 5
-    #    59, # 0x4B      DIT User Data Ch1 Byte 5
-    #    60, # 0x4C      DIT User Data Ch2 Byte 6
-    #    61, # 0x4D      DIT User Data Ch1 Byte 6
-    #    62, # 0x4E      DIT User Data Ch2 Byte 7
-    #    63, # 0x4F      DIT User Data Ch1 Byte 7
-    #    64, # 0x50      DIT User Data Ch2 Byte 8
-    #    65, # 0x51      DIT User Data Ch1 Byte 8
-    #    66, # 0x52      DIT User Data Ch2 Byte 9
-    #    67, # 0x53      DIT User Data Ch1 Byte 9
-    #    68, # 0x54      DIT User Data Ch2 Byte 10
-    #    69, # 0x55      DIT User Data Ch1 Byte 10
-    #    70, # 0x56      DIT User Data Ch2 Byte 11
-    #    71, # 0x57      DIT User Data Ch1 Byte 11
-    #    72, # 0x58      DIT User Data Ch2 Byte 12
-    #    73, # 0x59      DIT User Data Ch1 Byte 12
-    #    74, # 0x5A      DIT User Data Ch2 Byte 13
-    #    75, # 0x5B      DIT User Data Ch1 Byte 13
-    #    76, # 0x5C      DIT User Data Ch2 Byte 14
-    #    77, # 0x5D      DIT User Data Ch1 Byte 14
-    #    78, # 0x5E      DIR User Data Ch2 Byte 15
-    #    79, # 0x5F      DIT User Data Ch1 Byte 15
-    #    80, # 0x60      DIT User Data Ch2 Byte 16
-    #    81, # 0x61      DIT User Data Ch1 Byte 16
-    #    82, # 0x62      DIT User Data Ch2 Byte 17
-    #    83, # 0x63      DIT User Data Ch1 Byte 17
-    #    84, # 0x64      DIT User Data Ch2 Byte 18
-    #    85, # 0x65      DIT User Data Ch1 Byte 18
-    #    86, # 0x66      DIT User Data Ch2 Byte 19
-    #    87, # 0x67      DIT User Data Ch1 Byte 19
-    #    88, # 0x68      DIT User Data Ch2 Byte 20
-    #    89, # 0x69      DIT User Data Ch1 Byte 20
-    #    90, # 0x6A      DIT User Data Ch2 Byte 21
-    #    91, # 0x6B      DIT User Data Ch1 Byte 21
-    #    92, # 0x6C      DIT User Data Ch2 Byte 22
-    #    93, # 0x6D      DIT User Data Ch2 Byte 22
-    #    94, # 0x6E      DIT User Data Ch1 Byte 23
-    #    95, # 0x6F      DIT User Data Ch2 Byte 23
-    ]
-elif chan == "OD":
-    dev = "/dev/i2c-9"
-    p0_reglist = [
-        0,  # 0x01      Power-Down and Reset
-    #    1,  # 0x02      Global Interrupt Status
-        2,  # 0x03      Port A Control
-        3,  # 0x04      Port A Control
-    #    4,  # 0x05      Port B Control
-    #    5,  # 0x06      Port B Control
-        6,  # 0x07      Transmitter Control
-        7,  # 0x08      Transmitter Control
-        8,  # 0x09      Transmitter Control
-        9,  # 0x0A      SRC and DIT Status
-    #    10, # 0x0B      SRC and DIT Interrupt Mask
-    #    11, # 0x0C      SRC and DIT Interrupt Mask
-    #    12, # 0x0D      Receiver Control
-    #    13, # 0x0E      Receiver Control
-    #    14, # 0x0F-0x11 Receiver PLL Configuration
-    #    15, # 0x12      Non-PCM Audio Detection
-    #    16, # 0x13      Receiver Status
-    #    17, # 0x14      Receiver Status
-    #    18, # 0x15      Receiver Status
-    #    19, # 0x16      Receiver Interrupt Mask
-    #    20, # 0x17      Receiver Interrupt Mask
-    #    21, # 0x18      Receiver Interrupt Mode
-    #    22, # 0x19      Receiver Interrupt Mode
-    #    23, # 0x1A      Receiver Interrupt Mode
-    #    24, # 0x1B      General-Purpose Out (GPO1)
-    #    25, # 0x1C      General-Purpose Out (GPO2)
-    #    26, # 0x1D      General-Purpose Out (GPO3)
-    #    27, # 0x1E      General-Purpose Out (GPO4)
-    #    28, # 0x1F      Audio CD Q-Channel Sub-Code
-    #    29, # 0x20      Audio CD Q-Channel Sub-Code
-    #    30, # 0x21      Audio CD Q-Channel Sub-Code
-    #    31, # 0x22      Audio CD Q-Channel Sub-Code
-    #    32, # 0x23      Audio CD Q-Channel Sub-Code
-    #    33, # 0x24      Audio CD Q-Channel Sub-Code
-    #    34, # 0x25      Audio CD Q-Channel Sub-Code
-    #    35, # 0x26      Audio CD Q-Channel Sub-Code
-    #    36, # 0x27      Audio CD Q-Channel Sub-Code
-    #    37, # 0x28      Audio CD Q-Channel Sub-Code
-    #    38, # 0x29-0x2A PC Burst Preamble
-    #    39, # 0x2B-0x2C PD Burst Preamble
-        40, # 0x2D      SRC Control
-        41, # 0x2E      SRC Control
-        42, # 0x2F      SRC Control
-        43, # 0x30      SRC Control Right Attenuation
-        44, # 0x31      SRC Control Left Attenuation
-        45, # 0x32-0x33 SRC Input: Output Ratio
-    ]
-    p1_reglist = [
-    #    0,  # 0x00      DIR Channel Status Ch1 Byte 0
-    #    1,  # 0x01      DIR Channel Status Ch2 Byte 0
-    #    2,  # 0x02      DIR Channel Status Ch1 Byte 1
-    #    3,  # 0x03      DIR Channel Status Ch2 Byte 1
-    #    4,  # 0x04      DIR Channel Status Ch1 Byte 2
-    #    5,  # 0x05      DIR Channel Status Ch2 Byte 2
-    #    6,  # 0x06      DIR Channel Status Ch1 Byte 3
-    #    7,  # 0x07      DIR Channel Status Ch2 Byte 3
-    #    8,  # 0x08      DIR Channel Status Ch1 Byte 4
-    #    9,  # 0x09      DIR Channel Status Ch2 Byte 4
-    #    10, # 0x0A      DIR Channel Status Ch1 Byte 5
-    #    11, # 0x0B      DIR Channel Status Ch2 Byte 5
-    #    12, # 0x0C      DIR Channel Status Ch1 Byte 6
-    #    13, # 0x0D      DIR Channel Status Ch2 Byte 6
-    #    14, # 0x0E      DIR Channel Status Ch1 Byte 7
-    #    15, # 0x0F      DIR Channel Status Ch2 Byte 7
-    #    16, # 0x10      DIR Channel Status Ch1 Byte 8
-    #    17, # 0x11      DIR Channel Status Ch2 Byte 8
-    #    18, # 0x12      DIR Channel Status Ch1 Byte 9
-    #    19, # 0x13      DIR Channel Status Ch2 Byte 9
-    #    20, # 0x14      DIR Channel Status Ch1 Byte 10
-    #    21, # 0x15      DIR Channel Status Ch2 Byte 10
-    #    22, # 0x16      DIR Channel Status Ch1 Byte 11
-    #    23, # 0x17      DIR Channel Status Ch2 Byte 11
-    #    24, # 0x18      DIR Channel Status Ch1 Byte 12
-    #    25, # 0x19      DIR Channel Status Ch2 Byte 12
-    #    26, # 0x1A      DIR Channel Status Ch1 Byte 13
-    #    27, # 0x1B      DIR Channel Status Ch2 Byte 13
-    #    28, # 0x1C      DIR Channel Status Ch1 Byte 14
-    #    29, # 0x1D      DIR Channel Status Ch2 Byte 14
-    #    30, # 0x1E      DIR Channel Status Ch1 Byte 15
-    #    31, # 0x1F      DIR Channel Status Ch2 Byte 15
-    #    32, # 0x20      DIR Channel Status Ch1 Byte 16
-    #    33, # 0x21      DIR Channel Status Ch2 Byte 16
-    #    34, # 0x22      DIR Channel Status Ch1 Byte 17
-    #    35, # 0x23      DIR Channel Status Ch2 Byte 17
-    #    36, # 0x24      DIR Channel Status Ch1 Byte 18
-    #    37, # 0x25      DIR Channel Status Ch2 Byte 18
-    #    38, # 0x26      DIR Channel Status Ch1 Byte 19
-    #    39, # 0x27      DIR Channel Status Ch2 Byte 19
-    #    40, # 0x28      DIR Channel Status Ch1 Byte 20
-    #    41, # 0x29      DIR Channel Status Ch2 Byte 20
-    #    42, # 0x2A      DIR Channel Status Ch1 Byte 21
-    #    43, # 0x2B      DIR Channel Status Ch2 Byte 21
-    #    44, # 0x2C      DIR Channel Status Ch1 Byte 22
-    #    45, # 0x2D      DIR Channel Status Ch2 Byte 22
-    #    46, # 0x2E      DIR Channel Status Ch1 Byte 23
-    #    47, # 0x2F      DIR Channel Status Ch2 Byte 23
-    #    48, # 0x40      DIR User Data Ch2 Byte 0
-    #    49, # 0x41      DIR User Data Ch1 Byte 0
-    #    50, # 0x42      DIR User Data Ch2 Byte 1
-    #    51, # 0x43      DIR User Data Ch1 Byte 1
-    #    52, # 0x44      DIR User Data Ch2 Byte 2
-    #    53, # 0x45      DIR User Data Ch1 Byte 2
-    #    54, # 0x46      DIR User Data Ch2 Byte 3
-    #    55, # 0x47      DIR User Data Ch1 Byte 3
-    #    56, # 0x48      DIR User Data Ch2 Byte 4
-    #    57, # 0x49      DIR User Data Ch1 Byte 4
-    #    58, # 0x4A      DIR User Data Ch2 Byte 5
-    #    59, # 0x4B      DIR User Data Ch1 Byte 5
-    #    60, # 0x4C      DIR User Data Ch2 Byte 6
-    #    61, # 0x4D      DIR User Data Ch1 Byte 6
-    #    62, # 0x4E      DIR User Data Ch2 Byte 7
-    #    63, # 0x4F      DIR User Data Ch1 Byte 7
-    #    64, # 0x50      DIR User Data Ch2 Byte 8
-    #    65, # 0x51      DIR User Data Ch1 Byte 8
-    #    66, # 0x52      DIR User Data Ch2 Byte 9
-    #    67, # 0x53      DIR User Data Ch1 Byte 9
-    #    68, # 0x54      DIR User Data Ch2 Byte 10
-    #    69, # 0x55      DIR User Data Ch1 Byte 10
-    #    70, # 0x56      DIR User Data Ch2 Byte 11
-    #    71, # 0x57      DIR User Data Ch1 Byte 11
-    #    72, # 0x58      DIR User Data Ch2 Byte 12
-    #    73, # 0x59      DIR User Data Ch1 Byte 12
-    #    74, # 0x5A      DIR User Data Ch2 Byte 13
-    #    75, # 0x5B      DIR User Data Ch1 Byte 13
-    #    76, # 0x5C      DIR User Data Ch2 Byte 14
-    #    77, # 0x5D      DIR User Data Ch1 Byte 14
-    #    78, # 0x5E      DIR User Data Ch2 Byte 15
-    #    79, # 0x5F      DIR User Data Ch1 Byte 15
-    #    80, # 0x60      DIR User Data Ch2 Byte 16
-    #    81, # 0x61      DIR User Data Ch1 Byte 16
-    #    82, # 0x62      DIR User Data Ch2 Byte 17
-    #    83, # 0x63      DIR User Data Ch1 Byte 17
-    #    84, # 0x64      DIR User Data Ch2 Byte 18
-    #    85, # 0x65      DIR User Data Ch1 Byte 18
-    #    86, # 0x66      DIR User Data Ch2 Byte 19
-    #    87, # 0x67      DIR User Data Ch1 Byte 19
-    #    88, # 0x68      DIR User Data Ch2 Byte 20
-    #    89, # 0x69      DIR User Data Ch1 Byte 20
-    #    90, # 0x6A      DIR User Data Ch2 Byte 21
-    #    91, # 0x6B      DIR User Data Ch1 Byte 21
-    #    92, # 0x6C      DIR User Data Ch2 Byte 22
-    #    93, # 0x6D      DIR User Data Ch2 Byte 22
-    #    94, # 0x6E      DIR User Data Ch1 Byte 23
-    #    95, # 0x6F      DIR User Data Ch2 Byte 23
-    ]
-    p2_reglist = [
-        0,  # 0x00      DIT Channel Status Ch1 Byte 0
-        1,  # 0x01      DIT Channel Status Ch2 Byte 0
-        2,  # 0x02      DIT Channel Status Ch1 Byte 1
-        3,  # 0x03      DIT Channel Status Ch2 Byte 1
-        4,  # 0x04      DIT Channel Status Ch1 Byte 2
-        5,  # 0x05      DIT Channel Status Ch2 Byte 2
-        6,  # 0x06      DIT Channel Status Ch1 Byte 3
-        7,  # 0x07      DIT Channel Status Ch2 Byte 3
-    #    8,  # 0x08      DIT Channel Status Ch1 Byte 4
-    #    9,  # 0x09      DIT Channel Status Ch2 Byte 4
-    #    10, # 0x0A      DIT Channel Status Ch1 Byte 5
-    #    11, # 0x0B      DIT Channel Status Ch2 Byte 5
-    #    12, # 0x0C      DIT Channel Status Ch1 Byte 6
-    #    13, # 0x0D      DIT Channel Status Ch2 Byte 6
-    #    14, # 0x0E      DIT Channel Status Ch1 Byte 7
-    #    15, # 0x0F      DIT Channel Status Ch2 Byte 7
-    #    16, # 0x10      DIT Channel Status Ch1 Byte 8
-    #    17, # 0x11      DIT Channel Status Ch2 Byte 8
-    #    18, # 0x12      DIT Channel Status Ch1 Byte 9
-    #    19, # 0x13      DIT Channel Status Ch2 Byte 9
-    #    20, # 0x14      DIT Channel Status Ch1 Byte 10
-    #    21, # 0x15      DIT Channel Status Ch2 Byte 10
-    #    22, # 0x16      DIT Channel Status Ch1 Byte 11
-    #    23, # 0x17      DIT Channel Status Ch2 Byte 11
-    #    24, # 0x18      DIT Channel Status Ch1 Byte 12
-    #    25, # 0x19      DIT Channel Status Ch2 Byte 12
-    #    26, # 0x1A      DIT Channel Status Ch1 Byte 13
-    #    27, # 0x1B      DIT Channel Status Ch2 Byte 13
-    #    28, # 0x1C      DIT Channel Status Ch1 Byte 14
-    #    29, # 0x1D      DIT Channel Status Ch2 Byte 14
-    #    30, # 0x1E      DIT Channel Status Ch1 Byte 15
-    #    31, # 0x1F      DIT Channel Status Ch2 Byte 15
-    #    32, # 0x20      DIT Channel Status Ch1 Byte 16
-    #    33, # 0x21      DIT Channel Status Ch2 Byte 16
-    #    34, # 0x22      DIT Channel Status Ch1 Byte 17
-    #    35, # 0x23      DIT Channel Status Ch2 Byte 17
-    #    36, # 0x24      DIT Channel Status Ch1 Byte 18
-    #    37, # 0x25      DIT Channel Status Ch2 Byte 18
-    #    38, # 0x26      DIT Channel Status Ch1 Byte 19
-    #    39, # 0x27      DIT Channel Status Ch2 Byte 19
-    #    40, # 0x28      DIT Channel Status Ch1 Byte 20
-    #    41, # 0x29      DIT Channel Status Ch2 Byte 20
-    #    42, # 0x2A      DIT Channel Status Ch1 Byte 21
-    #    43, # 0x2B      DIT Channel Status Ch2 Byte 21
-    #    44, # 0x2C      DIT Channel Status Ch1 Byte 22
-    #    45, # 0x2D      DIT Channel Status Ch2 Byte 22
-    #    46, # 0x2E      DIT Channel Status Ch1 Byte 23
-    #    47, # 0x2F      DIT Channel Status Ch2 Byte 23
-    #    48, # 0x40      DIT User Data Ch2 Byte 0
-    #    49, # 0x41      DIT User Data Ch1 Byte 0
-    #    50, # 0x42      DIT User Data Ch2 Byte 1
-    #    51, # 0x43      DIT User Data Ch1 Byte 1
-    #    52, # 0x44      DIT User Data Ch2 Byte 2
-    #    53, # 0x45      DIT User Data Ch1 Byte 2
-    #    54, # 0x46      DIT User Data Ch2 Byte 3
-    #    55, # 0x47      DIT User Data Ch1 Byte 3
-    #    56, # 0x48      DIT User Data Ch2 Byte 4
-    #    57, # 0x49      DIT User Data Ch1 Byte 4
-    #    58, # 0x4A      DIT User Data Ch2 Byte 5
-    #    59, # 0x4B      DIT User Data Ch1 Byte 5
-    #    60, # 0x4C      DIT User Data Ch2 Byte 6
-    #    61, # 0x4D      DIT User Data Ch1 Byte 6
-    #    62, # 0x4E      DIT User Data Ch2 Byte 7
-    #    63, # 0x4F      DIT User Data Ch1 Byte 7
-    #    64, # 0x50      DIT User Data Ch2 Byte 8
-    #    65, # 0x51      DIT User Data Ch1 Byte 8
-    #    66, # 0x52      DIT User Data Ch2 Byte 9
-    #    67, # 0x53      DIT User Data Ch1 Byte 9
-    #    68, # 0x54      DIT User Data Ch2 Byte 10
-    #    69, # 0x55      DIT User Data Ch1 Byte 10
-    #    70, # 0x56      DIT User Data Ch2 Byte 11
-    #    71, # 0x57      DIT User Data Ch1 Byte 11
-    #    72, # 0x58      DIT User Data Ch2 Byte 12
-    #    73, # 0x59      DIT User Data Ch1 Byte 12
-    #    74, # 0x5A      DIT User Data Ch2 Byte 13
-    #    75, # 0x5B      DIT User Data Ch1 Byte 13
-    #    76, # 0x5C      DIT User Data Ch2 Byte 14
-    #    77, # 0x5D      DIT User Data Ch1 Byte 14
-    #    78, # 0x5E      DIR User Data Ch2 Byte 15
-    #    79, # 0x5F      DIT User Data Ch1 Byte 15
-    #    80, # 0x60      DIT User Data Ch2 Byte 16
-    #    81, # 0x61      DIT User Data Ch1 Byte 16
-    #    82, # 0x62      DIT User Data Ch2 Byte 17
-    #    83, # 0x63      DIT User Data Ch1 Byte 17
-    #    84, # 0x64      DIT User Data Ch2 Byte 18
-    #    85, # 0x65      DIT User Data Ch1 Byte 18
-    #    86, # 0x66      DIT User Data Ch2 Byte 19
-    #    87, # 0x67      DIT User Data Ch1 Byte 19
-    #    88, # 0x68      DIT User Data Ch2 Byte 20
-    #    89, # 0x69      DIT User Data Ch1 Byte 20
-    #    90, # 0x6A      DIT User Data Ch2 Byte 21
-    #    91, # 0x6B      DIT User Data Ch1 Byte 21
-    #    92, # 0x6C      DIT User Data Ch2 Byte 22
-    #    93, # 0x6D      DIT User Data Ch2 Byte 22
-    #    94, # 0x6E      DIT User Data Ch1 Byte 23
-    #    95, # 0x6F      DIT User Data Ch2 Byte 23
-    ]
-elif chan == "OE":
-    dev = "/dev/i2c-10"
-    p0_reglist = [
-        0,  # 0x01      Power-Down and Reset
-    #    1,  # 0x02      Global Interrupt Status
-        2,  # 0x03      Port A Control
-        3,  # 0x04      Port A Control
-    #    4,  # 0x05      Port B Control
-    #    5,  # 0x06      Port B Control
-        6,  # 0x07      Transmitter Control
-        7,  # 0x08      Transmitter Control
-        8,  # 0x09      Transmitter Control
-        9,  # 0x0A      SRC and DIT Status
-    #    10, # 0x0B      SRC and DIT Interrupt Mask
-    #    11, # 0x0C      SRC and DIT Interrupt Mask
-    #    12, # 0x0D      Receiver Control
-    #    13, # 0x0E      Receiver Control
-    #    14, # 0x0F-0x11 Receiver PLL Configuration
-    #    15, # 0x12      Non-PCM Audio Detection
-    #    16, # 0x13      Receiver Status
-    #    17, # 0x14      Receiver Status
-    #    18, # 0x15      Receiver Status
-    #    19, # 0x16      Receiver Interrupt Mask
-    #    20, # 0x17      Receiver Interrupt Mask
-    #    21, # 0x18      Receiver Interrupt Mode
-    #    22, # 0x19      Receiver Interrupt Mode
-    #    23, # 0x1A      Receiver Interrupt Mode
-    #    24, # 0x1B      General-Purpose Out (GPO1)
-    #    25, # 0x1C      General-Purpose Out (GPO2)
-    #    26, # 0x1D      General-Purpose Out (GPO3)
-    #    27, # 0x1E      General-Purpose Out (GPO4)
-    #    28, # 0x1F      Audio CD Q-Channel Sub-Code
-    #    29, # 0x20      Audio CD Q-Channel Sub-Code
-    #    30, # 0x21      Audio CD Q-Channel Sub-Code
-    #    31, # 0x22      Audio CD Q-Channel Sub-Code
-    #    32, # 0x23      Audio CD Q-Channel Sub-Code
-    #    33, # 0x24      Audio CD Q-Channel Sub-Code
-    #    34, # 0x25      Audio CD Q-Channel Sub-Code
-    #    35, # 0x26      Audio CD Q-Channel Sub-Code
-    #    36, # 0x27      Audio CD Q-Channel Sub-Code
-    #    37, # 0x28      Audio CD Q-Channel Sub-Code
-    #    38, # 0x29-0x2A PC Burst Preamble
-    #    39, # 0x2B-0x2C PD Burst Preamble
-        40, # 0x2D      SRC Control
-        41, # 0x2E      SRC Control
-        42, # 0x2F      SRC Control
-        43, # 0x30      SRC Control Right Attenuation
-        44, # 0x31      SRC Control Left Attenuation
-        45, # 0x32-0x33 SRC Input: Output Ratio
-    ]
-    p1_reglist = [
-    #    0,  # 0x00      DIR Channel Status Ch1 Byte 0
-    #    1,  # 0x01      DIR Channel Status Ch2 Byte 0
-    #    2,  # 0x02      DIR Channel Status Ch1 Byte 1
-    #    3,  # 0x03      DIR Channel Status Ch2 Byte 1
-    #    4,  # 0x04      DIR Channel Status Ch1 Byte 2
-    #    5,  # 0x05      DIR Channel Status Ch2 Byte 2
-    #    6,  # 0x06      DIR Channel Status Ch1 Byte 3
-    #    7,  # 0x07      DIR Channel Status Ch2 Byte 3
-    #    8,  # 0x08      DIR Channel Status Ch1 Byte 4
-    #    9,  # 0x09      DIR Channel Status Ch2 Byte 4
-    #    10, # 0x0A      DIR Channel Status Ch1 Byte 5
-    #    11, # 0x0B      DIR Channel Status Ch2 Byte 5
-    #    12, # 0x0C      DIR Channel Status Ch1 Byte 6
-    #    13, # 0x0D      DIR Channel Status Ch2 Byte 6
-    #    14, # 0x0E      DIR Channel Status Ch1 Byte 7
-    #    15, # 0x0F      DIR Channel Status Ch2 Byte 7
-    #    16, # 0x10      DIR Channel Status Ch1 Byte 8
-    #    17, # 0x11      DIR Channel Status Ch2 Byte 8
-    #    18, # 0x12      DIR Channel Status Ch1 Byte 9
-    #    19, # 0x13      DIR Channel Status Ch2 Byte 9
-    #    20, # 0x14      DIR Channel Status Ch1 Byte 10
-    #    21, # 0x15      DIR Channel Status Ch2 Byte 10
-    #    22, # 0x16      DIR Channel Status Ch1 Byte 11
-    #    23, # 0x17      DIR Channel Status Ch2 Byte 11
-    #    24, # 0x18      DIR Channel Status Ch1 Byte 12
-    #    25, # 0x19      DIR Channel Status Ch2 Byte 12
-    #    26, # 0x1A      DIR Channel Status Ch1 Byte 13
-    #    27, # 0x1B      DIR Channel Status Ch2 Byte 13
-    #    28, # 0x1C      DIR Channel Status Ch1 Byte 14
-    #    29, # 0x1D      DIR Channel Status Ch2 Byte 14
-    #    30, # 0x1E      DIR Channel Status Ch1 Byte 15
-    #    31, # 0x1F      DIR Channel Status Ch2 Byte 15
-    #    32, # 0x20      DIR Channel Status Ch1 Byte 16
-    #    33, # 0x21      DIR Channel Status Ch2 Byte 16
-    #    34, # 0x22      DIR Channel Status Ch1 Byte 17
-    #    35, # 0x23      DIR Channel Status Ch2 Byte 17
-    #    36, # 0x24      DIR Channel Status Ch1 Byte 18
-    #    37, # 0x25      DIR Channel Status Ch2 Byte 18
-    #    38, # 0x26      DIR Channel Status Ch1 Byte 19
-    #    39, # 0x27      DIR Channel Status Ch2 Byte 19
-    #    40, # 0x28      DIR Channel Status Ch1 Byte 20
-    #    41, # 0x29      DIR Channel Status Ch2 Byte 20
-    #    42, # 0x2A      DIR Channel Status Ch1 Byte 21
-    #    43, # 0x2B      DIR Channel Status Ch2 Byte 21
-    #    44, # 0x2C      DIR Channel Status Ch1 Byte 22
-    #    45, # 0x2D      DIR Channel Status Ch2 Byte 22
-    #    46, # 0x2E      DIR Channel Status Ch1 Byte 23
-    #    47, # 0x2F      DIR Channel Status Ch2 Byte 23
-    #    48, # 0x40      DIR User Data Ch2 Byte 0
-    #    49, # 0x41      DIR User Data Ch1 Byte 0
-    #    50, # 0x42      DIR User Data Ch2 Byte 1
-    #    51, # 0x43      DIR User Data Ch1 Byte 1
-    #    52, # 0x44      DIR User Data Ch2 Byte 2
-    #    53, # 0x45      DIR User Data Ch1 Byte 2
-    #    54, # 0x46      DIR User Data Ch2 Byte 3
-    #    55, # 0x47      DIR User Data Ch1 Byte 3
-    #    56, # 0x48      DIR User Data Ch2 Byte 4
-    #    57, # 0x49      DIR User Data Ch1 Byte 4
-    #    58, # 0x4A      DIR User Data Ch2 Byte 5
-    #    59, # 0x4B      DIR User Data Ch1 Byte 5
-    #    60, # 0x4C      DIR User Data Ch2 Byte 6
-    #    61, # 0x4D      DIR User Data Ch1 Byte 6
-    #    62, # 0x4E      DIR User Data Ch2 Byte 7
-    #    63, # 0x4F      DIR User Data Ch1 Byte 7
-    #    64, # 0x50      DIR User Data Ch2 Byte 8
-    #    65, # 0x51      DIR User Data Ch1 Byte 8
-    #    66, # 0x52      DIR User Data Ch2 Byte 9
-    #    67, # 0x53      DIR User Data Ch1 Byte 9
-    #    68, # 0x54      DIR User Data Ch2 Byte 10
-    #    69, # 0x55      DIR User Data Ch1 Byte 10
-    #    70, # 0x56      DIR User Data Ch2 Byte 11
-    #    71, # 0x57      DIR User Data Ch1 Byte 11
-    #    72, # 0x58      DIR User Data Ch2 Byte 12
-    #    73, # 0x59      DIR User Data Ch1 Byte 12
-    #    74, # 0x5A      DIR User Data Ch2 Byte 13
-    #    75, # 0x5B      DIR User Data Ch1 Byte 13
-    #    76, # 0x5C      DIR User Data Ch2 Byte 14
-    #    77, # 0x5D      DIR User Data Ch1 Byte 14
-    #    78, # 0x5E      DIR User Data Ch2 Byte 15
-    #    79, # 0x5F      DIR User Data Ch1 Byte 15
-    #    80, # 0x60      DIR User Data Ch2 Byte 16
-    #    81, # 0x61      DIR User Data Ch1 Byte 16
-    #    82, # 0x62      DIR User Data Ch2 Byte 17
-    #    83, # 0x63      DIR User Data Ch1 Byte 17
-    #    84, # 0x64      DIR User Data Ch2 Byte 18
-    #    85, # 0x65      DIR User Data Ch1 Byte 18
-    #    86, # 0x66      DIR User Data Ch2 Byte 19
-    #    87, # 0x67      DIR User Data Ch1 Byte 19
-    #    88, # 0x68      DIR User Data Ch2 Byte 20
-    #    89, # 0x69      DIR User Data Ch1 Byte 20
-    #    90, # 0x6A      DIR User Data Ch2 Byte 21
-    #    91, # 0x6B      DIR User Data Ch1 Byte 21
-    #    92, # 0x6C      DIR User Data Ch2 Byte 22
-    #    93, # 0x6D      DIR User Data Ch2 Byte 22
-    #    94, # 0x6E      DIR User Data Ch1 Byte 23
-    #    95, # 0x6F      DIR User Data Ch2 Byte 23
-    ]
-    p2_reglist = [
-        0,  # 0x00      DIT Channel Status Ch1 Byte 0
-        1,  # 0x01      DIT Channel Status Ch2 Byte 0
-        2,  # 0x02      DIT Channel Status Ch1 Byte 1
-        3,  # 0x03      DIT Channel Status Ch2 Byte 1
-        4,  # 0x04      DIT Channel Status Ch1 Byte 2
-        5,  # 0x05      DIT Channel Status Ch2 Byte 2
-        6,  # 0x06      DIT Channel Status Ch1 Byte 3
-        7,  # 0x07      DIT Channel Status Ch2 Byte 3
-    #    8,  # 0x08      DIT Channel Status Ch1 Byte 4
-    #    9,  # 0x09      DIT Channel Status Ch2 Byte 4
-    #    10, # 0x0A      DIT Channel Status Ch1 Byte 5
-    #    11, # 0x0B      DIT Channel Status Ch2 Byte 5
-    #    12, # 0x0C      DIT Channel Status Ch1 Byte 6
-    #    13, # 0x0D      DIT Channel Status Ch2 Byte 6
-    #    14, # 0x0E      DIT Channel Status Ch1 Byte 7
-    #    15, # 0x0F      DIT Channel Status Ch2 Byte 7
-    #    16, # 0x10      DIT Channel Status Ch1 Byte 8
-    #    17, # 0x11      DIT Channel Status Ch2 Byte 8
-    #    18, # 0x12      DIT Channel Status Ch1 Byte 9
-    #    19, # 0x13      DIT Channel Status Ch2 Byte 9
-    #    20, # 0x14      DIT Channel Status Ch1 Byte 10
-    #    21, # 0x15      DIT Channel Status Ch2 Byte 10
-    #    22, # 0x16      DIT Channel Status Ch1 Byte 11
-    #    23, # 0x17      DIT Channel Status Ch2 Byte 11
-    #    24, # 0x18      DIT Channel Status Ch1 Byte 12
-    #    25, # 0x19      DIT Channel Status Ch2 Byte 12
-    #    26, # 0x1A      DIT Channel Status Ch1 Byte 13
-    #    27, # 0x1B      DIT Channel Status Ch2 Byte 13
-    #    28, # 0x1C      DIT Channel Status Ch1 Byte 14
-    #    29, # 0x1D      DIT Channel Status Ch2 Byte 14
-    #    30, # 0x1E      DIT Channel Status Ch1 Byte 15
-    #    31, # 0x1F      DIT Channel Status Ch2 Byte 15
-    #    32, # 0x20      DIT Channel Status Ch1 Byte 16
-    #    33, # 0x21      DIT Channel Status Ch2 Byte 16
-    #    34, # 0x22      DIT Channel Status Ch1 Byte 17
-    #    35, # 0x23      DIT Channel Status Ch2 Byte 17
-    #    36, # 0x24      DIT Channel Status Ch1 Byte 18
-    #    37, # 0x25      DIT Channel Status Ch2 Byte 18
-    #    38, # 0x26      DIT Channel Status Ch1 Byte 19
-    #    39, # 0x27      DIT Channel Status Ch2 Byte 19
-    #    40, # 0x28      DIT Channel Status Ch1 Byte 20
-    #    41, # 0x29      DIT Channel Status Ch2 Byte 20
-    #    42, # 0x2A      DIT Channel Status Ch1 Byte 21
-    #    43, # 0x2B      DIT Channel Status Ch2 Byte 21
-    #    44, # 0x2C      DIT Channel Status Ch1 Byte 22
-    #    45, # 0x2D      DIT Channel Status Ch2 Byte 22
-    #    46, # 0x2E      DIT Channel Status Ch1 Byte 23
-    #    47, # 0x2F      DIT Channel Status Ch2 Byte 23
-    #    48, # 0x40      DIT User Data Ch2 Byte 0
-    #    49, # 0x41      DIT User Data Ch1 Byte 0
-    #    50, # 0x42      DIT User Data Ch2 Byte 1
-    #    51, # 0x43      DIT User Data Ch1 Byte 1
-    #    52, # 0x44      DIT User Data Ch2 Byte 2
-    #    53, # 0x45      DIT User Data Ch1 Byte 2
-    #    54, # 0x46      DIT User Data Ch2 Byte 3
-    #    55, # 0x47      DIT User Data Ch1 Byte 3
-    #    56, # 0x48      DIT User Data Ch2 Byte 4
-    #    57, # 0x49      DIT User Data Ch1 Byte 4
-    #    58, # 0x4A      DIT User Data Ch2 Byte 5
-    #    59, # 0x4B      DIT User Data Ch1 Byte 5
-    #    60, # 0x4C      DIT User Data Ch2 Byte 6
-    #    61, # 0x4D      DIT User Data Ch1 Byte 6
-    #    62, # 0x4E      DIT User Data Ch2 Byte 7
-    #    63, # 0x4F      DIT User Data Ch1 Byte 7
-    #    64, # 0x50      DIT User Data Ch2 Byte 8
-    #    65, # 0x51      DIT User Data Ch1 Byte 8
-    #    66, # 0x52      DIT User Data Ch2 Byte 9
-    #    67, # 0x53      DIT User Data Ch1 Byte 9
-    #    68, # 0x54      DIT User Data Ch2 Byte 10
-    #    69, # 0x55      DIT User Data Ch1 Byte 10
-    #    70, # 0x56      DIT User Data Ch2 Byte 11
-    #    71, # 0x57      DIT User Data Ch1 Byte 11
-    #    72, # 0x58      DIT User Data Ch2 Byte 12
-    #    73, # 0x59      DIT User Data Ch1 Byte 12
-    #    74, # 0x5A      DIT User Data Ch2 Byte 13
-    #    75, # 0x5B      DIT User Data Ch1 Byte 13
-    #    76, # 0x5C      DIT User Data Ch2 Byte 14
-    #    77, # 0x5D      DIT User Data Ch1 Byte 14
-    #    78, # 0x5E      DIR User Data Ch2 Byte 15
-    #    79, # 0x5F      DIT User Data Ch1 Byte 15
-    #    80, # 0x60      DIT User Data Ch2 Byte 16
-    #    81, # 0x61      DIT User Data Ch1 Byte 16
-    #    82, # 0x62      DIT User Data Ch2 Byte 17
-    #    83, # 0x63      DIT User Data Ch1 Byte 17
-    #    84, # 0x64      DIT User Data Ch2 Byte 18
-    #    85, # 0x65      DIT User Data Ch1 Byte 18
-    #    86, # 0x66      DIT User Data Ch2 Byte 19
-    #    87, # 0x67      DIT User Data Ch1 Byte 19
-    #    88, # 0x68      DIT User Data Ch2 Byte 20
-    #    89, # 0x69      DIT User Data Ch1 Byte 20
-    #    90, # 0x6A      DIT User Data Ch2 Byte 21
-    #    91, # 0x6B      DIT User Data Ch1 Byte 21
-    #    92, # 0x6C      DIT User Data Ch2 Byte 22
-    #    93, # 0x6D      DIT User Data Ch2 Byte 22
-    #    94, # 0x6E      DIT User Data Ch1 Byte 23
-    #    95, # 0x6F      DIT User Data Ch2 Byte 23
-    ]
-elif chan == "I3":
+if chan == "O7":
     dev = "/dev/i2c-12"
+    addr=0x72
     p0_reglist = [
         0,  # 0x01      Power-Down and Reset
     #    1,  # 0x02      Global Interrupt Status
@@ -3989,9 +2760,503 @@ elif chan == "I3":
         3,  # 0x04      Port A Control
     #    4,  # 0x05      Port B Control
     #    5,  # 0x06      Port B Control
-    #    6,  # 0x07      Transmitter Control
-    #    7,  # 0x08      Transmitter Control
-    #    8,  # 0x09      Transmitter Control
+        6,  # 0x07      Transmitter Control
+        7,  # 0x08      Transmitter Control
+        8,  # 0x09      Transmitter Control
+        9,  # 0x0A      SRC and DIT Status
+    #    10, # 0x0B      SRC and DIT Interrupt Mask
+    #    11, # 0x0C      SRC and DIT Interrupt Mask
+    #    12, # 0x0D      Receiver Control
+    #    13, # 0x0E      Receiver Control
+    #    14, # 0x0F-0x11 Receiver PLL Configuration
+    #    15, # 0x12      Non-PCM Audio Detection
+    #    16, # 0x13      Receiver Status
+    #    17, # 0x14      Receiver Status
+    #    18, # 0x15      Receiver Status
+    #    19, # 0x16      Receiver Interrupt Mask
+    #    20, # 0x17      Receiver Interrupt Mask
+    #    21, # 0x18      Receiver Interrupt Mode
+    #    22, # 0x19      Receiver Interrupt Mode
+    #    23, # 0x1A      Receiver Interrupt Mode
+    #    24, # 0x1B      General-Purpose Out (GPO1)
+    #    25, # 0x1C      General-Purpose Out (GPO2)
+    #    26, # 0x1D      General-Purpose Out (GPO3)
+    #    27, # 0x1E      General-Purpose Out (GPO4)
+    #    28, # 0x1F      Audio CD Q-Channel Sub-Code
+    #    29, # 0x20      Audio CD Q-Channel Sub-Code
+    #    30, # 0x21      Audio CD Q-Channel Sub-Code
+    #    31, # 0x22      Audio CD Q-Channel Sub-Code
+    #    32, # 0x23      Audio CD Q-Channel Sub-Code
+    #    33, # 0x24      Audio CD Q-Channel Sub-Code
+    #    34, # 0x25      Audio CD Q-Channel Sub-Code
+    #    35, # 0x26      Audio CD Q-Channel Sub-Code
+    #    36, # 0x27      Audio CD Q-Channel Sub-Code
+    #    37, # 0x28      Audio CD Q-Channel Sub-Code
+    #    38, # 0x29-0x2A PC Burst Preamble
+    #    39, # 0x2B-0x2C PD Burst Preamble
+        40, # 0x2D      SRC Control
+        41, # 0x2E      SRC Control
+        42, # 0x2F      SRC Control
+        43, # 0x30      SRC Control Right Attenuation
+        44, # 0x31      SRC Control Left Attenuation
+        45, # 0x32-0x33 SRC Input: Output Ratio
+    ]
+    p1_reglist = [
+    #    0,  # 0x00      DIR Channel Status Ch1 Byte 0
+    #    1,  # 0x01      DIR Channel Status Ch2 Byte 0
+    #    2,  # 0x02      DIR Channel Status Ch1 Byte 1
+    #    3,  # 0x03      DIR Channel Status Ch2 Byte 1
+    #    4,  # 0x04      DIR Channel Status Ch1 Byte 2
+    #    5,  # 0x05      DIR Channel Status Ch2 Byte 2
+    #    6,  # 0x06      DIR Channel Status Ch1 Byte 3
+    #    7,  # 0x07      DIR Channel Status Ch2 Byte 3
+    #    8,  # 0x08      DIR Channel Status Ch1 Byte 4
+    #    9,  # 0x09      DIR Channel Status Ch2 Byte 4
+    #    10, # 0x0A      DIR Channel Status Ch1 Byte 5
+    #    11, # 0x0B      DIR Channel Status Ch2 Byte 5
+    #    12, # 0x0C      DIR Channel Status Ch1 Byte 6
+    #    13, # 0x0D      DIR Channel Status Ch2 Byte 6
+    #    14, # 0x0E      DIR Channel Status Ch1 Byte 7
+    #    15, # 0x0F      DIR Channel Status Ch2 Byte 7
+    #    16, # 0x10      DIR Channel Status Ch1 Byte 8
+    #    17, # 0x11      DIR Channel Status Ch2 Byte 8
+    #    18, # 0x12      DIR Channel Status Ch1 Byte 9
+    #    19, # 0x13      DIR Channel Status Ch2 Byte 9
+    #    20, # 0x14      DIR Channel Status Ch1 Byte 10
+    #    21, # 0x15      DIR Channel Status Ch2 Byte 10
+    #    22, # 0x16      DIR Channel Status Ch1 Byte 11
+    #    23, # 0x17      DIR Channel Status Ch2 Byte 11
+    #    24, # 0x18      DIR Channel Status Ch1 Byte 12
+    #    25, # 0x19      DIR Channel Status Ch2 Byte 12
+    #    26, # 0x1A      DIR Channel Status Ch1 Byte 13
+    #    27, # 0x1B      DIR Channel Status Ch2 Byte 13
+    #    28, # 0x1C      DIR Channel Status Ch1 Byte 14
+    #    29, # 0x1D      DIR Channel Status Ch2 Byte 14
+    #    30, # 0x1E      DIR Channel Status Ch1 Byte 15
+    #    31, # 0x1F      DIR Channel Status Ch2 Byte 15
+    #    32, # 0x20      DIR Channel Status Ch1 Byte 16
+    #    33, # 0x21      DIR Channel Status Ch2 Byte 16
+    #    34, # 0x22      DIR Channel Status Ch1 Byte 17
+    #    35, # 0x23      DIR Channel Status Ch2 Byte 17
+    #    36, # 0x24      DIR Channel Status Ch1 Byte 18
+    #    37, # 0x25      DIR Channel Status Ch2 Byte 18
+    #    38, # 0x26      DIR Channel Status Ch1 Byte 19
+    #    39, # 0x27      DIR Channel Status Ch2 Byte 19
+    #    40, # 0x28      DIR Channel Status Ch1 Byte 20
+    #    41, # 0x29      DIR Channel Status Ch2 Byte 20
+    #    42, # 0x2A      DIR Channel Status Ch1 Byte 21
+    #    43, # 0x2B      DIR Channel Status Ch2 Byte 21
+    #    44, # 0x2C      DIR Channel Status Ch1 Byte 22
+    #    45, # 0x2D      DIR Channel Status Ch2 Byte 22
+    #    46, # 0x2E      DIR Channel Status Ch1 Byte 23
+    #    47, # 0x2F      DIR Channel Status Ch2 Byte 23
+    #    48, # 0x40      DIR User Data Ch2 Byte 0
+    #    49, # 0x41      DIR User Data Ch1 Byte 0
+    #    50, # 0x42      DIR User Data Ch2 Byte 1
+    #    51, # 0x43      DIR User Data Ch1 Byte 1
+    #    52, # 0x44      DIR User Data Ch2 Byte 2
+    #    53, # 0x45      DIR User Data Ch1 Byte 2
+    #    54, # 0x46      DIR User Data Ch2 Byte 3
+    #    55, # 0x47      DIR User Data Ch1 Byte 3
+    #    56, # 0x48      DIR User Data Ch2 Byte 4
+    #    57, # 0x49      DIR User Data Ch1 Byte 4
+    #    58, # 0x4A      DIR User Data Ch2 Byte 5
+    #    59, # 0x4B      DIR User Data Ch1 Byte 5
+    #    60, # 0x4C      DIR User Data Ch2 Byte 6
+    #    61, # 0x4D      DIR User Data Ch1 Byte 6
+    #    62, # 0x4E      DIR User Data Ch2 Byte 7
+    #    63, # 0x4F      DIR User Data Ch1 Byte 7
+    #    64, # 0x50      DIR User Data Ch2 Byte 8
+    #    65, # 0x51      DIR User Data Ch1 Byte 8
+    #    66, # 0x52      DIR User Data Ch2 Byte 9
+    #    67, # 0x53      DIR User Data Ch1 Byte 9
+    #    68, # 0x54      DIR User Data Ch2 Byte 10
+    #    69, # 0x55      DIR User Data Ch1 Byte 10
+    #    70, # 0x56      DIR User Data Ch2 Byte 11
+    #    71, # 0x57      DIR User Data Ch1 Byte 11
+    #    72, # 0x58      DIR User Data Ch2 Byte 12
+    #    73, # 0x59      DIR User Data Ch1 Byte 12
+    #    74, # 0x5A      DIR User Data Ch2 Byte 13
+    #    75, # 0x5B      DIR User Data Ch1 Byte 13
+    #    76, # 0x5C      DIR User Data Ch2 Byte 14
+    #    77, # 0x5D      DIR User Data Ch1 Byte 14
+    #    78, # 0x5E      DIR User Data Ch2 Byte 15
+    #    79, # 0x5F      DIR User Data Ch1 Byte 15
+    #    80, # 0x60      DIR User Data Ch2 Byte 16
+    #    81, # 0x61      DIR User Data Ch1 Byte 16
+    #    82, # 0x62      DIR User Data Ch2 Byte 17
+    #    83, # 0x63      DIR User Data Ch1 Byte 17
+    #    84, # 0x64      DIR User Data Ch2 Byte 18
+    #    85, # 0x65      DIR User Data Ch1 Byte 18
+    #    86, # 0x66      DIR User Data Ch2 Byte 19
+    #    87, # 0x67      DIR User Data Ch1 Byte 19
+    #    88, # 0x68      DIR User Data Ch2 Byte 20
+    #    89, # 0x69      DIR User Data Ch1 Byte 20
+    #    90, # 0x6A      DIR User Data Ch2 Byte 21
+    #    91, # 0x6B      DIR User Data Ch1 Byte 21
+    #    92, # 0x6C      DIR User Data Ch2 Byte 22
+    #    93, # 0x6D      DIR User Data Ch2 Byte 22
+    #    94, # 0x6E      DIR User Data Ch1 Byte 23
+    #    95, # 0x6F      DIR User Data Ch2 Byte 23
+    ]
+    p2_reglist = [
+        0,  # 0x00      DIT Channel Status Ch1 Byte 0
+        1,  # 0x01      DIT Channel Status Ch2 Byte 0
+        2,  # 0x02      DIT Channel Status Ch1 Byte 1
+        3,  # 0x03      DIT Channel Status Ch2 Byte 1
+        4,  # 0x04      DIT Channel Status Ch1 Byte 2
+        5,  # 0x05      DIT Channel Status Ch2 Byte 2
+        6,  # 0x06      DIT Channel Status Ch1 Byte 3
+        7,  # 0x07      DIT Channel Status Ch2 Byte 3
+    #    8,  # 0x08      DIT Channel Status Ch1 Byte 4
+    #    9,  # 0x09      DIT Channel Status Ch2 Byte 4
+    #    10, # 0x0A      DIT Channel Status Ch1 Byte 5
+    #    11, # 0x0B      DIT Channel Status Ch2 Byte 5
+    #    12, # 0x0C      DIT Channel Status Ch1 Byte 6
+    #    13, # 0x0D      DIT Channel Status Ch2 Byte 6
+    #    14, # 0x0E      DIT Channel Status Ch1 Byte 7
+    #    15, # 0x0F      DIT Channel Status Ch2 Byte 7
+    #    16, # 0x10      DIT Channel Status Ch1 Byte 8
+    #    17, # 0x11      DIT Channel Status Ch2 Byte 8
+    #    18, # 0x12      DIT Channel Status Ch1 Byte 9
+    #    19, # 0x13      DIT Channel Status Ch2 Byte 9
+    #    20, # 0x14      DIT Channel Status Ch1 Byte 10
+    #    21, # 0x15      DIT Channel Status Ch2 Byte 10
+    #    22, # 0x16      DIT Channel Status Ch1 Byte 11
+    #    23, # 0x17      DIT Channel Status Ch2 Byte 11
+    #    24, # 0x18      DIT Channel Status Ch1 Byte 12
+    #    25, # 0x19      DIT Channel Status Ch2 Byte 12
+    #    26, # 0x1A      DIT Channel Status Ch1 Byte 13
+    #    27, # 0x1B      DIT Channel Status Ch2 Byte 13
+    #    28, # 0x1C      DIT Channel Status Ch1 Byte 14
+    #    29, # 0x1D      DIT Channel Status Ch2 Byte 14
+    #    30, # 0x1E      DIT Channel Status Ch1 Byte 15
+    #    31, # 0x1F      DIT Channel Status Ch2 Byte 15
+    #    32, # 0x20      DIT Channel Status Ch1 Byte 16
+    #    33, # 0x21      DIT Channel Status Ch2 Byte 16
+    #    34, # 0x22      DIT Channel Status Ch1 Byte 17
+    #    35, # 0x23      DIT Channel Status Ch2 Byte 17
+    #    36, # 0x24      DIT Channel Status Ch1 Byte 18
+    #    37, # 0x25      DIT Channel Status Ch2 Byte 18
+    #    38, # 0x26      DIT Channel Status Ch1 Byte 19
+    #    39, # 0x27      DIT Channel Status Ch2 Byte 19
+    #    40, # 0x28      DIT Channel Status Ch1 Byte 20
+    #    41, # 0x29      DIT Channel Status Ch2 Byte 20
+    #    42, # 0x2A      DIT Channel Status Ch1 Byte 21
+    #    43, # 0x2B      DIT Channel Status Ch2 Byte 21
+    #    44, # 0x2C      DIT Channel Status Ch1 Byte 22
+    #    45, # 0x2D      DIT Channel Status Ch2 Byte 22
+    #    46, # 0x2E      DIT Channel Status Ch1 Byte 23
+    #    47, # 0x2F      DIT Channel Status Ch2 Byte 23
+    #    48, # 0x40      DIT User Data Ch2 Byte 0
+    #    49, # 0x41      DIT User Data Ch1 Byte 0
+    #    50, # 0x42      DIT User Data Ch2 Byte 1
+    #    51, # 0x43      DIT User Data Ch1 Byte 1
+    #    52, # 0x44      DIT User Data Ch2 Byte 2
+    #    53, # 0x45      DIT User Data Ch1 Byte 2
+    #    54, # 0x46      DIT User Data Ch2 Byte 3
+    #    55, # 0x47      DIT User Data Ch1 Byte 3
+    #    56, # 0x48      DIT User Data Ch2 Byte 4
+    #    57, # 0x49      DIT User Data Ch1 Byte 4
+    #    58, # 0x4A      DIT User Data Ch2 Byte 5
+    #    59, # 0x4B      DIT User Data Ch1 Byte 5
+    #    60, # 0x4C      DIT User Data Ch2 Byte 6
+    #    61, # 0x4D      DIT User Data Ch1 Byte 6
+    #    62, # 0x4E      DIT User Data Ch2 Byte 7
+    #    63, # 0x4F      DIT User Data Ch1 Byte 7
+    #    64, # 0x50      DIT User Data Ch2 Byte 8
+    #    65, # 0x51      DIT User Data Ch1 Byte 8
+    #    66, # 0x52      DIT User Data Ch2 Byte 9
+    #    67, # 0x53      DIT User Data Ch1 Byte 9
+    #    68, # 0x54      DIT User Data Ch2 Byte 10
+    #    69, # 0x55      DIT User Data Ch1 Byte 10
+    #    70, # 0x56      DIT User Data Ch2 Byte 11
+    #    71, # 0x57      DIT User Data Ch1 Byte 11
+    #    72, # 0x58      DIT User Data Ch2 Byte 12
+    #    73, # 0x59      DIT User Data Ch1 Byte 12
+    #    74, # 0x5A      DIT User Data Ch2 Byte 13
+    #    75, # 0x5B      DIT User Data Ch1 Byte 13
+    #    76, # 0x5C      DIT User Data Ch2 Byte 14
+    #    77, # 0x5D      DIT User Data Ch1 Byte 14
+    #    78, # 0x5E      DIR User Data Ch2 Byte 15
+    #    79, # 0x5F      DIT User Data Ch1 Byte 15
+    #    80, # 0x60      DIT User Data Ch2 Byte 16
+    #    81, # 0x61      DIT User Data Ch1 Byte 16
+    #    82, # 0x62      DIT User Data Ch2 Byte 17
+    #    83, # 0x63      DIT User Data Ch1 Byte 17
+    #    84, # 0x64      DIT User Data Ch2 Byte 18
+    #    85, # 0x65      DIT User Data Ch1 Byte 18
+    #    86, # 0x66      DIT User Data Ch2 Byte 19
+    #    87, # 0x67      DIT User Data Ch1 Byte 19
+    #    88, # 0x68      DIT User Data Ch2 Byte 20
+    #    89, # 0x69      DIT User Data Ch1 Byte 20
+    #    90, # 0x6A      DIT User Data Ch2 Byte 21
+    #    91, # 0x6B      DIT User Data Ch1 Byte 21
+    #    92, # 0x6C      DIT User Data Ch2 Byte 22
+    #    93, # 0x6D      DIT User Data Ch2 Byte 22
+    #    94, # 0x6E      DIT User Data Ch1 Byte 23
+    #    95, # 0x6F      DIT User Data Ch2 Byte 23
+    ]
+elif chan == "O8":
+    dev = "/dev/i2c-13"
+    addr=0x72
+    p0_reglist = [
+        0,  # 0x01      Power-Down and Reset
+    #    1,  # 0x02      Global Interrupt Status
+        2,  # 0x03      Port A Control
+        3,  # 0x04      Port A Control
+    #    4,  # 0x05      Port B Control
+    #    5,  # 0x06      Port B Control
+        6,  # 0x07      Transmitter Control
+        7,  # 0x08      Transmitter Control
+        8,  # 0x09      Transmitter Control
+        9,  # 0x0A      SRC and DIT Status
+    #    10, # 0x0B      SRC and DIT Interrupt Mask
+    #    11, # 0x0C      SRC and DIT Interrupt Mask
+    #    12, # 0x0D      Receiver Control
+    #    13, # 0x0E      Receiver Control
+    #    14, # 0x0F-0x11 Receiver PLL Configuration
+    #    15, # 0x12      Non-PCM Audio Detection
+    #    16, # 0x13      Receiver Status
+    #    17, # 0x14      Receiver Status
+    #    18, # 0x15      Receiver Status
+    #    19, # 0x16      Receiver Interrupt Mask
+    #    20, # 0x17      Receiver Interrupt Mask
+    #    21, # 0x18      Receiver Interrupt Mode
+    #    22, # 0x19      Receiver Interrupt Mode
+    #    23, # 0x1A      Receiver Interrupt Mode
+    #    24, # 0x1B      General-Purpose Out (GPO1)
+    #    25, # 0x1C      General-Purpose Out (GPO2)
+    #    26, # 0x1D      General-Purpose Out (GPO3)
+    #    27, # 0x1E      General-Purpose Out (GPO4)
+    #    28, # 0x1F      Audio CD Q-Channel Sub-Code
+    #    29, # 0x20      Audio CD Q-Channel Sub-Code
+    #    30, # 0x21      Audio CD Q-Channel Sub-Code
+    #    31, # 0x22      Audio CD Q-Channel Sub-Code
+    #    32, # 0x23      Audio CD Q-Channel Sub-Code
+    #    33, # 0x24      Audio CD Q-Channel Sub-Code
+    #    34, # 0x25      Audio CD Q-Channel Sub-Code
+    #    35, # 0x26      Audio CD Q-Channel Sub-Code
+    #    36, # 0x27      Audio CD Q-Channel Sub-Code
+    #    37, # 0x28      Audio CD Q-Channel Sub-Code
+    #    38, # 0x29-0x2A PC Burst Preamble
+    #    39, # 0x2B-0x2C PD Burst Preamble
+        40, # 0x2D      SRC Control
+        41, # 0x2E      SRC Control
+        42, # 0x2F      SRC Control
+        43, # 0x30      SRC Control Right Attenuation
+        44, # 0x31      SRC Control Left Attenuation
+        45, # 0x32-0x33 SRC Input: Output Ratio
+    ]
+    p1_reglist = [
+    #    0,  # 0x00      DIR Channel Status Ch1 Byte 0
+    #    1,  # 0x01      DIR Channel Status Ch2 Byte 0
+    #    2,  # 0x02      DIR Channel Status Ch1 Byte 1
+    #    3,  # 0x03      DIR Channel Status Ch2 Byte 1
+    #    4,  # 0x04      DIR Channel Status Ch1 Byte 2
+    #    5,  # 0x05      DIR Channel Status Ch2 Byte 2
+    #    6,  # 0x06      DIR Channel Status Ch1 Byte 3
+    #    7,  # 0x07      DIR Channel Status Ch2 Byte 3
+    #    8,  # 0x08      DIR Channel Status Ch1 Byte 4
+    #    9,  # 0x09      DIR Channel Status Ch2 Byte 4
+    #    10, # 0x0A      DIR Channel Status Ch1 Byte 5
+    #    11, # 0x0B      DIR Channel Status Ch2 Byte 5
+    #    12, # 0x0C      DIR Channel Status Ch1 Byte 6
+    #    13, # 0x0D      DIR Channel Status Ch2 Byte 6
+    #    14, # 0x0E      DIR Channel Status Ch1 Byte 7
+    #    15, # 0x0F      DIR Channel Status Ch2 Byte 7
+    #    16, # 0x10      DIR Channel Status Ch1 Byte 8
+    #    17, # 0x11      DIR Channel Status Ch2 Byte 8
+    #    18, # 0x12      DIR Channel Status Ch1 Byte 9
+    #    19, # 0x13      DIR Channel Status Ch2 Byte 9
+    #    20, # 0x14      DIR Channel Status Ch1 Byte 10
+    #    21, # 0x15      DIR Channel Status Ch2 Byte 10
+    #    22, # 0x16      DIR Channel Status Ch1 Byte 11
+    #    23, # 0x17      DIR Channel Status Ch2 Byte 11
+    #    24, # 0x18      DIR Channel Status Ch1 Byte 12
+    #    25, # 0x19      DIR Channel Status Ch2 Byte 12
+    #    26, # 0x1A      DIR Channel Status Ch1 Byte 13
+    #    27, # 0x1B      DIR Channel Status Ch2 Byte 13
+    #    28, # 0x1C      DIR Channel Status Ch1 Byte 14
+    #    29, # 0x1D      DIR Channel Status Ch2 Byte 14
+    #    30, # 0x1E      DIR Channel Status Ch1 Byte 15
+    #    31, # 0x1F      DIR Channel Status Ch2 Byte 15
+    #    32, # 0x20      DIR Channel Status Ch1 Byte 16
+    #    33, # 0x21      DIR Channel Status Ch2 Byte 16
+    #    34, # 0x22      DIR Channel Status Ch1 Byte 17
+    #    35, # 0x23      DIR Channel Status Ch2 Byte 17
+    #    36, # 0x24      DIR Channel Status Ch1 Byte 18
+    #    37, # 0x25      DIR Channel Status Ch2 Byte 18
+    #    38, # 0x26      DIR Channel Status Ch1 Byte 19
+    #    39, # 0x27      DIR Channel Status Ch2 Byte 19
+    #    40, # 0x28      DIR Channel Status Ch1 Byte 20
+    #    41, # 0x29      DIR Channel Status Ch2 Byte 20
+    #    42, # 0x2A      DIR Channel Status Ch1 Byte 21
+    #    43, # 0x2B      DIR Channel Status Ch2 Byte 21
+    #    44, # 0x2C      DIR Channel Status Ch1 Byte 22
+    #    45, # 0x2D      DIR Channel Status Ch2 Byte 22
+    #    46, # 0x2E      DIR Channel Status Ch1 Byte 23
+    #    47, # 0x2F      DIR Channel Status Ch2 Byte 23
+    #    48, # 0x40      DIR User Data Ch2 Byte 0
+    #    49, # 0x41      DIR User Data Ch1 Byte 0
+    #    50, # 0x42      DIR User Data Ch2 Byte 1
+    #    51, # 0x43      DIR User Data Ch1 Byte 1
+    #    52, # 0x44      DIR User Data Ch2 Byte 2
+    #    53, # 0x45      DIR User Data Ch1 Byte 2
+    #    54, # 0x46      DIR User Data Ch2 Byte 3
+    #    55, # 0x47      DIR User Data Ch1 Byte 3
+    #    56, # 0x48      DIR User Data Ch2 Byte 4
+    #    57, # 0x49      DIR User Data Ch1 Byte 4
+    #    58, # 0x4A      DIR User Data Ch2 Byte 5
+    #    59, # 0x4B      DIR User Data Ch1 Byte 5
+    #    60, # 0x4C      DIR User Data Ch2 Byte 6
+    #    61, # 0x4D      DIR User Data Ch1 Byte 6
+    #    62, # 0x4E      DIR User Data Ch2 Byte 7
+    #    63, # 0x4F      DIR User Data Ch1 Byte 7
+    #    64, # 0x50      DIR User Data Ch2 Byte 8
+    #    65, # 0x51      DIR User Data Ch1 Byte 8
+    #    66, # 0x52      DIR User Data Ch2 Byte 9
+    #    67, # 0x53      DIR User Data Ch1 Byte 9
+    #    68, # 0x54      DIR User Data Ch2 Byte 10
+    #    69, # 0x55      DIR User Data Ch1 Byte 10
+    #    70, # 0x56      DIR User Data Ch2 Byte 11
+    #    71, # 0x57      DIR User Data Ch1 Byte 11
+    #    72, # 0x58      DIR User Data Ch2 Byte 12
+    #    73, # 0x59      DIR User Data Ch1 Byte 12
+    #    74, # 0x5A      DIR User Data Ch2 Byte 13
+    #    75, # 0x5B      DIR User Data Ch1 Byte 13
+    #    76, # 0x5C      DIR User Data Ch2 Byte 14
+    #    77, # 0x5D      DIR User Data Ch1 Byte 14
+    #    78, # 0x5E      DIR User Data Ch2 Byte 15
+    #    79, # 0x5F      DIR User Data Ch1 Byte 15
+    #    80, # 0x60      DIR User Data Ch2 Byte 16
+    #    81, # 0x61      DIR User Data Ch1 Byte 16
+    #    82, # 0x62      DIR User Data Ch2 Byte 17
+    #    83, # 0x63      DIR User Data Ch1 Byte 17
+    #    84, # 0x64      DIR User Data Ch2 Byte 18
+    #    85, # 0x65      DIR User Data Ch1 Byte 18
+    #    86, # 0x66      DIR User Data Ch2 Byte 19
+    #    87, # 0x67      DIR User Data Ch1 Byte 19
+    #    88, # 0x68      DIR User Data Ch2 Byte 20
+    #    89, # 0x69      DIR User Data Ch1 Byte 20
+    #    90, # 0x6A      DIR User Data Ch2 Byte 21
+    #    91, # 0x6B      DIR User Data Ch1 Byte 21
+    #    92, # 0x6C      DIR User Data Ch2 Byte 22
+    #    93, # 0x6D      DIR User Data Ch2 Byte 22
+    #    94, # 0x6E      DIR User Data Ch1 Byte 23
+    #    95, # 0x6F      DIR User Data Ch2 Byte 23
+    ]
+    p2_reglist = [
+        0,  # 0x00      DIT Channel Status Ch1 Byte 0
+        1,  # 0x01      DIT Channel Status Ch2 Byte 0
+        2,  # 0x02      DIT Channel Status Ch1 Byte 1
+        3,  # 0x03      DIT Channel Status Ch2 Byte 1
+        4,  # 0x04      DIT Channel Status Ch1 Byte 2
+        5,  # 0x05      DIT Channel Status Ch2 Byte 2
+        6,  # 0x06      DIT Channel Status Ch1 Byte 3
+        7,  # 0x07      DIT Channel Status Ch2 Byte 3
+    #    8,  # 0x08      DIT Channel Status Ch1 Byte 4
+    #    9,  # 0x09      DIT Channel Status Ch2 Byte 4
+    #    10, # 0x0A      DIT Channel Status Ch1 Byte 5
+    #    11, # 0x0B      DIT Channel Status Ch2 Byte 5
+    #    12, # 0x0C      DIT Channel Status Ch1 Byte 6
+    #    13, # 0x0D      DIT Channel Status Ch2 Byte 6
+    #    14, # 0x0E      DIT Channel Status Ch1 Byte 7
+    #    15, # 0x0F      DIT Channel Status Ch2 Byte 7
+    #    16, # 0x10      DIT Channel Status Ch1 Byte 8
+    #    17, # 0x11      DIT Channel Status Ch2 Byte 8
+    #    18, # 0x12      DIT Channel Status Ch1 Byte 9
+    #    19, # 0x13      DIT Channel Status Ch2 Byte 9
+    #    20, # 0x14      DIT Channel Status Ch1 Byte 10
+    #    21, # 0x15      DIT Channel Status Ch2 Byte 10
+    #    22, # 0x16      DIT Channel Status Ch1 Byte 11
+    #    23, # 0x17      DIT Channel Status Ch2 Byte 11
+    #    24, # 0x18      DIT Channel Status Ch1 Byte 12
+    #    25, # 0x19      DIT Channel Status Ch2 Byte 12
+    #    26, # 0x1A      DIT Channel Status Ch1 Byte 13
+    #    27, # 0x1B      DIT Channel Status Ch2 Byte 13
+    #    28, # 0x1C      DIT Channel Status Ch1 Byte 14
+    #    29, # 0x1D      DIT Channel Status Ch2 Byte 14
+    #    30, # 0x1E      DIT Channel Status Ch1 Byte 15
+    #    31, # 0x1F      DIT Channel Status Ch2 Byte 15
+    #    32, # 0x20      DIT Channel Status Ch1 Byte 16
+    #    33, # 0x21      DIT Channel Status Ch2 Byte 16
+    #    34, # 0x22      DIT Channel Status Ch1 Byte 17
+    #    35, # 0x23      DIT Channel Status Ch2 Byte 17
+    #    36, # 0x24      DIT Channel Status Ch1 Byte 18
+    #    37, # 0x25      DIT Channel Status Ch2 Byte 18
+    #    38, # 0x26      DIT Channel Status Ch1 Byte 19
+    #    39, # 0x27      DIT Channel Status Ch2 Byte 19
+    #    40, # 0x28      DIT Channel Status Ch1 Byte 20
+    #    41, # 0x29      DIT Channel Status Ch2 Byte 20
+    #    42, # 0x2A      DIT Channel Status Ch1 Byte 21
+    #    43, # 0x2B      DIT Channel Status Ch2 Byte 21
+    #    44, # 0x2C      DIT Channel Status Ch1 Byte 22
+    #    45, # 0x2D      DIT Channel Status Ch2 Byte 22
+    #    46, # 0x2E      DIT Channel Status Ch1 Byte 23
+    #    47, # 0x2F      DIT Channel Status Ch2 Byte 23
+    #    48, # 0x40      DIT User Data Ch2 Byte 0
+    #    49, # 0x41      DIT User Data Ch1 Byte 0
+    #    50, # 0x42      DIT User Data Ch2 Byte 1
+    #    51, # 0x43      DIT User Data Ch1 Byte 1
+    #    52, # 0x44      DIT User Data Ch2 Byte 2
+    #    53, # 0x45      DIT User Data Ch1 Byte 2
+    #    54, # 0x46      DIT User Data Ch2 Byte 3
+    #    55, # 0x47      DIT User Data Ch1 Byte 3
+    #    56, # 0x48      DIT User Data Ch2 Byte 4
+    #    57, # 0x49      DIT User Data Ch1 Byte 4
+    #    58, # 0x4A      DIT User Data Ch2 Byte 5
+    #    59, # 0x4B      DIT User Data Ch1 Byte 5
+    #    60, # 0x4C      DIT User Data Ch2 Byte 6
+    #    61, # 0x4D      DIT User Data Ch1 Byte 6
+    #    62, # 0x4E      DIT User Data Ch2 Byte 7
+    #    63, # 0x4F      DIT User Data Ch1 Byte 7
+    #    64, # 0x50      DIT User Data Ch2 Byte 8
+    #    65, # 0x51      DIT User Data Ch1 Byte 8
+    #    66, # 0x52      DIT User Data Ch2 Byte 9
+    #    67, # 0x53      DIT User Data Ch1 Byte 9
+    #    68, # 0x54      DIT User Data Ch2 Byte 10
+    #    69, # 0x55      DIT User Data Ch1 Byte 10
+    #    70, # 0x56      DIT User Data Ch2 Byte 11
+    #    71, # 0x57      DIT User Data Ch1 Byte 11
+    #    72, # 0x58      DIT User Data Ch2 Byte 12
+    #    73, # 0x59      DIT User Data Ch1 Byte 12
+    #    74, # 0x5A      DIT User Data Ch2 Byte 13
+    #    75, # 0x5B      DIT User Data Ch1 Byte 13
+    #    76, # 0x5C      DIT User Data Ch2 Byte 14
+    #    77, # 0x5D      DIT User Data Ch1 Byte 14
+    #    78, # 0x5E      DIR User Data Ch2 Byte 15
+    #    79, # 0x5F      DIT User Data Ch1 Byte 15
+    #    80, # 0x60      DIT User Data Ch2 Byte 16
+    #    81, # 0x61      DIT User Data Ch1 Byte 16
+    #    82, # 0x62      DIT User Data Ch2 Byte 17
+    #    83, # 0x63      DIT User Data Ch1 Byte 17
+    #    84, # 0x64      DIT User Data Ch2 Byte 18
+    #    85, # 0x65      DIT User Data Ch1 Byte 18
+    #    86, # 0x66      DIT User Data Ch2 Byte 19
+    #    87, # 0x67      DIT User Data Ch1 Byte 19
+    #    88, # 0x68      DIT User Data Ch2 Byte 20
+    #    89, # 0x69      DIT User Data Ch1 Byte 20
+    #    90, # 0x6A      DIT User Data Ch2 Byte 21
+    #    91, # 0x6B      DIT User Data Ch1 Byte 21
+    #    92, # 0x6C      DIT User Data Ch2 Byte 22
+    #    93, # 0x6D      DIT User Data Ch2 Byte 22
+    #    94, # 0x6E      DIT User Data Ch1 Byte 23
+    #    95, # 0x6F      DIT User Data Ch2 Byte 23
+    ]
+elif chan == "I5":
+    dev = "/dev/i2c-10"
+    addr=0x70
+    p0_reglist = [
+        0,  # 0x01      Power-Down and Reset
+    #    1,  # 0x02      Global Interrupt Status
+        2,  # 0x03      Port A Control
+        3,  # 0x04      Port A Control
+        4,  # 0x05      Port B Control
+        5,  # 0x06      Port B Control
+        6,  # 0x07      Transmitter Control
+        7,  # 0x08      Transmitter Control
+        8,  # 0x09      Transmitter Control
         9,  # 0x0A      SRC and DIT Status
     #    10, # 0x0B      SRC and DIT Interrupt Mask
     #    11, # 0x0C      SRC and DIT Interrupt Mask
@@ -4226,18 +3491,513 @@ elif chan == "I3":
     #    94, # 0x6E      DIT User Data Ch1 Byte 23
     #    95, # 0x6F      DIT User Data Ch2 Byte 23
     ]
-elif chan == "I4":
-    dev = "/dev/i2c-13"
+elif chan == "I6":
+    dev = "/dev/i2c-11"
+    addr=0x70
     p0_reglist = [
         0,  # 0x01      Power-Down and Reset
     #    1,  # 0x02      Global Interrupt Status
         2,  # 0x03      Port A Control
         3,  # 0x04      Port A Control
-    #    4,  # 0x05      Port B Control
-    #    5,  # 0x06      Port B Control
-    #    6,  # 0x07      Transmitter Control
-    #    7,  # 0x08      Transmitter Control
-    #    8,  # 0x09      Transmitter Control
+        4,  # 0x05      Port B Control
+        5,  # 0x06      Port B Control
+        6,  # 0x07      Transmitter Control
+        7,  # 0x08      Transmitter Control
+        8,  # 0x09      Transmitter Control
+        9,  # 0x0A      SRC and DIT Status
+    #    10, # 0x0B      SRC and DIT Interrupt Mask
+    #    11, # 0x0C      SRC and DIT Interrupt Mask
+        12, # 0x0D      Receiver Control
+        13, # 0x0E      Receiver Control
+        14, # 0x0F-0x11 Receiver PLL Configuration
+        15, # 0x12      Non-PCM Audio Detection
+        16, # 0x13      Receiver Status
+        17, # 0x14      Receiver Status
+        18, # 0x15      Receiver Status
+    #    19, # 0x16      Receiver Interrupt Mask
+    #    20, # 0x17      Receiver Interrupt Mask
+    #    21, # 0x18      Receiver Interrupt Mode
+    #    22, # 0x19      Receiver Interrupt Mode
+    #    23, # 0x1A      Receiver Interrupt Mode
+    #    24, # 0x1B      General-Purpose Out (GPO1)
+    #    25, # 0x1C      General-Purpose Out (GPO2)
+    #    26, # 0x1D      General-Purpose Out (GPO3)
+    #    27, # 0x1E      General-Purpose Out (GPO4)
+    #    28, # 0x1F      Audio CD Q-Channel Sub-Code
+    #    29, # 0x20      Audio CD Q-Channel Sub-Code
+    #    30, # 0x21      Audio CD Q-Channel Sub-Code
+    #    31, # 0x22      Audio CD Q-Channel Sub-Code
+    #    32, # 0x23      Audio CD Q-Channel Sub-Code
+    #    33, # 0x24      Audio CD Q-Channel Sub-Code
+    #    34, # 0x25      Audio CD Q-Channel Sub-Code
+    #    35, # 0x26      Audio CD Q-Channel Sub-Code
+    #    36, # 0x27      Audio CD Q-Channel Sub-Code
+    #    37, # 0x28      Audio CD Q-Channel Sub-Code
+    #    38, # 0x29-0x2A PC Burst Preamble
+    #    39, # 0x2B-0x2C PD Burst Preamble
+        40, # 0x2D      SRC Control
+        41, # 0x2E      SRC Control
+        42, # 0x2F      SRC Control
+        43, # 0x30      SRC Control Right Attenuation
+        44, # 0x31      SRC Control Left Attenuation
+        45, # 0x32-0x33 SRC Input: Output Ratio
+    ]
+    p1_reglist = [
+        0,  # 0x00      DIR Channel Status Ch1 Byte 0
+        1,  # 0x01      DIR Channel Status Ch2 Byte 0
+        2,  # 0x02      DIR Channel Status Ch1 Byte 1
+        3,  # 0x03      DIR Channel Status Ch2 Byte 1
+        4,  # 0x04      DIR Channel Status Ch1 Byte 2
+        5,  # 0x05      DIR Channel Status Ch2 Byte 2
+        6,  # 0x06      DIR Channel Status Ch1 Byte 3
+        7,  # 0x07      DIR Channel Status Ch2 Byte 3
+    #    8,  # 0x08      DIR Channel Status Ch1 Byte 4
+    #    9,  # 0x09      DIR Channel Status Ch2 Byte 4
+    #    10, # 0x0A      DIR Channel Status Ch1 Byte 5
+    #    11, # 0x0B      DIR Channel Status Ch2 Byte 5
+    #    12, # 0x0C      DIR Channel Status Ch1 Byte 6
+    #    13, # 0x0D      DIR Channel Status Ch2 Byte 6
+    #    14, # 0x0E      DIR Channel Status Ch1 Byte 7
+    #    15, # 0x0F      DIR Channel Status Ch2 Byte 7
+    #    16, # 0x10      DIR Channel Status Ch1 Byte 8
+    #    17, # 0x11      DIR Channel Status Ch2 Byte 8
+    #    18, # 0x12      DIR Channel Status Ch1 Byte 9
+    #    19, # 0x13      DIR Channel Status Ch2 Byte 9
+    #    20, # 0x14      DIR Channel Status Ch1 Byte 10
+    #    21, # 0x15      DIR Channel Status Ch2 Byte 10
+    #    22, # 0x16      DIR Channel Status Ch1 Byte 11
+    #    23, # 0x17      DIR Channel Status Ch2 Byte 11
+    #    24, # 0x18      DIR Channel Status Ch1 Byte 12
+    #    25, # 0x19      DIR Channel Status Ch2 Byte 12
+    #    26, # 0x1A      DIR Channel Status Ch1 Byte 13
+    #    27, # 0x1B      DIR Channel Status Ch2 Byte 13
+    #    28, # 0x1C      DIR Channel Status Ch1 Byte 14
+    #    29, # 0x1D      DIR Channel Status Ch2 Byte 14
+    #    30, # 0x1E      DIR Channel Status Ch1 Byte 15
+    #    31, # 0x1F      DIR Channel Status Ch2 Byte 15
+    #    32, # 0x20      DIR Channel Status Ch1 Byte 16
+    #    33, # 0x21      DIR Channel Status Ch2 Byte 16
+    #    34, # 0x22      DIR Channel Status Ch1 Byte 17
+    #    35, # 0x23      DIR Channel Status Ch2 Byte 17
+    #    36, # 0x24      DIR Channel Status Ch1 Byte 18
+    #    37, # 0x25      DIR Channel Status Ch2 Byte 18
+    #    38, # 0x26      DIR Channel Status Ch1 Byte 19
+    #    39, # 0x27      DIR Channel Status Ch2 Byte 19
+    #    40, # 0x28      DIR Channel Status Ch1 Byte 20
+    #    41, # 0x29      DIR Channel Status Ch2 Byte 20
+    #    42, # 0x2A      DIR Channel Status Ch1 Byte 21
+    #    43, # 0x2B      DIR Channel Status Ch2 Byte 21
+    #    44, # 0x2C      DIR Channel Status Ch1 Byte 22
+    #    45, # 0x2D      DIR Channel Status Ch2 Byte 22
+    #    46, # 0x2E      DIR Channel Status Ch1 Byte 23
+    #    47, # 0x2F      DIR Channel Status Ch2 Byte 23
+    #    48, # 0x40      DIR User Data Ch2 Byte 0
+    #    49, # 0x41      DIR User Data Ch1 Byte 0
+    #    50, # 0x42      DIR User Data Ch2 Byte 1
+    #    51, # 0x43      DIR User Data Ch1 Byte 1
+    #    52, # 0x44      DIR User Data Ch2 Byte 2
+    #    53, # 0x45      DIR User Data Ch1 Byte 2
+    #    54, # 0x46      DIR User Data Ch2 Byte 3
+    #    55, # 0x47      DIR User Data Ch1 Byte 3
+    #    56, # 0x48      DIR User Data Ch2 Byte 4
+    #    57, # 0x49      DIR User Data Ch1 Byte 4
+    #    58, # 0x4A      DIR User Data Ch2 Byte 5
+    #    59, # 0x4B      DIR User Data Ch1 Byte 5
+    #    60, # 0x4C      DIR User Data Ch2 Byte 6
+    #    61, # 0x4D      DIR User Data Ch1 Byte 6
+    #    62, # 0x4E      DIR User Data Ch2 Byte 7
+    #    63, # 0x4F      DIR User Data Ch1 Byte 7
+    #    64, # 0x50      DIR User Data Ch2 Byte 8
+    #    65, # 0x51      DIR User Data Ch1 Byte 8
+    #    66, # 0x52      DIR User Data Ch2 Byte 9
+    #    67, # 0x53      DIR User Data Ch1 Byte 9
+    #    68, # 0x54      DIR User Data Ch2 Byte 10
+    #    69, # 0x55      DIR User Data Ch1 Byte 10
+    #    70, # 0x56      DIR User Data Ch2 Byte 11
+    #    71, # 0x57      DIR User Data Ch1 Byte 11
+    #    72, # 0x58      DIR User Data Ch2 Byte 12
+    #    73, # 0x59      DIR User Data Ch1 Byte 12
+    #    74, # 0x5A      DIR User Data Ch2 Byte 13
+    #    75, # 0x5B      DIR User Data Ch1 Byte 13
+    #    76, # 0x5C      DIR User Data Ch2 Byte 14
+    #    77, # 0x5D      DIR User Data Ch1 Byte 14
+    #    78, # 0x5E      DIR User Data Ch2 Byte 15
+    #    79, # 0x5F      DIR User Data Ch1 Byte 15
+    #    80, # 0x60      DIR User Data Ch2 Byte 16
+    #    81, # 0x61      DIR User Data Ch1 Byte 16
+    #    82, # 0x62      DIR User Data Ch2 Byte 17
+    #    83, # 0x63      DIR User Data Ch1 Byte 17
+    #    84, # 0x64      DIR User Data Ch2 Byte 18
+    #    85, # 0x65      DIR User Data Ch1 Byte 18
+    #    86, # 0x66      DIR User Data Ch2 Byte 19
+    #    87, # 0x67      DIR User Data Ch1 Byte 19
+    #    88, # 0x68      DIR User Data Ch2 Byte 20
+    #    89, # 0x69      DIR User Data Ch1 Byte 20
+    #    90, # 0x6A      DIR User Data Ch2 Byte 21
+    #    91, # 0x6B      DIR User Data Ch1 Byte 21
+    #    92, # 0x6C      DIR User Data Ch2 Byte 22
+    #    93, # 0x6D      DIR User Data Ch2 Byte 22
+    #    94, # 0x6E      DIR User Data Ch1 Byte 23
+    #    95, # 0x6F      DIR User Data Ch2 Byte 23
+    ]
+    p2_reglist = [
+    #    0,  # 0x00      DIT Channel Status Ch1 Byte 0
+    #    1,  # 0x01      DIT Channel Status Ch2 Byte 0
+    #    2,  # 0x02      DIT Channel Status Ch1 Byte 1
+    #    3,  # 0x03      DIT Channel Status Ch2 Byte 1
+    #    4,  # 0x04      DIT Channel Status Ch1 Byte 2
+    #    5,  # 0x05      DIT Channel Status Ch2 Byte 2
+    #    6,  # 0x06      DIT Channel Status Ch1 Byte 3
+    #    7,  # 0x07      DIT Channel Status Ch2 Byte 3
+    #    8,  # 0x08      DIT Channel Status Ch1 Byte 4
+    #    9,  # 0x09      DIT Channel Status Ch2 Byte 4
+    #    10, # 0x0A      DIT Channel Status Ch1 Byte 5
+    #    11, # 0x0B      DIT Channel Status Ch2 Byte 5
+    #    12, # 0x0C      DIT Channel Status Ch1 Byte 6
+    #    13, # 0x0D      DIT Channel Status Ch2 Byte 6
+    #    14, # 0x0E      DIT Channel Status Ch1 Byte 7
+    #    15, # 0x0F      DIT Channel Status Ch2 Byte 7
+    #    16, # 0x10      DIT Channel Status Ch1 Byte 8
+    #    17, # 0x11      DIT Channel Status Ch2 Byte 8
+    #    18, # 0x12      DIT Channel Status Ch1 Byte 9
+    #    19, # 0x13      DIT Channel Status Ch2 Byte 9
+    #    20, # 0x14      DIT Channel Status Ch1 Byte 10
+    #    21, # 0x15      DIT Channel Status Ch2 Byte 10
+    #    22, # 0x16      DIT Channel Status Ch1 Byte 11
+    #    23, # 0x17      DIT Channel Status Ch2 Byte 11
+    #    24, # 0x18      DIT Channel Status Ch1 Byte 12
+    #    25, # 0x19      DIT Channel Status Ch2 Byte 12
+    #    26, # 0x1A      DIT Channel Status Ch1 Byte 13
+    #    27, # 0x1B      DIT Channel Status Ch2 Byte 13
+    #    28, # 0x1C      DIT Channel Status Ch1 Byte 14
+    #    29, # 0x1D      DIT Channel Status Ch2 Byte 14
+    #    30, # 0x1E      DIT Channel Status Ch1 Byte 15
+    #    31, # 0x1F      DIT Channel Status Ch2 Byte 15
+    #    32, # 0x20      DIT Channel Status Ch1 Byte 16
+    #    33, # 0x21      DIT Channel Status Ch2 Byte 16
+    #    34, # 0x22      DIT Channel Status Ch1 Byte 17
+    #    35, # 0x23      DIT Channel Status Ch2 Byte 17
+    #    36, # 0x24      DIT Channel Status Ch1 Byte 18
+    #    37, # 0x25      DIT Channel Status Ch2 Byte 18
+    #    38, # 0x26      DIT Channel Status Ch1 Byte 19
+    #    39, # 0x27      DIT Channel Status Ch2 Byte 19
+    #    40, # 0x28      DIT Channel Status Ch1 Byte 20
+    #    41, # 0x29      DIT Channel Status Ch2 Byte 20
+    #    42, # 0x2A      DIT Channel Status Ch1 Byte 21
+    #    43, # 0x2B      DIT Channel Status Ch2 Byte 21
+    #    44, # 0x2C      DIT Channel Status Ch1 Byte 22
+    #    45, # 0x2D      DIT Channel Status Ch2 Byte 22
+    #    46, # 0x2E      DIT Channel Status Ch1 Byte 23
+    #    47, # 0x2F      DIT Channel Status Ch2 Byte 23
+    #    48, # 0x40      DIT User Data Ch2 Byte 0
+    #    49, # 0x41      DIT User Data Ch1 Byte 0
+    #    50, # 0x42      DIT User Data Ch2 Byte 1
+    #    51, # 0x43      DIT User Data Ch1 Byte 1
+    #    52, # 0x44      DIT User Data Ch2 Byte 2
+    #    53, # 0x45      DIT User Data Ch1 Byte 2
+    #    54, # 0x46      DIT User Data Ch2 Byte 3
+    #    55, # 0x47      DIT User Data Ch1 Byte 3
+    #    56, # 0x48      DIT User Data Ch2 Byte 4
+    #    57, # 0x49      DIT User Data Ch1 Byte 4
+    #    58, # 0x4A      DIT User Data Ch2 Byte 5
+    #    59, # 0x4B      DIT User Data Ch1 Byte 5
+    #    60, # 0x4C      DIT User Data Ch2 Byte 6
+    #    61, # 0x4D      DIT User Data Ch1 Byte 6
+    #    62, # 0x4E      DIT User Data Ch2 Byte 7
+    #    63, # 0x4F      DIT User Data Ch1 Byte 7
+    #    64, # 0x50      DIT User Data Ch2 Byte 8
+    #    65, # 0x51      DIT User Data Ch1 Byte 8
+    #    66, # 0x52      DIT User Data Ch2 Byte 9
+    #    67, # 0x53      DIT User Data Ch1 Byte 9
+    #    68, # 0x54      DIT User Data Ch2 Byte 10
+    #    69, # 0x55      DIT User Data Ch1 Byte 10
+    #    70, # 0x56      DIT User Data Ch2 Byte 11
+    #    71, # 0x57      DIT User Data Ch1 Byte 11
+    #    72, # 0x58      DIT User Data Ch2 Byte 12
+    #    73, # 0x59      DIT User Data Ch1 Byte 12
+    #    74, # 0x5A      DIT User Data Ch2 Byte 13
+    #    75, # 0x5B      DIT User Data Ch1 Byte 13
+    #    76, # 0x5C      DIT User Data Ch2 Byte 14
+    #    77, # 0x5D      DIT User Data Ch1 Byte 14
+    #    78, # 0x5E      DIR User Data Ch2 Byte 15
+    #    79, # 0x5F      DIT User Data Ch1 Byte 15
+    #    80, # 0x60      DIT User Data Ch2 Byte 16
+    #    81, # 0x61      DIT User Data Ch1 Byte 16
+    #    82, # 0x62      DIT User Data Ch2 Byte 17
+    #    83, # 0x63      DIT User Data Ch1 Byte 17
+    #    84, # 0x64      DIT User Data Ch2 Byte 18
+    #    85, # 0x65      DIT User Data Ch1 Byte 18
+    #    86, # 0x66      DIT User Data Ch2 Byte 19
+    #    87, # 0x67      DIT User Data Ch1 Byte 19
+    #    88, # 0x68      DIT User Data Ch2 Byte 20
+    #    89, # 0x69      DIT User Data Ch1 Byte 20
+    #    90, # 0x6A      DIT User Data Ch2 Byte 21
+    #    91, # 0x6B      DIT User Data Ch1 Byte 21
+    #    92, # 0x6C      DIT User Data Ch2 Byte 22
+    #    93, # 0x6D      DIT User Data Ch2 Byte 22
+    #    94, # 0x6E      DIT User Data Ch1 Byte 23
+    #    95, # 0x6F      DIT User Data Ch2 Byte 23
+    ]
+elif chan == "I7":
+    dev = "/dev/i2c-12"
+    addr=0x70
+    p0_reglist = [
+        0,  # 0x01      Power-Down and Reset
+    #    1,  # 0x02      Global Interrupt Status
+        2,  # 0x03      Port A Control
+        3,  # 0x04      Port A Control
+        4,  # 0x05      Port B Control
+        5,  # 0x06      Port B Control
+        6,  # 0x07      Transmitter Control
+        7,  # 0x08      Transmitter Control
+        8,  # 0x09      Transmitter Control
+        9,  # 0x0A      SRC and DIT Status
+    #    10, # 0x0B      SRC and DIT Interrupt Mask
+    #    11, # 0x0C      SRC and DIT Interrupt Mask
+        12, # 0x0D      Receiver Control
+        13, # 0x0E      Receiver Control
+        14, # 0x0F-0x11 Receiver PLL Configuration
+        15, # 0x12      Non-PCM Audio Detection
+        16, # 0x13      Receiver Status
+        17, # 0x14      Receiver Status
+        18, # 0x15      Receiver Status
+    #    19, # 0x16      Receiver Interrupt Mask
+    #    20, # 0x17      Receiver Interrupt Mask
+    #    21, # 0x18      Receiver Interrupt Mode
+    #    22, # 0x19      Receiver Interrupt Mode
+    #    23, # 0x1A      Receiver Interrupt Mode
+    #    24, # 0x1B      General-Purpose Out (GPO1)
+    #    25, # 0x1C      General-Purpose Out (GPO2)
+    #    26, # 0x1D      General-Purpose Out (GPO3)
+    #    27, # 0x1E      General-Purpose Out (GPO4)
+    #    28, # 0x1F      Audio CD Q-Channel Sub-Code
+    #    29, # 0x20      Audio CD Q-Channel Sub-Code
+    #    30, # 0x21      Audio CD Q-Channel Sub-Code
+    #    31, # 0x22      Audio CD Q-Channel Sub-Code
+    #    32, # 0x23      Audio CD Q-Channel Sub-Code
+    #    33, # 0x24      Audio CD Q-Channel Sub-Code
+    #    34, # 0x25      Audio CD Q-Channel Sub-Code
+    #    35, # 0x26      Audio CD Q-Channel Sub-Code
+    #    36, # 0x27      Audio CD Q-Channel Sub-Code
+    #    37, # 0x28      Audio CD Q-Channel Sub-Code
+    #    38, # 0x29-0x2A PC Burst Preamble
+    #    39, # 0x2B-0x2C PD Burst Preamble
+        40, # 0x2D      SRC Control
+        41, # 0x2E      SRC Control
+        42, # 0x2F      SRC Control
+        43, # 0x30      SRC Control Right Attenuation
+        44, # 0x31      SRC Control Left Attenuation
+        45, # 0x32-0x33 SRC Input: Output Ratio
+    ]
+    p1_reglist = [
+        0,  # 0x00      DIR Channel Status Ch1 Byte 0
+        1,  # 0x01      DIR Channel Status Ch2 Byte 0
+        2,  # 0x02      DIR Channel Status Ch1 Byte 1
+        3,  # 0x03      DIR Channel Status Ch2 Byte 1
+        4,  # 0x04      DIR Channel Status Ch1 Byte 2
+        5,  # 0x05      DIR Channel Status Ch2 Byte 2
+        6,  # 0x06      DIR Channel Status Ch1 Byte 3
+        7,  # 0x07      DIR Channel Status Ch2 Byte 3
+    #    8,  # 0x08      DIR Channel Status Ch1 Byte 4
+    #    9,  # 0x09      DIR Channel Status Ch2 Byte 4
+    #    10, # 0x0A      DIR Channel Status Ch1 Byte 5
+    #    11, # 0x0B      DIR Channel Status Ch2 Byte 5
+    #    12, # 0x0C      DIR Channel Status Ch1 Byte 6
+    #    13, # 0x0D      DIR Channel Status Ch2 Byte 6
+    #    14, # 0x0E      DIR Channel Status Ch1 Byte 7
+    #    15, # 0x0F      DIR Channel Status Ch2 Byte 7
+    #    16, # 0x10      DIR Channel Status Ch1 Byte 8
+    #    17, # 0x11      DIR Channel Status Ch2 Byte 8
+    #    18, # 0x12      DIR Channel Status Ch1 Byte 9
+    #    19, # 0x13      DIR Channel Status Ch2 Byte 9
+    #    20, # 0x14      DIR Channel Status Ch1 Byte 10
+    #    21, # 0x15      DIR Channel Status Ch2 Byte 10
+    #    22, # 0x16      DIR Channel Status Ch1 Byte 11
+    #    23, # 0x17      DIR Channel Status Ch2 Byte 11
+    #    24, # 0x18      DIR Channel Status Ch1 Byte 12
+    #    25, # 0x19      DIR Channel Status Ch2 Byte 12
+    #    26, # 0x1A      DIR Channel Status Ch1 Byte 13
+    #    27, # 0x1B      DIR Channel Status Ch2 Byte 13
+    #    28, # 0x1C      DIR Channel Status Ch1 Byte 14
+    #    29, # 0x1D      DIR Channel Status Ch2 Byte 14
+    #    30, # 0x1E      DIR Channel Status Ch1 Byte 15
+    #    31, # 0x1F      DIR Channel Status Ch2 Byte 15
+    #    32, # 0x20      DIR Channel Status Ch1 Byte 16
+    #    33, # 0x21      DIR Channel Status Ch2 Byte 16
+    #    34, # 0x22      DIR Channel Status Ch1 Byte 17
+    #    35, # 0x23      DIR Channel Status Ch2 Byte 17
+    #    36, # 0x24      DIR Channel Status Ch1 Byte 18
+    #    37, # 0x25      DIR Channel Status Ch2 Byte 18
+    #    38, # 0x26      DIR Channel Status Ch1 Byte 19
+    #    39, # 0x27      DIR Channel Status Ch2 Byte 19
+    #    40, # 0x28      DIR Channel Status Ch1 Byte 20
+    #    41, # 0x29      DIR Channel Status Ch2 Byte 20
+    #    42, # 0x2A      DIR Channel Status Ch1 Byte 21
+    #    43, # 0x2B      DIR Channel Status Ch2 Byte 21
+    #    44, # 0x2C      DIR Channel Status Ch1 Byte 22
+    #    45, # 0x2D      DIR Channel Status Ch2 Byte 22
+    #    46, # 0x2E      DIR Channel Status Ch1 Byte 23
+    #    47, # 0x2F      DIR Channel Status Ch2 Byte 23
+    #    48, # 0x40      DIR User Data Ch2 Byte 0
+    #    49, # 0x41      DIR User Data Ch1 Byte 0
+    #    50, # 0x42      DIR User Data Ch2 Byte 1
+    #    51, # 0x43      DIR User Data Ch1 Byte 1
+    #    52, # 0x44      DIR User Data Ch2 Byte 2
+    #    53, # 0x45      DIR User Data Ch1 Byte 2
+    #    54, # 0x46      DIR User Data Ch2 Byte 3
+    #    55, # 0x47      DIR User Data Ch1 Byte 3
+    #    56, # 0x48      DIR User Data Ch2 Byte 4
+    #    57, # 0x49      DIR User Data Ch1 Byte 4
+    #    58, # 0x4A      DIR User Data Ch2 Byte 5
+    #    59, # 0x4B      DIR User Data Ch1 Byte 5
+    #    60, # 0x4C      DIR User Data Ch2 Byte 6
+    #    61, # 0x4D      DIR User Data Ch1 Byte 6
+    #    62, # 0x4E      DIR User Data Ch2 Byte 7
+    #    63, # 0x4F      DIR User Data Ch1 Byte 7
+    #    64, # 0x50      DIR User Data Ch2 Byte 8
+    #    65, # 0x51      DIR User Data Ch1 Byte 8
+    #    66, # 0x52      DIR User Data Ch2 Byte 9
+    #    67, # 0x53      DIR User Data Ch1 Byte 9
+    #    68, # 0x54      DIR User Data Ch2 Byte 10
+    #    69, # 0x55      DIR User Data Ch1 Byte 10
+    #    70, # 0x56      DIR User Data Ch2 Byte 11
+    #    71, # 0x57      DIR User Data Ch1 Byte 11
+    #    72, # 0x58      DIR User Data Ch2 Byte 12
+    #    73, # 0x59      DIR User Data Ch1 Byte 12
+    #    74, # 0x5A      DIR User Data Ch2 Byte 13
+    #    75, # 0x5B      DIR User Data Ch1 Byte 13
+    #    76, # 0x5C      DIR User Data Ch2 Byte 14
+    #    77, # 0x5D      DIR User Data Ch1 Byte 14
+    #    78, # 0x5E      DIR User Data Ch2 Byte 15
+    #    79, # 0x5F      DIR User Data Ch1 Byte 15
+    #    80, # 0x60      DIR User Data Ch2 Byte 16
+    #    81, # 0x61      DIR User Data Ch1 Byte 16
+    #    82, # 0x62      DIR User Data Ch2 Byte 17
+    #    83, # 0x63      DIR User Data Ch1 Byte 17
+    #    84, # 0x64      DIR User Data Ch2 Byte 18
+    #    85, # 0x65      DIR User Data Ch1 Byte 18
+    #    86, # 0x66      DIR User Data Ch2 Byte 19
+    #    87, # 0x67      DIR User Data Ch1 Byte 19
+    #    88, # 0x68      DIR User Data Ch2 Byte 20
+    #    89, # 0x69      DIR User Data Ch1 Byte 20
+    #    90, # 0x6A      DIR User Data Ch2 Byte 21
+    #    91, # 0x6B      DIR User Data Ch1 Byte 21
+    #    92, # 0x6C      DIR User Data Ch2 Byte 22
+    #    93, # 0x6D      DIR User Data Ch2 Byte 22
+    #    94, # 0x6E      DIR User Data Ch1 Byte 23
+    #    95, # 0x6F      DIR User Data Ch2 Byte 23
+    ]
+    p2_reglist = [
+    #    0,  # 0x00      DIT Channel Status Ch1 Byte 0
+    #    1,  # 0x01      DIT Channel Status Ch2 Byte 0
+    #    2,  # 0x02      DIT Channel Status Ch1 Byte 1
+    #    3,  # 0x03      DIT Channel Status Ch2 Byte 1
+    #    4,  # 0x04      DIT Channel Status Ch1 Byte 2
+    #    5,  # 0x05      DIT Channel Status Ch2 Byte 2
+    #    6,  # 0x06      DIT Channel Status Ch1 Byte 3
+    #    7,  # 0x07      DIT Channel Status Ch2 Byte 3
+    #    8,  # 0x08      DIT Channel Status Ch1 Byte 4
+    #    9,  # 0x09      DIT Channel Status Ch2 Byte 4
+    #    10, # 0x0A      DIT Channel Status Ch1 Byte 5
+    #    11, # 0x0B      DIT Channel Status Ch2 Byte 5
+    #    12, # 0x0C      DIT Channel Status Ch1 Byte 6
+    #    13, # 0x0D      DIT Channel Status Ch2 Byte 6
+    #    14, # 0x0E      DIT Channel Status Ch1 Byte 7
+    #    15, # 0x0F      DIT Channel Status Ch2 Byte 7
+    #    16, # 0x10      DIT Channel Status Ch1 Byte 8
+    #    17, # 0x11      DIT Channel Status Ch2 Byte 8
+    #    18, # 0x12      DIT Channel Status Ch1 Byte 9
+    #    19, # 0x13      DIT Channel Status Ch2 Byte 9
+    #    20, # 0x14      DIT Channel Status Ch1 Byte 10
+    #    21, # 0x15      DIT Channel Status Ch2 Byte 10
+    #    22, # 0x16      DIT Channel Status Ch1 Byte 11
+    #    23, # 0x17      DIT Channel Status Ch2 Byte 11
+    #    24, # 0x18      DIT Channel Status Ch1 Byte 12
+    #    25, # 0x19      DIT Channel Status Ch2 Byte 12
+    #    26, # 0x1A      DIT Channel Status Ch1 Byte 13
+    #    27, # 0x1B      DIT Channel Status Ch2 Byte 13
+    #    28, # 0x1C      DIT Channel Status Ch1 Byte 14
+    #    29, # 0x1D      DIT Channel Status Ch2 Byte 14
+    #    30, # 0x1E      DIT Channel Status Ch1 Byte 15
+    #    31, # 0x1F      DIT Channel Status Ch2 Byte 15
+    #    32, # 0x20      DIT Channel Status Ch1 Byte 16
+    #    33, # 0x21      DIT Channel Status Ch2 Byte 16
+    #    34, # 0x22      DIT Channel Status Ch1 Byte 17
+    #    35, # 0x23      DIT Channel Status Ch2 Byte 17
+    #    36, # 0x24      DIT Channel Status Ch1 Byte 18
+    #    37, # 0x25      DIT Channel Status Ch2 Byte 18
+    #    38, # 0x26      DIT Channel Status Ch1 Byte 19
+    #    39, # 0x27      DIT Channel Status Ch2 Byte 19
+    #    40, # 0x28      DIT Channel Status Ch1 Byte 20
+    #    41, # 0x29      DIT Channel Status Ch2 Byte 20
+    #    42, # 0x2A      DIT Channel Status Ch1 Byte 21
+    #    43, # 0x2B      DIT Channel Status Ch2 Byte 21
+    #    44, # 0x2C      DIT Channel Status Ch1 Byte 22
+    #    45, # 0x2D      DIT Channel Status Ch2 Byte 22
+    #    46, # 0x2E      DIT Channel Status Ch1 Byte 23
+    #    47, # 0x2F      DIT Channel Status Ch2 Byte 23
+    #    48, # 0x40      DIT User Data Ch2 Byte 0
+    #    49, # 0x41      DIT User Data Ch1 Byte 0
+    #    50, # 0x42      DIT User Data Ch2 Byte 1
+    #    51, # 0x43      DIT User Data Ch1 Byte 1
+    #    52, # 0x44      DIT User Data Ch2 Byte 2
+    #    53, # 0x45      DIT User Data Ch1 Byte 2
+    #    54, # 0x46      DIT User Data Ch2 Byte 3
+    #    55, # 0x47      DIT User Data Ch1 Byte 3
+    #    56, # 0x48      DIT User Data Ch2 Byte 4
+    #    57, # 0x49      DIT User Data Ch1 Byte 4
+    #    58, # 0x4A      DIT User Data Ch2 Byte 5
+    #    59, # 0x4B      DIT User Data Ch1 Byte 5
+    #    60, # 0x4C      DIT User Data Ch2 Byte 6
+    #    61, # 0x4D      DIT User Data Ch1 Byte 6
+    #    62, # 0x4E      DIT User Data Ch2 Byte 7
+    #    63, # 0x4F      DIT User Data Ch1 Byte 7
+    #    64, # 0x50      DIT User Data Ch2 Byte 8
+    #    65, # 0x51      DIT User Data Ch1 Byte 8
+    #    66, # 0x52      DIT User Data Ch2 Byte 9
+    #    67, # 0x53      DIT User Data Ch1 Byte 9
+    #    68, # 0x54      DIT User Data Ch2 Byte 10
+    #    69, # 0x55      DIT User Data Ch1 Byte 10
+    #    70, # 0x56      DIT User Data Ch2 Byte 11
+    #    71, # 0x57      DIT User Data Ch1 Byte 11
+    #    72, # 0x58      DIT User Data Ch2 Byte 12
+    #    73, # 0x59      DIT User Data Ch1 Byte 12
+    #    74, # 0x5A      DIT User Data Ch2 Byte 13
+    #    75, # 0x5B      DIT User Data Ch1 Byte 13
+    #    76, # 0x5C      DIT User Data Ch2 Byte 14
+    #    77, # 0x5D      DIT User Data Ch1 Byte 14
+    #    78, # 0x5E      DIR User Data Ch2 Byte 15
+    #    79, # 0x5F      DIT User Data Ch1 Byte 15
+    #    80, # 0x60      DIT User Data Ch2 Byte 16
+    #    81, # 0x61      DIT User Data Ch1 Byte 16
+    #    82, # 0x62      DIT User Data Ch2 Byte 17
+    #    83, # 0x63      DIT User Data Ch1 Byte 17
+    #    84, # 0x64      DIT User Data Ch2 Byte 18
+    #    85, # 0x65      DIT User Data Ch1 Byte 18
+    #    86, # 0x66      DIT User Data Ch2 Byte 19
+    #    87, # 0x67      DIT User Data Ch1 Byte 19
+    #    88, # 0x68      DIT User Data Ch2 Byte 20
+    #    89, # 0x69      DIT User Data Ch1 Byte 20
+    #    90, # 0x6A      DIT User Data Ch2 Byte 21
+    #    91, # 0x6B      DIT User Data Ch1 Byte 21
+    #    92, # 0x6C      DIT User Data Ch2 Byte 22
+    #    93, # 0x6D      DIT User Data Ch2 Byte 22
+    #    94, # 0x6E      DIT User Data Ch1 Byte 23
+    #    95, # 0x6F      DIT User Data Ch2 Byte 23
+    ]
+elif chan == "I8":
+    dev = "/dev/i2c-13"
+    addr=0x70
+    p0_reglist = [
+        0,  # 0x01      Power-Down and Reset
+    #    1,  # 0x02      Global Interrupt Status
+        2,  # 0x03      Port A Control
+        3,  # 0x04      Port A Control
+        4,  # 0x05      Port B Control
+        5,  # 0x06      Port B Control
+        6,  # 0x07      Transmitter Control
+        7,  # 0x08      Transmitter Control
+        8,  # 0x09      Transmitter Control
         9,  # 0x0A      SRC and DIT Status
     #    10, # 0x0B      SRC and DIT Interrupt Mask
     #    11, # 0x0C      SRC and DIT Interrupt Mask
@@ -4482,19 +4242,19 @@ p0_regs = {}
 p1_regs = {}
 p2_regs = {}
 
-i2c_reg_write(i2c, 0x70, 0x7F, 0x00)  # page 0
+i2c_reg_write(i2c, addr, 0x7F, 0x00)  # page 0
 for i in p0_reglist:
-    p0_regs[src4392_page0[i]["name"]] = reg_decode(i2c, 0x70, src4392_page0[i])
+    p0_regs[src4392_page0[i]["name"]] = reg_decode(i2c, addr, src4392_page0[i])
 
-i2c_reg_write(i2c, 0x70, 0x7F, 0x01)  # page 1
+i2c_reg_write(i2c, addr, 0x7F, 0x01)  # page 1
 for i in p1_reglist:
-    p2_regs[src4392_page1[i]["name"]] = reg_decode(i2c, 0x70, src4392_page1[i])
+    p2_regs[src4392_page1[i]["name"]] = reg_decode(i2c, addr, src4392_page1[i])
 
-i2c_reg_write(i2c, 0x70, 0x7F, 0x02)  # page 2
+i2c_reg_write(i2c, addr, 0x7F, 0x02)  # page 2
 for i in p2_reglist:
-    p2_regs[src4392_page2[i]["name"]] = reg_decode(i2c, 0x70, src4392_page2[i])
+    p2_regs[src4392_page2[i]["name"]] = reg_decode(i2c, addr, src4392_page2[i])
 
-i2c_reg_write(i2c, 0x70, 0x7F, 0x00)  # page 0
+i2c_reg_write(i2c, addr, 0x7F, 0x00)  # page 0
 
 i2c.close()
 

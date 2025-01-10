@@ -15,7 +15,7 @@ int main(int argc, char **argv)
 	int bVerbose = 0;
     int nBytes = 1;
     static FILE *fFiles[MAX_FILES];
-    static long nRead[MAX_FILES] = { 0 };
+    static long nWritten[MAX_FILES] = { 0 };
     long nPad = 0;
     static struct {
         int nBytes; //
@@ -48,42 +48,42 @@ int main(int argc, char **argv)
     				fprintf(stderr, "Option '%c' requires value\n\n", optopt);
 			case 'h':
 			default:
-				printf("interleave [-h] [-p ""PATTERN""] [-v] fileA [fileB [fileC [fileD [...]]]]\n"
+				printf("deinterleave [-h] [-p ""PATTERN""] [-v] fileA [fileB [fileC [fileD [...]]]]\n"
 				       "  -h                Print usage\n"
 				       "  -v                Verbose\n"
-				       "  -n count          Specify the default number of bytes to take from each file\n"
+				       "  -n count          Specify the default number of bytes to send to each file\n"
 				       "                      before proceeding to the next file (default: 1)\n"
 				       "  -p ""PATTERN""    Specify interleave pattern\n"
 				       "                      PATTERN consists of a 1 or more sets of a number followed by \n"
 				       "                        an optional letter.\n"
-                       "                      A number by itself indicates the number of 0x00 padding bytes\n"
+                       "                      A number by itself indicates the number of bytes to skip\n"
                        "                      A number followed by a letter indicates the number of bytes\n"
-                       "                        to be taken from the speficied file (1024 max)\n"
+                       "                        to be sent to the speficied file (1024 max)\n"
                        "                      A negative number followed by a letter indicates the number\n"
-                       "                        byte-reversed bytes to be taken from the specified file\n"
-                       "                      The default is n bytes from each file in order\n"
+                       "                        byte-reversed bytes to be sent to the specified file\n"
+                       "                      The default is n bytes to each file in order\n"
                        "                        where n is speficified by the -n argument\n"
 				       "n");
 				       
 				printf("Example:\n"
-				       "  interleave a.bin b.bin c.bin\n"
+				       "  deinterleave a.bin b.bin c.bin < abc.bin\n"
                        "    Output\n"
-                       "       1 byte from a.bin\n"
-                       "       1 byte from b.bin\n"
-                       "       1 byte from c.bin\n"
-                       "       repeating until the end of any file\n"
-				       "  interleave -n 4 a.bin b.bin\n"
+                       "       1 byte to a.bin\n"
+                       "       1 byte to b.bin\n"
+                       "       1 byte to c.bin\n"
+                       "       repeating until the end of abc.bin\n"
+				       "  deinterleave -n 4 a.bin b.bin < ab.bin\n"
                        "    Output\n"
-                       "       4 bytes from a.bin\n"
-                       "       4 bytes from b.bin\n"
-                       "       repeating until the end of any file\n"
-                       "  interleave -p ""4c 1 2a 1b"" a.bin b.bin c.bin\n"
+                       "       4 bytes to a.bin\n"
+                       "       4 bytes to b.bin\n"
+                       "       repeating until the end of ab.bin\n"
+                       "  deinterleave -p ""4c 1 2a 1b"" a.bin b.bin c.bin < abc.bon\n"
                        "    Output:\n"
-                       "       4 bytes from a.bin\n"
-                       "       1 pad byte (0x00)\n"
-                       "       2 bytes from a.bin\n"
-                       "       1 byte from b.bin\n"
-                       "       repeating until the end of any file\n"
+                       "       4 bytes to a.bin\n"
+                       "       1 skip byte\n"
+                       "       2 bytes to a.bin\n"
+                       "       1 byte to b.bin\n"
+                       "       repeating until the end of ab.bin\n"
                        );
 				return 1;
 		}
@@ -154,7 +154,7 @@ int main(int argc, char **argv)
         fprintf(stderr, "Pattern:\n");
         for (iPattern=0; iPattern<nPatterns; iPattern++) {
             if (Pattern[iPattern].iFile < 0) {
-                fprintf(stderr, "   %4d bytes: 0x00 (padding)\n", Pattern[iPattern].nBytes);
+                fprintf(stderr, "   %4d bytes: skip\n", Pattern[iPattern].nBytes);
             } else if (Pattern[iPattern].nBytes > 0) {
                 fprintf(stderr, "   %4d bytes: File %c\n", Pattern[iPattern].nBytes, Pattern[iPattern].iFile+'A');
             } else {
@@ -164,7 +164,7 @@ int main(int argc, char **argv)
     }
 
     for (iFile=0; iFile<nFiles; iFile++) {
-        fFiles[iFile] = fopen(argv[optind+iFile], "r");
+        fFiles[iFile] = fopen(argv[optind+iFile], "w");
         if (fFiles[iFile]==NULL) {
             for (int i=0; i<iFile; i++) {
                 fclose(fFiles[i]);
@@ -177,15 +177,15 @@ int main(int argc, char **argv)
             int n = Pattern[iPattern].nBytes;
             int nr;
             if (Pattern[iPattern].iFile >= 0) {
-                if (nr=fread(Buffer, 1, abs(n), fFiles[Pattern[iPattern].iFile]) == abs(n)) {
+                if (nr=fread(Buffer, 1, abs(n), stdin) == abs(n)) {
                     if (n > 0) {
-                        fwrite(Buffer, 1, n, stdout);
+                        fwrite(Buffer, 1, n, fFiles[Pattern[iPattern].iFile]);
                     } else {
                         for (int i=abs(n)-1; i>=0; i--) {
-                            fwrite(&Buffer[i], 1, 1, stdout);
+                            fwrite(&Buffer[i], 1, 1, fFiles[Pattern[iPattern].iFile]);
                         }
                     }
-                    nRead[Pattern[iPattern].iFile] += abs(n);
+                    nWritten[Pattern[iPattern].iFile] += abs(n);
                 } else {
                     if (bVerbose) {
                         fprintf(stderr, "EOF %s\n", argv[optind+Pattern[iPattern].iFile]);
@@ -194,7 +194,7 @@ int main(int argc, char **argv)
                 }
             } else {
                 for (int i=0; i<abs(n); i++) {
-                    fputc(0x00, stdout);
+                    fgetc(stdin);
                 }
                 nPad += abs(n);
             }
@@ -204,10 +204,10 @@ int main(int argc, char **argv)
     if (bVerbose) {
         long nTotal = 0;
         for (iFile=0; iFile<nFiles; iFile++) {
-            fprintf(stderr, "File %s, Bytes: %ld\n", argv[optind+iFile], nRead[iFile]);
-            nTotal+= nRead[iFile];
+            fprintf(stderr, "File %s, Bytes: %ld\n", argv[optind+iFile], nWritten[iFile]);
+            nTotal+= nWritten[iFile];
         }
-        fprintf(stderr, "Padding Bytes: %ld\n", nPad);
+        fprintf(stderr, "Skipped Bytes: %ld\n", nPad);
         nTotal += nPad;
         fprintf(stderr, "Total Bytes: %ld\n", nTotal);
     }

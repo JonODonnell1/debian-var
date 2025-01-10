@@ -142,7 +142,7 @@ ____________EOF_i2cprog
         i2cprog $i2c_bus $i2c_addr <<____________EOF_i2cprog
             0 0x00  # OUTPUT_SEL = 00 (I2S)
             1 0x33  # ENABLE_ADC_CH and ENABLE_DATA_IN_CH
-            2 0x01  # SELECT_ADC_NUM = 1 (192k)
+            2 0x00  # SELECT_ADC_NUM = 1 (192k)
             3 0x00  # SELECT_IADC_NUM = SEL_CLK_DIV
             8 0x00  # MASTER_BCK_DIV1 = 0, MASTER_MODE_ENABLE = 0
             9 0x00  # master mode is disabled
@@ -185,6 +185,12 @@ es9033(){
     i2c_sync_addr=$2
     i2c_addr=$3
 
+    if [ $i2c_bus -lt 12 ]; then
+        vol=0x00  # volume for amp-out
+    else
+        vol=0x00  # volume for analog out
+    fi
+
     verbose_log_begin_msg "$MODEL Initializing es9033 on i2c-${i2c_bus} @ ${i2c_sync_addr}/${i2c_addr}..."
 
     i=0
@@ -207,7 +213,12 @@ ____________EOF_i2cprog
         fi
         sleep 0.1
         i2cprog $i2c_bus $i2c_addr <<____________EOF_i2cprog
-            0 0x3E  # SYSTEM_CONFIG AMP_MODE_REG=1
+            0  0x3E  # SYSTEM_CONFIG AMP_MODE_REG=1
+            46 $vol  # volume
+            47 $vol  # volume
+            51 0x20  # set RUN_VOLUME
+            w 100000 # wait 0.1s
+            51 0x00  # clear RUN_VOLUME
 ____________EOF_i2cprog
         if [ $? -ne 0 ]; then
             if [ $i -le $retries ]; then
@@ -230,76 +241,38 @@ src4392_out(){
     i2c_bus=$1 # 12|13
     i2c_addr=$2
     freq=$3 # 48000, 96000, 192000, 44100, 88200, 176400
-    bitperfect=$4 # 0,1 (bitperfect uses port B and can only be used for i2c_addr==6)
-    #  if !bitperfect & freq==44100|88200|176400, SAI2 must be playing dummy 44.1k stream to generate clock
-    #  if bitperfect, freq must match rate on SAI2
-
     verbose_log_begin_msg "$MODEL Initializing src4392 for output on i2c-${i2c_bus} @ ${i2c_addr}..."
 
-    if [ $bitperfect -eq 0 ]; then
-        if [ $freq -eq 48000 ]; then
-            reg_p0_06=0x00  #  I2S Port B: MCLK Source MCLK (0x00), MCLK Freq = 128x LRCK (0x00)
-            reg_p0_07=0x7C  #  DIT: Data slip (0x00), VALID (0x00), BLSM Output (0x04), TXIS=SRC (0x18), TXDIV 512 (0x60), TXCLK=MCLK (0x00)
-            reg_p2_06=0x40  #  Ch1 48kHz, Level 2 accuracy
-            reg_p2_07=0x40  #  Ch2 48kHz, Level 2 accuracy
-        elif [ $freq -eq 96000 ]; then
-            reg_p0_06=0x00  #  I2S Port B: MCLK Source MCLK (0x00), MCLK Freq = 128x LRCK (0x00)
-            reg_p0_07=0x3C  #  DIT: Data slip (0x00), VALID (0x00), BLSM Output (0x04), TXIS=SRC (0x18), TXDIV 256 (0x20), TXCLK=MCLK (0x00)
-            reg_p2_06=0x50  #  Ch1 96kHz, Level 2 accuracy
-            reg_p2_07=0x50  #  Ch2 96kHz, Level 2 accuracy
-        elif [ $freq -eq 192000 ]; then
-            reg_p0_06=0x00  #  I2S Port B: MCLK Source MCLK (0x00), MCLK Freq = 128x LRCK (0x00)
-            reg_p0_07=0x1C  #  DIT: Data slip (0x00), VALID (0x00), BLSM Output (0x04), TXIS=SRC (0x18), TXDIV 128 (0x00), TXCLK=MCLK (0x00)
-            reg_p2_06=0x70  #  Ch1 192kHz, Level 2 accuracy
-            reg_p2_07=0x70  #  Ch2 192kHz, Level 2 accuracy
-        elif [ $freq -eq 44100 ]; then
-            reg_p0_06=0x00  #  I2S Port B: MCLK Source MCLK (0x00), MCLK Freq = 128x LRCK (0x00)
-            reg_p0_07=0x7C  #  DIT: Data slip (0x00), VALID (0x00), BLSM Output (0x04), TXIS=SRC (0x18), TXDIV 512 (0x60), TXCLK=MCLK (0x00)
-            reg_p2_06=0x00  #  Ch1 44.1kHz, Level 2 accuracy
-            reg_p2_07=0x00  #  Ch2 44.1kHz, Level 2 accuracy
-        elif [ $freq -eq 88200 ]; then
-            reg_p0_06=0x00  #  I2S Port B: MCLK Source MCLK (0x00), MCLK Freq = 128x LRCK (0x00)
-            reg_p0_07=0x3C  #  DIT: Data slip (0x00), VALID (0x00), BLSM Output (0x04), TXIS=SRC (0x18), TXDIV 256 (0x20), TXCLK=MCLK (0x00)
-            reg_p2_06=0x10  #  Ch1 88.2kHz, Level 2 accuracy
-            reg_p2_07=0x10  #  Ch2 88.2kHz, Level 2 accuracy
-        elif [ $freq -eq 176400 ]; then
-            reg_p0_06=0x00  #  I2S Port B: MCLK Source MCLK (0x00), MCLK Freq = 128x LRCK (0x00)
-            reg_p0_07=0x1C  #  DIT: Data slip (0x00), VALID (0x00), BLSM Output (0x04), TXIS=SRC (0x18), TXDIV 128 (0x00), TXCLK=MCLK (0x00)
-            reg_p2_06=0x30  #  Ch1 176.4kHz, Level 2 accuracy
-            reg_p2_07=0x30  #  Ch2 176.4kHz, Level 2 accuracy
-        fi
-    else
-        if [ $freq -eq 48000 ]; then
-            reg_p0_06=0x03  #  I2S Port B: MCLK Source MCLK (0x00), MCLK Freq = 512x LRCK (0x03)
-            reg_p0_07=0x6C  #  DIT: Data slip (0x00), VALID (0x00), BLSM Output (0x04), TXIS=Port B (0x08), TXDIV 512 (0x60), TXCLK=MCLK (0x00)
-            reg_p2_06=0x40  #  Ch1 48kHz, Level 2 accuracy
-            reg_p2_07=0x40  #  Ch2 48kHz, Level 2 accuracy
-        elif [ $freq -eq 96000 ]; then
-            reg_p0_06=0x01  #  I2S Port B: MCLK Source MCLK (0x00), MCLK Freq = 256x LRCK (0x01)
-            reg_p0_07=0x2C  #  DIT: Data slip (0x00), VALID (0x00), BLSM Output (0x04), TXIS=Port B (0x08), TXDIV 256 (0x20), TXCLK=MCLK (0x00)
-            reg_p2_06=0x50  #  Ch1 96kHz, Level 2 accuracy
-            reg_p2_07=0x50  #  Ch2 96kHz, Level 2 accuracy
-        elif [ $freq -eq 192000 ]; then
-            reg_p0_06=0x00  #  I2S Port B: MCLK Source MCLK (0x00), MCLK Freq = 128x LRCK (0x00)
-            reg_p0_07=0x0C  #  DIT: Data slip (0x00), VALID (0x00), BLSM Output (0x04), TXIS=Port B (0x08), TXDIV 128 (0x00), TXCLK=MCLK (0x00)
-            reg_p2_06=0x70  #  Ch1 192kHz, Level 2 accuracy
-            reg_p2_07=0x70  #  Ch2 192kHz, Level 2 accuracy
-        elif [ $freq -eq 44100 ]; then
-            reg_p0_06=0x03  #  I2S Port B: MCLK Source MCLK (0x00), MCLK Freq = 512x LRCK (0x03)
-            reg_p0_07=0x6C  #  DIT: Data slip (0x00), VALID (0x00), BLSM Output (0x04), TXIS=Port B (0x08), TXDIV 512 (0x60), TXCLK=MCLK (0x00)
-            reg_p2_06=0x00  #  Ch1 44.1kHz, Level 2 accuracy
-            reg_p2_07=0x00  #  Ch2 44.1kHz, Level 2 accuracy
-        elif [ $freq -eq 88200 ]; then
-            reg_p0_06=0x01  #  I2S Port B: MCLK Source MCLK (0x00), MCLK Freq = 256x LRCK (0x01)
-            reg_p0_07=0x2C  #  DIT: Data slip (0x00), VALID (0x00), BLSM Output (0x04), TXIS=Port B (0x08), TXDIV 256 (0x20), TXCLK=MCLK (0x00)
-            reg_p2_06=0x10  #  Ch1 88.2kHz, Level 2 accuracy
-            reg_p2_07=0x10  #  Ch2 88.2kHz, Level 2 accuracy
-        elif [ $freq -eq 176400 ]; then
-            reg_p0_06=0x00  #  I2S Port B: MCLK Source MCLK (0x00), MCLK Freq = 128x LRCK (0x00)
-            reg_p0_07=0x0C  #  DIT: Data slip (0x00), VALID (0x00), BLSM Output (0x04), TXIS=Port B (0x08), TXDIV 128 (0x00), TXCLK=MCLK (0x00)
-            reg_p2_06=0x30  #  Ch1 176.4kHz, Level 2 accuracy
-            reg_p2_07=0x30  #  Ch2 176.4kHz, Level 2 accuracy
-        fi
+    if [ $freq -eq 48000 ]; then
+        reg_p0_06=0x00  #  I2S Port B: MCLK Source MCLK (0x00), MCLK Freq = 128x LRCK (0x00)
+        reg_p0_07=0x7C  #  DIT: Data slip (0x00), VALID (0x00), BLSM Output (0x04), TXIS=SRC (0x18), TXDIV 512 (0x60), TXCLK=MCLK (0x00)
+        reg_p2_06=0x40  #  Ch1 48kHz, Level 2 accuracy
+        reg_p2_07=0x40  #  Ch2 48kHz, Level 2 accuracy
+    elif [ $freq -eq 96000 ]; then
+        reg_p0_06=0x00  #  I2S Port B: MCLK Source MCLK (0x00), MCLK Freq = 128x LRCK (0x00)
+        reg_p0_07=0x3C  #  DIT: Data slip (0x00), VALID (0x00), BLSM Output (0x04), TXIS=SRC (0x18), TXDIV 256 (0x20), TXCLK=MCLK (0x00)
+        reg_p2_06=0x50  #  Ch1 96kHz, Level 2 accuracy
+        reg_p2_07=0x50  #  Ch2 96kHz, Level 2 accuracy
+    elif [ $freq -eq 192000 ]; then
+        reg_p0_06=0x00  #  I2S Port B: MCLK Source MCLK (0x00), MCLK Freq = 128x LRCK (0x00)
+        reg_p0_07=0x1C  #  DIT: Data slip (0x00), VALID (0x00), BLSM Output (0x04), TXIS=SRC (0x18), TXDIV 128 (0x00), TXCLK=MCLK (0x00)
+        reg_p2_06=0x70  #  Ch1 192kHz, Level 2 accuracy
+        reg_p2_07=0x70  #  Ch2 192kHz, Level 2 accuracy
+    elif [ $freq -eq 44100 ]; then
+        reg_p0_06=0x00  #  I2S Port B: MCLK Source MCLK (0x00), MCLK Freq = 128x LRCK (0x00)
+        reg_p0_07=0x7C  #  DIT: Data slip (0x00), VALID (0x00), BLSM Output (0x04), TXIS=SRC (0x18), TXDIV 512 (0x60), TXCLK=MCLK (0x00)
+        reg_p2_06=0x00  #  Ch1 44.1kHz, Level 2 accuracy
+        reg_p2_07=0x00  #  Ch2 44.1kHz, Level 2 accuracy
+    elif [ $freq -eq 88200 ]; then
+        reg_p0_06=0x00  #  I2S Port B: MCLK Source MCLK (0x00), MCLK Freq = 128x LRCK (0x00)
+        reg_p0_07=0x3C  #  DIT: Data slip (0x00), VALID (0x00), BLSM Output (0x04), TXIS=SRC (0x18), TXDIV 256 (0x20), TXCLK=MCLK (0x00)
+        reg_p2_06=0x10  #  Ch1 88.2kHz, Level 2 accuracy
+        reg_p2_07=0x10  #  Ch2 88.2kHz, Level 2 accuracy
+    elif [ $freq -eq 176400 ]; then
+        reg_p0_06=0x00  #  I2S Port B: MCLK Source MCLK (0x00), MCLK Freq = 128x LRCK (0x00)
+        reg_p0_07=0x1C  #  DIT: Data slip (0x00), VALID (0x00), BLSM Output (0x04), TXIS=SRC (0x18), TXDIV 128 (0x00), TXCLK=MCLK (0x00)
+        reg_p2_06=0x30  #  Ch1 176.4kHz, Level 2 accuracy
+        reg_p2_07=0x30  #  Ch2 176.4kHz, Level 2 accuracy
     fi
     if [ $i2c_bus -eq 12 ]; then
         reg_p2_04=0x88      # Source 1, Left
@@ -348,7 +321,7 @@ src4392_out(){
             0x04 $reg_p2_04
             0x05 $reg_p2_05
             0x06 $reg_p2_06
-                0x07 $reg_p2_07
+            0x07 $reg_p2_07
             0x7F 0x00  # Register Page 0
 ____________EOF_i2cprog
         if [ $? -ne 0 ]; then
@@ -505,13 +478,13 @@ start)
     es9033 10 0x4C 0x48           # O5
     es9033 11 0x4C 0x48           # O6
     es9033 12 0x4C 0x48           # O7
-    src4392_out 12 0x70 192000 0  # O7
+    src4392_out 12 0x72 192000    # O7
     es9033 13 0x4C 0x48           # O8
-    src4392_out 13 0x70 192000 0  # O8
+    src4392_out 13 0x72 192000    # O8
 
     nvme_init
 
-    pulseaudio_init
+    # pulseaudio_init
 
     # signal boot finished to PMIC
     gpioset `gpiofind bootcompl`=1  # signal boot complete, TODO: should be in app
