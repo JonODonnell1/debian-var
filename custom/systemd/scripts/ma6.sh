@@ -430,6 +430,7 @@ gpio_init(){
     gpio_setup_out bootcompl 0
     gpio_setup_out pwroff    0
     gpio_setup_out out_ampen 0
+    gpio_setup_out amppwr_n  0  # turn on amp power automatically
 }
 
 gpio_read(){
