@@ -4,6 +4,7 @@ CC=`realpath ../toolchain/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu/bin/
 CPP=`realpath ../toolchain/gcc-linaro-6.3.1-2017.05-x86_64_aarch64-linux-gnu/bin/aarch64-linux-gnu-g++`
 cd src
 $CC i2cprog.c -o ../bin/i2cprog
+$CC i2ctest.c -o ../bin/i2ctest
 $CC interleave.c -o ../bin/interleave
 $CC deinterleave.c -o ../bin/deinterleave
 $CC SigGen.c pink.c -lm -o ../bin/SigGen
